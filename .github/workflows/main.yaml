@@ -52,7 +52,7 @@ jobs:
           DOCKER_CONTEXT: github-action
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: docker-cache
         with:
           path: "/tmp/.buildx-cache"
