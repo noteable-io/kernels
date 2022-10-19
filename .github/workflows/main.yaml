@@ -12,7 +12,7 @@ on:
 jobs:
 
   build-python-images:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         # version: ["3.8.8", "3.9.13", "3.10.5"] 3.10.5 fails with dependency conflicts
