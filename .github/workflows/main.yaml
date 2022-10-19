@@ -56,7 +56,7 @@ jobs:
         id: docker-cache
         with:
           path: "/tmp/.buildx-cache"
-          key: "${{ runner.os }}-buildx-${{ matrix.directory }}-${{ matrix.version }}"
+          key: "${{ runner.os }}-${{env.RUNNER_ARCH}}-buildx-${{ matrix.directory }}-${{ matrix.version }}"
           restore-keys: "${{ runner.os }}-buildx-"
       
       - name: Build arguments
