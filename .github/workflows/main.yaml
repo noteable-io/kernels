@@ -57,7 +57,7 @@ jobs:
         with:
           path: "/tmp/.buildx-cache"
           key: "${{ runner.os }}-${{env.RUNNER_ARCH}}-buildx-${{ matrix.directory }}-${{ matrix.version }}"
-          restore-keys: "${{ runner.os }}-buildx-"
+          restore-keys: "${{ runner.os }}-${{env.RUNNER_ARCH}}-buildx-${{ matrix.directory }}-"
       
       - name: Build arguments
         id: build-args
