@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4.3
 ARG BASE_IMAGE=jupyter/datascience-notebook
-ARG PYTHON_VERSION=3.9.13
+ARG PYTHON_VERSION=3.9.15
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE}:python-${PYTHON_VERSION}
 
