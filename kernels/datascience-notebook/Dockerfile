@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4.1
+# syntax = docker/dockerfile:1.4.3
 ARG BASE_IMAGE=jupyter/datascience-notebook
 ARG PYTHON_VERSION=3.9.13
 # hadolint ignore=DL3006
