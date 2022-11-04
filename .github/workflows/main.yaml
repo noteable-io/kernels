@@ -22,7 +22,7 @@ jobs:
         # version: ["3.8.8", "3.9.13", "3.10.5"] 3.10.5 fails with dependency conflicts
         # We may need to have separate requirements.txt for each version, or replace
         # dependencies on the fly
-        version: ["3.8.13", "3.9.13"]
+        version: ["3.8.15", "3.9.15"]
         directory: ["datascience-notebook"]
         # The datascience-notebook base image does not support ARM
         # We would need to build and maintain our own base image
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           endpoint: github-action
 
@@ -45,7 +45,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
