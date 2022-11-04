@@ -1,0 +1,12 @@
+dx==1.1.2
+# Datasources-related packages here on down, alphabetized please for easy cut/paste across files and repos.
+google-cloud-bigquery-storage==2.6.3
+psycopg2-binary==2.9.3
+pyodbc==4.0.32
+redshift_connector==2.0.907
+snowflake_sqlalchemy==1.3.4
+sqlalchemy-bigquery==1.3.0
+sqlalchemy-databricks==0.2.0
+sqlalchemy-redshift==0.8.9
+trino[sqlalchemy]==0.313.0
+astroid==2.12.2
