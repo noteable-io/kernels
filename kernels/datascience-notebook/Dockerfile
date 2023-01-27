@@ -39,8 +39,7 @@ RUN groupadd --gid 4004 noteable && \
 RUN mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 RUN mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
-RUN echo "${JULIA_PKGDIR} -- ${CONDA_DIR}" && \
-  chown noteable:noteable "${JULIA_PKGDIR}" && \
+RUN chown noteable:noteable "${JULIA_PKGDIR}" && \
   chown noteable:noteable "${CONDA_DIR}" && \
   fix-permissions "${JULIA_PKGDIR}" && \
   fix-permissions "${CONDA_DIR}"
