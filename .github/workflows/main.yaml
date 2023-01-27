@@ -18,14 +18,14 @@ jobs:
         # version: ["3.8.8", "3.9.13", "3.10.5"] 3.10.5 fails with dependency conflicts
         # We may need to have separate requirements.txt for each version, or replace
         # dependencies on the fly
-        version: ["3.8.8", "3.9.13"]
+        version: ["3.9.13", "3.8.13"]
         directory: ["datascience-notebook"]
         # The datascience-notebook base image does not support ARM
         # We would need to build and maintain our own base image
         # architecture: ["arm", "amd"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # TODO: Log into DockerHub to prevent rate limiting
 
@@ -52,7 +52,7 @@ jobs:
           DOCKER_CONTEXT: github-action
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: docker-cache
         with:
           path: "/tmp/buildx-cache"
