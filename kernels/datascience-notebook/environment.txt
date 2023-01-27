@@ -1,4 +1,4 @@
-ipykernel=5.5.*
+jupyter_client=7.3.*
 ipython=8.0.*
 vdom=0.6
 papermill=2.2.*

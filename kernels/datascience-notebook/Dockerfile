@@ -1,10 +1,16 @@
 # syntax = docker/dockerfile:1.4.3
 ARG BASE_IMAGE=jupyter/datascience-notebook
-ARG PYTHON_VERSION=3.9.15
+ARG PYTHON_VERSION=3.9.13
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE}:python-${PYTHON_VERSION}
 
 USER root
+
+# datascience-notebook:python-3.9.13 includes psutil 5.9.2 with cooked C lib, but
+# later pip installs end up installing 5.9.4, but for some
+# reason 'import psutil' will end up getting the python 5.9.4 but the
+# C lib from 5.9.2, and, unlike Smeagol, it hateses the precious.
+RUN pip uninstall -y psutil
 
 # Set up log file for magics
 RUN touch /var/log/noteable_magics.log && \
@@ -20,11 +26,6 @@ WORKDIR /tmp
 RUN apt-get update && \
   apt-get install -y jq procps git unixodbc-dev g++ \
   && rm -rf /var/lib/apt/lists/*
-
-ENV TINI_VERSION=v0.19.0
-RUN TINI_BINARY=$(if [ "$(uname -m)" = "aarch64" ]; then echo "tini-arm64"; else echo "tini"; fi); echo "${TINI_BINARY}" \
-  && wget -q -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/${TINI_BINARY}" \
-  && chmod +x /usr/local/bin/tini
 
 ENV NB_USER="noteable" \
   NB_UID=4004 \
@@ -43,6 +44,19 @@ RUN chown noteable:noteable "${JULIA_PKGDIR}" && \
   fix-permissions "${JULIA_PKGDIR}" && \
   fix-permissions "${CONDA_DIR}"
 
+ENV TINI_VERSION=v0.19.0
+RUN TINI_BINARY=$(if [ "$(uname -m)" = "aarch64" ]; then echo "tini-arm64"; else echo "tini"; fi); echo "${TINI_BINARY}" \
+  && wget -q -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/${TINI_BINARY}" \
+  && chmod +x /usr/local/bin/tini
+
+
+
+
+
+
+
+
+
 # Run non-privileged user
 USER noteable
 
@@ -54,18 +68,14 @@ ENV PATH="/home/noteable/.local/bin:${PATH}" \
 # hadolint ignore=DL3045
 COPY environment.txt ./
 
-# hadolint ignore=DL3045
-COPY requirements.txt ./
-
 # hadolint ignore=SC2034
-RUN conda install --file environment.txt
+RUN mamba install --file environment.txt
 
 # hadolint ignore=DL3045
 COPY requirements.txt ./
 
 # hadolint ignore=SC1008,SC2155,DL3042,SC2102
-RUN  pip install -I --quiet --no-cache-dir "git+https://github.com/noteable-io/noteable-notebook-magics.git@main" && \
-  pip install -I --quiet --no-cache-dir -r requirements.txt
+RUN pip install -I --no-cache-dir -r requirements.txt
 
 # Copy over any python commands that need to run on startup
 # that aren't covered by IPython extensions
@@ -80,7 +90,10 @@ RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 RUN python -c "import noteable_magics"
 
 RUN git config --global user.name "Noteable Kernel" && \
-  git config --global user.email "engineering@noteable.io"
+  git config --global user.email "engineering@noteable.io" && \
+  git config --global safe.directory /etc/noteable/project && \
+  git config --global credential.helper /git_credential_helper.py && \
+  git config --global credential.useHttpPath true
 
 # https://ipython.readthedocs.io/en/stable/config/intro.html#systemwide-configuration
 COPY ipython_config.py /etc/ipython
@@ -91,6 +104,8 @@ WORKDIR /etc/noteable/project
 # Add the entrypoint script to the $PATH
 COPY run.sh /usr/local/bin
 COPY secrets_helper.py /tmp/secrets_helper.py
+COPY git_credential_helper.py /git_credential_helper.py
+COPY git-wrapper.sh /usr/local/bin/git
 
 EXPOSE 50001-50005
 
