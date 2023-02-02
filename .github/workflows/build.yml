@@ -40,8 +40,6 @@ jobs:
       matrix:
         version: [ "3.9.13", "3.8.13" ]
     secrets: inherit
-    env:
-      PYTHON_VERSION: ${{ matrix.version }}
     with:
       dockerfile: ./kernels/python/Dockerfile
       context: ./kernels/python
@@ -52,3 +50,5 @@ jobs:
         type=ref,event=pr,prefix=${{ matrix.version }}
         type=sha,format=long,prefix=${{ matrix.version }}
         type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }},prefix=${{ matrix.version }}
+      build_args: |
+        PYTHON_VERSION=${{ matrix.version }}
