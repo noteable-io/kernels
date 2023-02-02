@@ -38,6 +38,7 @@ jobs:
     strategy:
       matrix:
         version: [ "3.9.13", "3.8.13" ]
+    secrets: inherit
     with:
       dockerfile: ./kernels/python/Dockerfile
       context: ./kernels/python
