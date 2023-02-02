@@ -50,8 +50,6 @@ on:
       DOCKERHUB_PASSWORD:
         required: true
 
-
-
 jobs:
   build:
     permissions:
