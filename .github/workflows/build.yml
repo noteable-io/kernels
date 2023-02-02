@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - main
-  pull_requests:
+  pull_request:
     branches:
       - main
-permissions:
-  id-token: write
-  contents: read
-  packages: write
 
 jobs:
   base-linting:
@@ -34,6 +30,10 @@ jobs:
           VALIDATE_YAML: true
 
   build_python_kernel:
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
     uses: ./github/workflows/reuable-docker-build.yml
     strategy:
       matrix:
