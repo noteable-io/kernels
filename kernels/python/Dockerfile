@@ -1,5 +1,6 @@
 # syntax = docker/dockerfile:1.2.1
-FROM jupyter/datascience-notebook:python-3.9.6
+ARG PYTHON_VERSION
+FROM jupyter/datascience-notebook:python-${PYTHON_VERSION}
 
 USER root
 
