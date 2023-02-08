@@ -51,13 +51,13 @@ ENV PATH="/home/noteable/.local/bin:${PATH}" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 # hadolint ignore=DL3045
-COPY ../../environment.txt ./
+COPY environment.txt ./
 
 # hadolint ignore=SC2034
 RUN mamba install --file environment.txt
 
 # hadolint ignore=DL3045
-COPY ../../requirements.txt ./
+COPY requirements.txt ./
 
 # hadolint ignore=SC1008,SC2155,DL3042,SC2102
 RUN pip install -I --no-cache-dir -r requirements.txt
@@ -81,14 +81,14 @@ RUN git config --global user.name "Noteable Kernel" && \
   git config --global credential.useHttpPath true
 
 # https://ipython.readthedocs.io/en/stable/config/intro.html#systemwide-configuration
-COPY ../../ipython_config.py /etc/ipython
+COPY .ipython_config.py /etc/ipython
 
 # Set standard working directory for noteable project
 WORKDIR /etc/noteable/project
 
 # Add the entrypoint script to the $PATH
 COPY run.sh /usr/local/bin
-COPY ../../secrets_helper.py /tmp/secrets_helper.py
+COPY secrets_helper.py /tmp/secrets_helper.py
 COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git
 
