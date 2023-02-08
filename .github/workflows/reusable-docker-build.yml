@@ -70,6 +70,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
+      - name: Copy common files
+        run: make copy-common-files
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
