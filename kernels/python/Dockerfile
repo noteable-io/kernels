@@ -81,7 +81,7 @@ RUN git config --global user.name "Noteable Kernel" && \
   git config --global credential.useHttpPath true
 
 # https://ipython.readthedocs.io/en/stable/config/intro.html#systemwide-configuration
-COPY .ipython_config.py /etc/ipython
+COPY ipython_config.py /etc/ipython
 
 # Set standard working directory for noteable project
 WORKDIR /etc/noteable/project
