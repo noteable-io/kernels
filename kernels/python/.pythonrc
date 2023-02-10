@@ -1,0 +1,8 @@
+import pandas as pd
+
+import dx
+
+dx.set_option("DISPLAY_MAX_ROWS", 50_000)
+dx.set_option("DISPLAY_MAX_COLUMNS", 100)
+dx.set_option("ENABLE_DATALINK", True)
+dx.set_option("ENABLE_ASSIGNMENT", False)
