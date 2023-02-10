@@ -11,11 +11,11 @@ on:
 jobs:
   base-linting:
     name: base-linting
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Lint Dockerfile, Shell scripts, YAML
         uses: github/super-linter@v4
