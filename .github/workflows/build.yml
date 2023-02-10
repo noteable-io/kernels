@@ -38,6 +38,8 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build.yml
     strategy:
       matrix:
+        # Must be a supported version by jupyter/datascience-notebook
+        # https://hub.docker.com/r/jupyter/datascience-notebook/tags?page=1&name=python-
         version: [ "3.9.13", "3.8.13" ]
     secrets: inherit
     with:
