@@ -83,7 +83,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
-          version: v0.10.1
+          version: v0.10.2
 
       # Note: The outputs in github action will show duplicate labels being generated for the meta outputs.
       # When the Docker engine builds, it will only take the later values, and our custom labels get added
@@ -97,7 +97,7 @@ jobs:
           labels: ${{ inputs.labels }}
 
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: ${{ inputs.platforms }}
           context: ${{ inputs.context }}
