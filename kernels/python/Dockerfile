@@ -37,10 +37,8 @@ RUN groupadd --gid 4004 noteable && \
 RUN mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 RUN mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
-RUN chown noteable:noteable "${JULIA_PKGDIR}" && \
-  chown noteable:noteable "${CONDA_DIR}" && \
-  fix-permissions "${JULIA_PKGDIR}" && \
-  fix-permissions "${CONDA_DIR}"
+RUN chown noteable:noteable "${CONDA_DIR}" && \
+  fix-permissions "${CONDA_DIR}" \
 
 # Run non-privileged user
 USER noteable
