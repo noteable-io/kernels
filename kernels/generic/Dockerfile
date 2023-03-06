@@ -1,5 +1,6 @@
 # syntax = docker/dockerfile:1.2.1
-FROM jupyter/minimal-notebook:python-3.9.13
+ARG PYTHON_VERSION
+FROM jupyter/minimal-notebook:python-${PYTHON_VERSION}
 
 USER root
 
