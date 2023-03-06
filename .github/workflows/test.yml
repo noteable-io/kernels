@@ -28,4 +28,3 @@ jobs:
           VALIDATE_BASH_EXEC: true
           VALIDATE_DOCKERFILE_HADOLINT: true
           VALIDATE_YAML: true
-
