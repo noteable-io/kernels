@@ -1,4 +1,4 @@
-name: Build kernel images
+name: Main
 
 on:
   push:
@@ -6,26 +6,6 @@ on:
       - main
 
 jobs:
-  base-linting:
-    name: base-linting
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Lint Dockerfile, Shell scripts, YAML
-        uses: github/super-linter@v4
-        env:
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          # Linters to enable
-          VALIDATE_BASH: true
-          VALIDATE_BASH_EXEC: true
-          VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_YAML: true
-
   build_generic_kernel:
     permissions:
       id-token: write
