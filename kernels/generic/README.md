@@ -8,5 +8,5 @@ Entrypoint is used to implement signal-based interrupts, since `ipykernel` does 
 # Optional step to help you auto-load your built docker container into minikube for use with Gate
 eval $(minikube docker-env)
 
-DOCKER_BUILDKIT=1 docker build --secret "id=git-credentials,src=${HOME}/.git-credentials" -t local/python3-generic:latest .
+DOCKER_BUILDKIT=1 docker build -t local/python3-generic:latest .
 ```
