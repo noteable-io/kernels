@@ -101,7 +101,7 @@ jobs:
             docker buildx build \
               --pull \
               --output 'type=docker' \
-              --platform=linux/arm64 \
+              --platform=linux/amd64 \
               --progress plain \
               --cache-from 'type=local,src=/tmp/buildx-cache' \
               --cache-to 'type=local,dest=/tmp/buildx-cache' \
