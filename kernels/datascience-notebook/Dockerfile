@@ -4,8 +4,6 @@ ARG PYTHON_VERSION=3.9.13
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE}:python-${PYTHON_VERSION}
 
-ENV PYTHON_VERSION=${PYTHON_VERSION}
-
 USER root
 
 # datascience-notebook:python-3.9.13 includes psutil 5.9.2 with cooked C lib, but
@@ -58,6 +56,8 @@ ENV PATH="/home/noteable/.local/bin:${PATH}" \
   HOME="/home/noteable" \
   XDG_CACHE_HOME="/home/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
+
+ARG PYTHON_VERSION
 
 # hadolint ignore=DL3045
 COPY environment-${PYTHON_VERSION}.txt  ./environment.txt
