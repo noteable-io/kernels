@@ -66,13 +66,13 @@ ENV PATH="/home/noteable/.local/bin:${PATH}" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 # hadolint ignore=DL3045
-COPY environment.txt ./
+COPY environment-${PYTHON_VERSION}.txt  ./environment.txt
 
 # hadolint ignore=SC2034
 RUN mamba install --file environment.txt
 
 # hadolint ignore=DL3045
-COPY requirements.txt ./
+COPY requirements-${PYTHON_VERSION}.txt ./requirements.txt
 
 # hadolint ignore=SC1008,SC2155,DL3042,SC2102
 RUN pip install -I --no-cache-dir -r requirements.txt

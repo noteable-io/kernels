@@ -1,0 +1,16 @@
+# Scheduler/ochestration packages
+dagstermill==0.16.15
+papermill-origami==0.0.9
+cloudpickle==2.2.0
+flytekitplugins-papermill==1.2.4
+# Added for ease of use with integration partners
+pyiceberg==0.3.0
+fugue==0.8.0
+fugue-jupyter==0.2.2
+
+# https://github.com/noteable-io/ packages
+git+https://www.github.com/noteable-io/dx.git@a7df2821182293546d7d7a9ede3cdcc0c946d570
+git+https://www.github.com/noteable-io/noteable-notebook-magics.git@a3b00faedcba9f38c7b75b4f45f4eba7e1ce313e
+git+https://www.github.com/noteable-io/sidecar_comms.git@35b7cf8ad6b15daf020954c9029aaae5779f324a
+
+# (All of the datasources modules are now explicit requirements within noteable-notebook-magics.)
