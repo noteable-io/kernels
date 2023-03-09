@@ -3,7 +3,7 @@ dagstermill==0.16.15
 cloudpickle==2.2.0
 flytekitplugins-papermill==1.2.4
 # Added for ease of use with integration partners
-pyiceberg==0.3.0
+pyiceberg
 fugue==0.8.0
 fugue-jupyter==0.2.2
 
