@@ -4,6 +4,8 @@ ARG PYTHON_VERSION=3.9.13
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE}:python-${PYTHON_VERSION}
 
+ENV PYTHON_VERSION=${PYTHON_VERSION}
+
 USER root
 
 # datascience-notebook:python-3.9.13 includes psutil 5.9.2 with cooked C lib, but
