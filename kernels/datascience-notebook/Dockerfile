@@ -39,23 +39,15 @@ RUN groupadd --gid 4004 noteable && \
 RUN mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 RUN mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
-RUN chown noteable:noteable "${JULIA_PKGDIR}" && \
-  chown noteable:noteable "${CONDA_DIR}" && \
-  fix-permissions "${JULIA_PKGDIR}" && \
+RUN chown noteable:noteable "${CONDA_DIR}" && \
   fix-permissions "${CONDA_DIR}"
 
-ENV TINI_VERSION=v0.19.0
-RUN TINI_BINARY=$(if [ "$(uname -m)" = "aarch64" ]; then echo "tini-arm64"; else echo "tini"; fi); echo "${TINI_BINARY}" \
-  && wget -q -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/${TINI_BINARY}" \
-  && chmod +x /usr/local/bin/tini
-
-
-
-
-
-
-
-
+# `rust` is required for install of some packages under arm (and future x86 packages)
+# hadolint ignore=SC1091
+RUN wget -O rustup.sh -q https://sh.rustup.rs && \
+    sh rustup.sh -y && \
+    rm rustup.sh && \
+    source "$HOME/.cargo/env"
 
 # Run non-privileged user
 USER noteable
