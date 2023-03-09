@@ -1,5 +1,5 @@
 # Scheduler/ochestration packages
-dagstermill==0.16.15
+dagstermill
 cloudpickle==2.2.0
 flytekitplugins-papermill==1.2.4
 # Added for ease of use with integration partners
