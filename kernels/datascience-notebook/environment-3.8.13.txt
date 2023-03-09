@@ -1,7 +1,7 @@
 jupyter_client=7.3.*
-ipython
+ipython=8.0.*
 vdom=0.6
 papermill=2.2.*
 ipywidgets=7.6.*
 plotly=4.14.3
-geopandas
+geopandas=0.11.0
