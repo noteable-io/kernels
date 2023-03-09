@@ -44,10 +44,10 @@ jobs:
           docker context create github-action
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
         with:
           endpoint: github-action
-          version: v0.10.0
+          version: v0.10.4
         env:
           DOCKER_CONTEXT: github-action
 
