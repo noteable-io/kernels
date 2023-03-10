@@ -100,7 +100,6 @@ jobs:
             docker buildx build \
               --pull \
               --push \
-              --output 'type=docker' \
               --platform=linux/amd64 \
               --progress plain \
               --cache-from 'type=local,src=/tmp/buildx-cache' \
