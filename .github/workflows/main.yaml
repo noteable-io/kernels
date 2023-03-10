@@ -92,7 +92,6 @@ jobs:
 
       - name: Build image
         env:
-          DOCKER_CONTENT_TRUST: 1
           DOCKER_CONTEXT: github-action
         run: |
           (
@@ -117,4 +116,6 @@ jobs:
         env:
           DOCKER_CONTEXT: github-action
         run: |
+          docker images
+
           docker push --all-tags ${{ steps.build-args.outputs.FULL_IMAGE_NAME }}
