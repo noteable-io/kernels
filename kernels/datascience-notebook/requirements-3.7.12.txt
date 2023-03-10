@@ -1,7 +1,7 @@
 # Scheduler/ochestration packages
-dagstermill
+# dagstermill
 cloudpickle==2.2.0
-flytekitplugins-papermill
+# flytekitplugins-papermill
 # Added for ease of use with integration partners
 pyiceberg
 fugue==0.8.0
@@ -10,6 +10,11 @@ fugue-jupyter==0.2.2
 # https://github.com/noteable-io/ packages
 # git+https://www.github.com/noteable-io/dx.git@a7df2821182293546d7d7a9ede3cdcc0c946d570
 # git+https://www.github.com/noteable-io/noteable-notebook-magics.git@a3b00faedcba9f38c7b75b4f45f4eba7e1ce313e
-git+https://www.github.com/noteable-io/sidecar_comms.git@35b7cf8ad6b15daf020954c9029aaae5779f324a
+# git+https://www.github.com/noteable-io/sidecar_comms.git@35b7cf8ad6b15daf020954c9029aaae5779f324a
+
+# Conflict
+# dagstermill 0.3.0 depends on ipykernel>=4.9.0
+# flytekitplugins-papermill 0.1.0 depends on ipykernel>=5.0.0
+# sidecar-comms 0.1.0 depends on ipykernel<7.0.0 and >=6.20.2
 
 # (All of the datasources modules are now explicit requirements within noteable-notebook-magics.)
