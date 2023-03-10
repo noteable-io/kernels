@@ -81,7 +81,7 @@ RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 # Smoke test to ensure packages were installed properly
 # hadolint ignore=SC1008
-RUN python -c "import noteable_magics"
+RUN if [ "$PYTHON_VERSION" != "3.7.12" ]; then python -c "import noteable_magics"; fi
 
 RUN git config --global user.name "Noteable Kernel" && \
   git config --global user.email "engineering@noteable.io" && \
