@@ -99,10 +99,12 @@ jobs:
             
             docker buildx build \
               --pull \
+              --push \
               --output 'type=docker' \
               --platform=linux/amd64 \
               --progress plain \
-              --no-cache \
+              --cache-from 'type=local,src=/tmp/buildx-cache' \
+              --cache-to 'type=local,dest=/tmp/buildx-cache' \
               --tag '${{ steps.build-args.outputs.FULL_IMAGE_NAME_TAGGED }}' \
               --build-arg PYTHON_VERSION=${{ matrix.version }} \
               --build-arg 'NBL_ARG_BUILD_TIMESTAMP=${{ steps.build-args.outputs.BUILD_TIMESTAMP }}' \
@@ -111,11 +113,3 @@ jobs:
               --build-arg 'NBL_ARG_VERSION=${{ github.ref }}' \
               .
           )
-
-      - name: Publish image
-        env:
-          DOCKER_CONTEXT: github-action
-        run: |
-          docker images
-
-          docker push --all-tags ${{ steps.build-args.outputs.FULL_IMAGE_NAME }}
