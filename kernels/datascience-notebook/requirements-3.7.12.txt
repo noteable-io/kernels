@@ -3,7 +3,7 @@
 cloudpickle==2.2.0
 # flytekitplugins-papermill
 # Added for ease of use with integration partners
-pyiceberg
+# pyiceberg
 fugue==0.8.0
 fugue-jupyter==0.2.2
 
