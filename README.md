@@ -12,5 +12,6 @@ coincides with a single Docker context, which is build in Github Actions
 Any built images are tagged with the name of the kernel. i.e. 
 - `/kernels/python` gets tagged as `ghcr.io/noteable-io/kernels/python:$tag`
 
-If a kernel supports builds against multiple python versions, they are tagged with 
-`${python_version}-${sha}`. Kernels that build against a single Python version are tagged  only with `${sha}`
+All built kernels, should be tagged with the following
+- `${python_version}-${{ github.sha }}` for all builds 
+- `${python_version}-latest` for the most recent sha on main
