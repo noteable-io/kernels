@@ -5,3 +5,5 @@ papermill=2.2.*
 ipywidgets=7.6.*
 plotly=4.14.3
 geopandas=0.11.0
+conda-forge::cudatoolkit=11.7.0
+nvidia::cuda-nvcc=11.3.58

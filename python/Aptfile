@@ -1,0 +1,12 @@
+build-essential
+ca-certificates
+curl
+bzip2
+gnupg2
+wget
+g++
+git
+jq
+libudunits2-dev
+procps
+unixodbc-dev

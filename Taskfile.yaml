@@ -1,0 +1,6 @@
+version: 3
+
+includes:
+  python: ./Taskfile.python.yaml
+  R: ./Taskfile.R.yaml
+  test: ./Taskfile.test.yaml

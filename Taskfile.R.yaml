@@ -1,0 +1,14 @@
+version: 3
+
+tasks:
+  build:base:
+    desc: Build the R base image
+    cmds:
+      - >-
+        docker build R \
+          --build-arg "NBL_PYTHON_VERSION={{.NBL_R_VERSION}}" \
+          --tag "local/kernel-R-{{.NBL_R_VERSION}}-{{.IDENTIFIER}}:dev"
+          --file {{.DOCKERFILE_PATH}}.{{.IDENTIFIER}}
+    vars:
+      DOCKERFILE_PATH: ./Dockerfile
+      IDENTIFIER: base

@@ -1,0 +1,4 @@
+default-libmysqlclient-dev
+libpq-dev
+lsb-release
+msodbcsql18

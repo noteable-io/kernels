@@ -1,0 +1,3 @@
+libcudnn8=8.5.0.96-1+cuda11.7
+libcudnn8-dev=8.5.0.96-1+cuda11.7
+cuda-toolkit

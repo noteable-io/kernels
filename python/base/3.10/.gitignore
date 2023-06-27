@@ -1,0 +1,5 @@
+# Ignore files copied in here from Taskfile commands
+apt-install
+Aptfile
+requirements.in
+run.sh
