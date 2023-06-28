@@ -2,3 +2,5 @@ default-libmysqlclient-dev
 libpq-dev
 lsb-release
 msodbcsql18
+fonts-noto-cjk
+graphviz

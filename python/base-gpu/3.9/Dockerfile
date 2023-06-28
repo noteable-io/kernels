@@ -7,6 +7,9 @@
 ARG NBL_PYTHON_VERSION=3.9
 FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
 
+COPY Aptfile .
+RUN /usr/bin/apt-install Aptfile
+
 #### Configurations for GPU drivers
 # CUDA Compatibility matrix: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions
 # AWS GPU AMI information: https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
@@ -23,9 +26,6 @@ WORKDIR /tmp
 
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
   sudo dpkg -i cuda-keyring_1.0-1_all.deb
-
-COPY Aptfile .
-RUN /usr/bin/apt-install Aptfile
 
 ENV NB_USER="noteable" \
   NB_UID=4004 \

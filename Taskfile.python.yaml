@@ -71,7 +71,7 @@ tasks:
     desc: Lock Python dependencies for GPU builds using pip-compile
     deps: [base:lock-dependencies]
     cmds:
-      - task python:base:lock IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - task python:base:lock-dependencies IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
 
   base-gpu:build:
     desc: Build the Python 3.x image with GPU support after copying required files
@@ -105,6 +105,12 @@ tasks:
   noteable:copy-files:
     desc: Copy files from the `python/noteable` directory to the build directories
     deps: [base:deps:copy-requirements]
+    cmds:
+      - cp python/noteable/Aptfile python/noteable/{{.NBL_PYTHON_VERSION}}/Aptfile
+      - cp python/noteable/git_credential_helper.py python/noteable/{{.NBL_PYTHON_VERSION}}/git_credential_helper.py
+      - cp python/noteable/git-wrapper.sh python/noteable/{{.NBL_PYTHON_VERSION}}/git-wrapper.sh
+      - cp python/noteable/ipython_config.py python/noteable/{{.NBL_PYTHON_VERSION}}/ipython_config.py
+      - cp python/noteable/.pythonrc python/noteable/{{.NBL_PYTHON_VERSION}}/.pythonrc
 
   noteable:lock-dependencies:
     desc: Lock Python dependencies for Noteable builds using pip-compile
@@ -130,6 +136,7 @@ tasks:
       - task python:core:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev
 
   # convenience functions
+  # TODO: clean all of this up
   base:3.9:lock-dependencies:
     desc: Lock Python dependencies for Python 3.9 builds using pip-compile
     cmds:
@@ -179,3 +186,105 @@ tasks:
     cmds:
       - task python:base:all:lock-dependencies
       - task python:base:all:build
+
+  # datascience convenience functions
+  datascience:3.9:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.9 builds using pip-compile
+    cmds:
+      - task python:datascience:lock-dependencies NBL_PYTHON_VERSION=3.9
+
+  datascience:3.10:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.10 builds using pip-compile
+    cmds:
+      - task python:datascience:lock-dependencies NBL_PYTHON_VERSION=3.10
+
+  datascience:3.11:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.11 builds using pip-compile
+    cmds:
+      - task python:datascience:lock-dependencies NBL_PYTHON_VERSION=3.11
+
+  datascience:all:lock-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - datascience:3.9:lock-dependencies
+      - datascience:3.10:lock-dependencies
+      - datascience:3.11:lock-dependencies
+
+  datascience:3.9:build:
+    desc: Build the Python 3.9 datascience image
+    cmds:
+      - task python:datascience:build NBL_PYTHON_VERSION=3.9
+
+  datascience:3.10:build:
+    desc: Build the Python 3.10 datascience image
+    cmds:
+      - task python:datascience:build NBL_PYTHON_VERSION=3.10
+
+  datascience:3.11:build:
+    desc: Build the Python 3.11 datascience image
+    cmds:
+      - task python:datascience:build NBL_PYTHON_VERSION=3.11
+
+  datascience:all:build:
+    desc: Build all Python datascience images
+    deps:
+      - datascience:3.9:build
+      - datascience:3.10:build
+      - datascience:3.11:build
+
+  datascience:all:lock-dependencies-and-build:
+    desc: Lock Python dependencies and build all Python datascience images
+    cmds:
+      - task python:datascience:all:lock-dependencies
+      - task python:datascience:all:build
+
+  # Noteable convenience functions
+  noteable:3.9:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.9 builds using pip-compile
+    cmds:
+      - task python:noteable:lock-dependencies NBL_PYTHON_VERSION=3.9
+
+  noteable:3.10:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.10 builds using pip-compile
+    cmds:
+      - task python:noteable:lock-dependencies NBL_PYTHON_VERSION=3.10
+
+  noteable:3.11:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.11 builds using pip-compile
+    cmds:
+      - task python:noteable:lock-dependencies NBL_PYTHON_VERSION=3.11
+
+  noteable:all:lock-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - noteable:3.9:lock-dependencies
+      - noteable:3.10:lock-dependencies
+      - noteable:3.11:lock-dependencies
+
+  noteable:3.9:build:
+    desc: Build the Python 3.9 noteable image
+    cmds:
+      - task python:noteable:build NBL_PYTHON_VERSION=3.9
+
+  noteable:3.10:build:
+    desc: Build the Python 3.10 noteable image
+    cmds:
+      - task python:noteable:build NBL_PYTHON_VERSION=3.10
+
+  noteable:3.11:build:
+    desc: Build the Python 3.11 noteable image
+    cmds:
+      - task python:noteable:build NBL_PYTHON_VERSION=3.11
+
+  noteable:all:build:
+    desc: Build all Python noteable images
+    deps:
+      - noteable:3.9:build
+      - noteable:3.10:build
+      - noteable:3.11:build
+
+  noteable:all:lock-dependencies-and-build:
+    desc: Lock Python dependencies and build all Python noteable images
+    cmds:
+      - task python:noteable:all:lock-dependencies
+      - task python:noteable:all:build
