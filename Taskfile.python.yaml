@@ -1,8 +1,12 @@
 version: 3
 
+# https://hub.docker.com/_/python/tags?page=1&name=slim-bullseye
 vars:
   NBL_PYTHON_VERSION: 3.9
   IDENTIFIER: base
+
+# NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
+# directly in `cmds: []`, the variables have to be passed in explicitly.
 
 tasks:
   core:build:
@@ -14,24 +18,11 @@ tasks:
           --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
           --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}:dev"
 
-  base:copy-root-files:
-    desc: Copy files from the root of the repository to the build directories
-    cmds:
-      - cp apt-install python/base/{{.NBL_PYTHON_VERSION}}/apt-install
-    generates:
-      - python/base/{{.NBL_PYTHON_VERSION}}/apt-install
-
   base:copy-files:
-    desc: Copy files from the language-level directory to the build directories
-    deps: [base:copy-root-files]
+    desc: Copy files from the Python directory to the build directories
     cmds:
-      - cp python/{{.IDENTIFIER}}/Aptfile python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/Aptfile
-      - cp python/{{.IDENTIFIER}}/run.sh python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/run.sh
-      - cp python/{{.IDENTIFIER}}/secrets_helper.py python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/secrets_helper.py
-    generates:
-      - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/Aptfile
-      - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/run.sh
-      - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/secrets_helper.py
+      - task copy-root-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
+      - task copy-language-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
 
   base:pyenv:install:
     desc: Install the specified version of Python using pyenv
@@ -71,7 +62,6 @@ tasks:
   base:build:
     desc: Build the Python 3.x base image after copying required files
     cmds:
-      # these have to be done in order, so we can't use deps
       - task python:base:copy-files IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - task python:core:build IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
 
@@ -95,7 +85,7 @@ tasks:
       - task python:base:lock-dependencies IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
 
   datascience:build:
-    desc: Build the Python 3.x image with datascience packages
+    desc: Build the Python 3.x image with datascience packages extending the base image of the same version
     cmds:
       - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
 
@@ -121,7 +111,7 @@ tasks:
       - task python:base:lock-dependencies IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
 
   noteable:build:
-    desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc)
+    desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) extending the datascience image of the same version
     cmds:
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev

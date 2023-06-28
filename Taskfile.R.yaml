@@ -1,14 +1,31 @@
 version: 3
 
+# https://hub.docker.com/_/r-base/tags
+vars:
+  NBL_R_VERSION: 4.3.0
+  IDENTIFIER: base
+
+# NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
+# directly in `cmds: []`, the variables have to be passed in explicitly.
+
 tasks:
-  build:base:
-    desc: Build the R base image
+  core:build:
+    desc: Build the R 4.x image
     cmds:
       - >-
-        docker build R \
-          --build-arg "NBL_PYTHON_VERSION={{.NBL_R_VERSION}}" \
-          --tag "local/kernel-R-{{.NBL_R_VERSION}}-{{.IDENTIFIER}}:dev"
-          --file {{.DOCKERFILE_PATH}}.{{.IDENTIFIER}}
-    vars:
-      DOCKERFILE_PATH: ./Dockerfile
-      IDENTIFIER: base
+        docker build R/{{.IDENTIFIER}}/{{.NBL_R_VERSION}} \
+          --build-arg "NBL_R_VERSION={{.NBL_R_VERSION}}" \
+          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
+          --tag "local/kernel-r-{{.NBL_R_VERSION}}-{{.IDENTIFIER}}:dev"
+
+  base:copy-files:
+    desc: Copy files from the R directory to the build directories
+    cmds:
+      - task copy-root-files LANGUAGE=R IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
+      - task copy-language-files LANGUAGE=R IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
+
+  base:build:
+    desc: Build the R 4.x base image after copying required files
+    cmds:
+      - task r:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
+      - task r:core:build IDENTIFIER=base NBL_R_VERSION={{.NBL_R_VERSION}}

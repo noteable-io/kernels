@@ -9,49 +9,55 @@ on:
       - main
 
 jobs:
-  base-linting:
-    name: base-linting
-    runs-on: ubuntu-22.04
+  superlint:
+    uses: noteable-io/actions/.github/workflows/superlint.yml@0.8.5
+    secrets: inherit
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Lint Dockerfile, Shell scripts, YAML
-        uses: github/super-linter@v4
-        env:
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          # Linters to enable
-          VALIDATE_BASH: true
-          VALIDATE_BASH_EXEC: true
-          VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_YAML: true
-
-  build_python_kernel:
-    permissions:
-      id-token: write
-      contents: read
-      packages: write
-      actions: write
-    uses: ./.github/workflows/reusable-docker-build.yml
+  build_images:
     strategy:
       matrix:
-        # Must be a supported version by jupyter/datascience-notebook
-        # https://hub.docker.com/r/jupyter/datascience-notebook/tags?page=1&name=python-
-        version: [ "3.9.13", "3.8.13" ]
+        identifier:
+          - 'base'
+          - 'datascience'
+          - 'noteable'
+        version:
+          - 3.9
+          - 3.10
+          - 3.11
+        gpu_suffix:
+          - '-gpu'
+          - ''
+    name: python ${{ matrix.version }} - ${{ matrix.identifier }}-${{ matrix.gpu_suffix }}
+    uses: noteable-io/actions/.github/workflows/docker.yml@0.8.5
     secrets: inherit
     with:
-      dockerfile: ./kernels/python/Dockerfile
-      context: ./kernels/python
+      context: ./python/${{ matrix.identifier }}${{ matrix.gpu_suffix }}
+      enable_comments: false
+      aws_account_id: ''
       images: |
-        ghcr.io/${{ github.repository }}/python
-      tags: |
-        type=ref,event=branch,prefix=${{ matrix.version }}
-        type=ref,event=pr,prefix=${{ matrix.version }}
-        type=sha,format=long,prefix=${{ matrix.version }}
-        type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }},prefix=${{ matrix.version }}
+        ghcr.io/noteable-io/kernel${{ matrix.gpu_suffix }}-python-${{ matrix.identifier }}-${{ matrix.version }}
       build_args: |
-        PYTHON_VERSION=${{ matrix.version }}
-      platforms: "linux/amd64"
+        NBL_PYTHON_VERSION=${{ matrix.version }}
+      tags: |
+        type=sha,format=long
+  
+  build_r_images:
+    strategy:
+      matrix:
+        identifier:
+          - base
+        version:
+          - 4.3
+    name: ${{ matrix.identifier }} / ${{ matrix.version }}
+    uses: noteable-io/actions/.github/workflows/docker.yml@0.8.5
+    secrets: inherit
+    with:
+      context: ./R
+      enable_comments: false
+      aws_account_id: ''
+      images: |
+        ghcr.io/noteable-io/kernel-r-${{ matrix.version }}
+      build_args: |
+        NBL_R_VERSION=${{ matrix.version }}
+      tags: |
+        type=sha,format=long
