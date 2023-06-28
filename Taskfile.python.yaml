@@ -16,7 +16,8 @@ tasks:
         docker build python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}} \
           --build-arg "NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}" \
           --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
-          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}:dev"
+          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}:dev" \
+          --progress plain
 
   base:copy-files:
     desc: Copy files from the Python directory to the build directories
@@ -127,3 +128,54 @@ tasks:
     cmds:
       - task python:noteable:copy-files IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - task python:core:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev
+
+  # convenience functions
+  base:3.9:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.9 builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies NBL_PYTHON_VERSION=3.9
+
+  base:3.10:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.10 builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies NBL_PYTHON_VERSION=3.10
+
+  base:3.11:lock-dependencies:
+    desc: Lock Python dependencies for Python 3.11 builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies NBL_PYTHON_VERSION=3.11
+
+  base:all:lock-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - base:3.9:lock-dependencies
+      - base:3.10:lock-dependencies
+      - base:3.11:lock-dependencies
+
+  base:3.9:build:
+    desc: Build the Python 3.9 base image
+    cmds:
+      - task python:base:build NBL_PYTHON_VERSION=3.9
+
+  base:3.10:build:
+    desc: Build the Python 3.10 base image
+    cmds:
+      - task python:base:build NBL_PYTHON_VERSION=3.10
+
+  base:3.11:build:
+    desc: Build the Python 3.11 base image
+    cmds:
+      - task python:base:build NBL_PYTHON_VERSION=3.11
+
+  base:all:build:
+    desc: Build all Python base images
+    deps:
+      - base:3.9:build
+      - base:3.10:build
+      - base:3.11:build
+
+  base:all:lock-dependencies-and-build:
+    desc: Lock Python dependencies and build all Python base images
+    cmds:
+      - task python:base:all:lock-dependencies
+      - task python:base:all:build

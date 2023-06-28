@@ -8,8 +8,6 @@ FROM ${BASE_IMAGE} as base
 
 ARG NBL_PYTHON_VERSION=3.9
 
-SHELL ["micromamba", "run", "-n", "noteable-venv", "/bin/bash", "-c"]
-
 USER root
 
 # Prerequisites to install msodbcsql18 driver for MS SQL Server connectivity.
