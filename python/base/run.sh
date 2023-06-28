@@ -22,4 +22,4 @@ echo "Starting Python kernel using ${VENV_PYTHON}"
 # https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP
 export PYTHONSTARTUP=~/.pythonrc
 
-micromamba run -n noteable-venv python -m ipykernel_launcher -f ${connection_file} --debug
+exec python -m ipykernel_launcher -f ${connection_file} --debug
