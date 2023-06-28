@@ -21,7 +21,7 @@ RUN groupadd --gid 4004 noteable && \
   --no-log-init \
   --gid noteable noteable && \
   chown --recursive noteable:noteable /home/noteable && \
-  mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
+  mkdir /opt/venv && chown noteable:noteable /opt/venv && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
 # Install tini to manage passing signals to the child kernel process
@@ -29,24 +29,18 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 
-# Use micromamba and set up a virtual environment so we can install packages without root
 COPY apt-install /usr/bin/
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
-RUN wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
-  ./bin/micromamba shell init -s bash -p ~/micromamba
-
 USER noteable
 
-RUN micromamba create --name noteable-venv \
-  -c conda-forge \
-  -y \
-  python=${NBL_PYTHON_VERSION}
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-SHELL ["micromamba", "run", "-n", "noteable-venv", "/bin/bash", "-c"]
-
-RUN pip install --no-cache-dir ipykernel
+COPY requirements.txt /tmp/base_requirements.txt
+RUN pip install --no-cache-dir -r /tmp/base_requirements.txt
 
 COPY secrets_helper.py /tmp/secrets_helper.py
 COPY run.sh /usr/local/bin
