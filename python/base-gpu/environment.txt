@@ -1,0 +1,2 @@
+conda-forge::cudatoolkit=11.7.0
+nvidia::cuda-nvcc=11.3.58

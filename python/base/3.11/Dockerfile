@@ -48,8 +48,7 @@ COPY run.sh /usr/local/bin
 ENV HOME="/home/noteable" \
   PYTHONPATH="/home/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
   XDG_CACHE_HOME="/home/noteable/.cache/" \
-  GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials" \
-  VENV_PYTHON="${NBL_PYTHON}"
+  GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 WORKDIR /etc/noteable/project
 EXPOSE 50001-50005

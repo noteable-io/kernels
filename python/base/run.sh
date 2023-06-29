@@ -18,7 +18,7 @@ eval "$(python /tmp/secrets_helper.py)"
 echo "Done injecting Secrets, turning echoing back on"
 set -x
 
-echo "Starting Python kernel using ${VENV_PYTHON}"
+echo "Starting Python kernel"
 # https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP
 export PYTHONSTARTUP=~/.pythonrc
 

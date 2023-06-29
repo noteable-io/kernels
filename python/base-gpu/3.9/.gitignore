@@ -1,6 +1,7 @@
 # Ignore files copied in here from Taskfile commands
 apt-install
 Aptfile
+environment.txt
 requirements.in
 run.sh
 secrets_helper.py

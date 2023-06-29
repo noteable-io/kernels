@@ -1,9 +1,0 @@
-# GPU / Machine Learning packages, to be installed after the normal requirements.txt
-# tensorflow==2.*
-# tensorrt
-torch==2.*
-torchvision==0.15.*
-torchaudio==2.*
-cuda-python==12.*
-fastai
-pandas==1.5.3
