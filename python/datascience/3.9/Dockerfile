@@ -2,7 +2,6 @@
 # Datascience build: adds packages based on the NumFOCUS datascience stack
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE} as base
-RUN echo "Building datascience image from ${BASE_IMAGE}"
 
 ARG NBL_PYTHON_VERSION=3.9
 
