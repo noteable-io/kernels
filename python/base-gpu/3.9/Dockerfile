@@ -1,108 +1,93 @@
 # syntax = docker/dockerfile:1.2.1
-# ---
-# Bare minimum Python 3.x.x image with ipykernel installed and bare minimum GPU drivers and packages
-# - no Python packages aside from builtins and ipykernel
-# - no git, secrets, SQL, extensions, etc
-# ---
-ARG NBL_PYTHON_VERSION=3.9
-FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE} as base
 
-# User/group setup
+ARG NBL_PYTHON_VERSION=3.9
+
 USER root
 
-ENV NB_USER="noteable" \
-  NB_UID=4004 \
-  NB_GID=4004
-
-RUN groupadd --gid 4004 noteable && \
-  useradd --uid 4004 \
-  --shell /bin/false \
-  --create-home \
-  --no-log-init \
-  --gid noteable noteable && \
-  chown --recursive noteable:noteable /home/noteable && \
-  mkdir /opt/venv && chown noteable:noteable /opt/venv && \
-  mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
-
-# Install tini to manage passing signals to the child kernel process
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-
-COPY apt-install /usr/bin/
-COPY Aptfile .
-RUN /usr/bin/apt-install Aptfile
-
-# Configurations for GPU drivers
+#### Configurations for GPU drivers
 # CUDA Compatibility matrix: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions
 # AWS GPU AMI information: https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
-
 ENV CUDNN_VERSION="8.2.4.15-1" \
   CUDA_VERSION="11.4" \
   NVIDIA_LIBCUDNN_VERSION="8.2.4.15" \
   CUDA_DASH="11-4" \
-  CONDA_PREFIX="/opt/conda"
+  CONDA_DIR="/opt/conda"
+
+# install micromamba
+COPY --chown=noteable-noteable initial-condarc "${CONDA_DIR}/.condarc"
+WORKDIR /tmp
+RUN set -x && \
+  arch=$(uname -m) && \
+  if [ "${arch}" = "x86_64" ]; then \
+  # Should be simpler, see <https://github.com/mamba-org/mamba/issues/1437>
+  arch="64"; \
+  fi && \
+  wget --progress=dot:giga -O /tmp/micromamba.tar.bz2 \
+  "https://micromamba.snakepit.net/api/micromamba/linux-${arch}/latest" && \
+  tar -xvjf /tmp/micromamba.tar.bz2 --strip-components=1 bin/micromamba && \
+  rm /tmp/micromamba.tar.bz2 && \
+  # Install the packages
+  ./micromamba install \
+  --root-prefix="${CONDA_DIR}" \
+  --prefix="${CONDA_DIR}" \
+  --yes \
+  python=$NBL_PYTHON_VERSION \
+  'mamba' && \
+  rm micromamba
+
+ENV PATH="${CONDA_DIR}/bin:${PATH}"
+
+# Pin major.minor version of python
+RUN mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \
+  mamba clean --all -f -y
 
 WORKDIR /tmp
 
-# download and configure repo locally to install cuda-toolkit and libcnn8
-USER root
+# libpq-dev: requirement for psycopg2 postgres client binding for SQL magics.
+# default-libmysqlclient-dev build-essential: likewise for mysqlclient package.
+# (these RUN statement add-on lines must be kept in parallel between python3-generic and noteable-python
+#  on behalf of noteable-notebook-magics)
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
   dpkg -i cuda-keyring_1.0-1_all.deb
 
-COPY gpu.Aptfile .
-RUN /usr/bin/apt-install gpu.Aptfile
+COPY Aptfile .
+RUN /usr/bin/apt-install Aptfile
 
-ENV CONDA_DIR="/opt/conda"
-RUN mkdir "${CONDA_DIR}" && \
-  chown noteable:noteable "${CONDA_DIR}"
+ENV PATH="/home/noteable/.local/bin:${PATH}" \
+  HOME="/home/noteable" \
+  XDG_CACHE_HOME="/home/noteable/.cache/" \
+  GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
-# micromamba because we're tempting fate
+RUN chown -R noteable:noteable "${CONDA_DIR}"
+
+# Run non-privileged user
 USER noteable
 
-# Install Miniconda and Python 3.9
-RUN curl -Lo miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-  && chmod +x miniconda.sh \
-  && ./miniconda.sh -b -p "${CONDA_DIR}" \
-  && rm miniconda.sh \
-  && "${CONDA_DIR}/bin/conda clean" -tipsy \
-  && ln -s "${CONDA_DIR}/etc/profile.d/conda.sh" /etc/profile.d/conda.sh \
-  && echo ". "${CONDA_DIR}"/etc/profile.d/conda.sh" >> ~/.bashrc \
-  && echo "conda activate base" >> ~/.bashrc
+COPY environment.txt /tmp/environment.txt
+RUN mamba install -y --file /tmp/environment.txt
 
-# Make RUN commands use the new environment
-SHELL ["/bin/bash", "-c"]
-
-# Install Mamba
-RUN conda install -c conda-forge mamba
-
-# Define environment variable
-ENV PATH "${CONDA_DIR}/bin:${PATH}"
-
-# hadolint ignore=DL3045
-COPY environment.txt requirements.txt /tmp/
-
-RUN mamba install -c conda-forge -y --file /tmp/environment.txt
-
+COPY requirements.txt /tmp/requirements.txt
 RUN pip install -I --no-cache-dir -r /tmp/requirements.txt
-
-COPY run.sh /usr/local/bin
 
 # NOTE: At the moment, we're unable to use numba. Numba doesn't have support for forward compatibility,
 # which requires that runtime / driver versions match for CUDA. The highest driver version supported by Amazon Linux
 # is 11.4, where as the lowest supported version in Ubuntu 22.04 is 11.7
 
 # Install tensorflow
-RUN mkdir -p $CONDA_PREFIX/lib/nvvm/libdevice && \
-  cp $CONDA_PREFIX/lib/libdevice.10.bc $CONDA_PREFIX/lib/nvvm/libdevice/
+RUN python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.* && \
+  mkdir -p $CONDA_DIR/lib/nvvm/libdevice && \
+  cp $CONDA_DIR/lib/libdevice.10.bc $CONDA_DIR/lib/nvvm/libdevice/
 
 # Set environment variables for Tensorflow / Cuda
 ENV CUDNN_PATH=/opt/conda/lib/python3.9/site-packages/nvidia/cudnn
 # ENV doesn't seem to inherit from previous values when ran in same command
 # We move to separate lines to ensure CUDNN_PATH is available
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib \
-  XLA_FLAGS="--xla_gpu_cuda_data_dir=$CONDA_PREFIX/lib/"
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
+  XLA_FLAGS="--xla_gpu_cuda_data_dir=$CONDA_DIR/lib/"
+
+USER noteable
 
 # Set standard working directory for noteable project
 WORKDIR /etc/noteable/project

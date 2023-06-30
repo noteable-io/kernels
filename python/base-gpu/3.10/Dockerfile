@@ -1,75 +1,107 @@
 # syntax = docker/dockerfile:1.2.1
-# ---
-# Bare minimum Python 3.x.x image with ipykernel installed
-# - no Python packages aside from builtins and ipykernel
-# - no git, secrets, SQL, extensions, etc
-# ---
-ARG NBL_PYTHON_VERSION=3.10
-FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE} as base
 
-# User/group setup
+ARG NBL_PYTHON_VERSION=3.10
+
 USER root
 
-ENV NB_USER="noteable" \
-  NB_UID=4004 \
-  NB_GID=4004
+#### Configurations for GPU drivers
+# CUDA Compatibility matrix: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions
+# AWS GPU AMI information: https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
+ENV CUDNN_VERSION="8.2.4.15-1" \
+  CUDA_VERSION="11.4" \
+  NVIDIA_LIBCUDNN_VERSION="8.2.4.15" \
+  CUDA_DASH="11-4" \
+  CONDA_DIR="/opt/conda"
 
-RUN groupadd --gid 4004 noteable && \
-  useradd --uid 4004 \
-  --shell /bin/false \
-  --create-home \
-  --no-log-init \
-  --gid noteable noteable && \
-  chown --recursive noteable:noteable /home/noteable && \
-  mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
+# install micromamba
+COPY --chown=noteable-noteable initial-condarc "${CONDA_DIR}/.condarc"
+WORKDIR /tmp
+RUN set -x && \
+  arch=$(uname -m) && \
+  if [ "${arch}" = "x86_64" ]; then \
+  # Should be simpler, see <https://github.com/mamba-org/mamba/issues/1437>
+  arch="64"; \
+  fi && \
+  wget --progress=dot:giga -O /tmp/micromamba.tar.bz2 \
+  "https://micromamba.snakepit.net/api/micromamba/linux-${arch}/latest" && \
+  tar -xvjf /tmp/micromamba.tar.bz2 --strip-components=1 bin/micromamba && \
+  rm /tmp/micromamba.tar.bz2 && \
+  # Install the packages
+  ./micromamba install \
+  --root-prefix="${CONDA_DIR}" \
+  --prefix="${CONDA_DIR}" \
+  --yes \
+  python=$NBL_PYTHON_VERSION \
+  'mamba' && \
+  rm micromamba
 
-# Install tini to manage passing signals to the child kernel process
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
+ENV PATH="${CONDA_DIR}/bin:${PATH}"
 
-# Use micromamba and set up a virtual environment so we can install packages without root
-COPY apt-install /usr/bin/
+# Pin major.minor version of python
+RUN mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \
+  mamba clean --all -f -y
+
+WORKDIR /tmp
+
+# libpq-dev: requirement for psycopg2 postgres client binding for SQL magics.
+# default-libmysqlclient-dev build-essential: likewise for mysqlclient package.
+# (these RUN statement add-on lines must be kept in parallel between python3-generic and noteable-python
+#  on behalf of noteable-notebook-magics)
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
+  dpkg -i cuda-keyring_1.0-1_all.deb
+
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
-RUN wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
-  ./bin/micromamba shell init -s bash -p ~/micromamba
-
-USER noteable
-
-RUN micromamba create --name noteable-venv \
-  -c conda-forge \
-  -y \
-  python=${NBL_PYTHON_VERSION}
-
-SHELL ["micromamba", "run", "-n", "noteable-venv", "/bin/bash", "-c"]
-
-RUN pip install --no-cache-dir ipykernel
-
-COPY secrets_helper.py /tmp/secrets_helper.py
-COPY run.sh /usr/local/bin
-
-ENV HOME="/home/noteable" \
-  PYTHONPATH="/home/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
+ENV PATH="/home/noteable/.local/bin:${PATH}" \
+  HOME="/home/noteable" \
   XDG_CACHE_HOME="/home/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
+RUN chown -R noteable:noteable "${CONDA_DIR}"
+
+# Run non-privileged user
+USER noteable
+
+COPY environment.txt /tmp/environment.txt
+RUN mamba install -y --file /tmp/environment.txt
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -I --no-cache-dir -r /tmp/requirements.txt
+
+# NOTE: At the moment, we're unable to use numba. Numba doesn't have support for forward compatibility,
+# which requires that runtime / driver versions match for CUDA. The highest driver version supported by Amazon Linux
+# is 11.4, where as the lowest supported version in Ubuntu 22.04 is 11.7
+
+# Install tensorflow
+RUN python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.* && \
+  mkdir -p $CONDA_DIR/lib/nvvm/libdevice && \
+  cp $CONDA_DIR/lib/libdevice.10.bc $CONDA_DIR/lib/nvvm/libdevice/
+
+# Set environment variables for Tensorflow / Cuda
+ENV CUDNN_PATH=/opt/conda/lib/python3.9/site-packages/nvidia/cudnn
+# ENV doesn't seem to inherit from previous values when ran in same command
+# We move to separate lines to ensure CUDNN_PATH is available
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
+  XLA_FLAGS="--xla_gpu_cuda_data_dir=$CONDA_DIR/lib/"
+
+USER noteable
+
+# Set standard working directory for noteable project
 WORKDIR /etc/noteable/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["run.sh"]
 
-ARG NBL_ARG_BUILD_TIMESTAMP="undefined"
+# Labels
 ARG NBL_ARG_REVISION="undefined"
+ARG NBL_ARG_PYTHON_VERSION="3.9.6"
 ARG NBL_ARG_BUILD_URL="undefined"
 ARG NBL_ARG_VERSION="undefined"
-LABEL org.opencontainers.image.created="${NBL_ARG_BUILD_TIMESTAMP}" \
-  org.opencontainers.image.revision="${NBL_ARG_REVISION}" \
-  org.opencontainers.image.source="https://github.com/noteable-io/polymorph" \
-  org.opencontainers.image.title="noteable-python-${NBL_PYTHON_VERSION}" \
+LABEL org.opencontainers.image.revision="${NBL_ARG_REVISION}" \
+  org.opencontainers.image.title="noteable-python-gpu-${NBL_ARG_PYTHON_VERSION}" \
   org.opencontainers.image.url="${NBL_ARG_BUILD_URL}" \
-  org.opencontainers.image.vendor="Noteable" \
   org.opencontainers.image.version="${NBL_ARG_VERSION}"
