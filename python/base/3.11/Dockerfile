@@ -4,7 +4,7 @@
 # - no Python packages aside from builtins and ipykernel
 # - no git, secrets, SQL, extensions, etc
 # ---
-ARG NBL_PYTHON_VERSION=3.9
+ARG NBL_PYTHON_VERSION=3.11
 FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
 
 # User/group setup
@@ -22,6 +22,7 @@ RUN groupadd --gid 4004 noteable && \
   --gid noteable noteable && \
   chown --recursive noteable:noteable /home/noteable && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
+  mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
 # Install tini to manage passing signals to the child kernel process
