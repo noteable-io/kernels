@@ -76,9 +76,10 @@ tasks:
   base-gpu:build:
     desc: Build the Python 3.x image with GPU support after copying required files
     cmds:
-      - cp python/base-gpu/environment.txt python/base-gpu/{{.NBL_PYTHON_VERSION}}/environment.txt
       - task python:base:copy-files IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - cp python/base-gpu/environment.txt python/base-gpu/{{.NBL_PYTHON_VERSION}}/environment.txt
       - cp python/base-gpu/gpu.Aptfile python/base-gpu/{{.NBL_PYTHON_VERSION}}/gpu.Aptfile
+      - cp python/base-gpu/run.sh python/base-gpu/{{.NBL_PYTHON_VERSION}}/run.sh
       - task python:core:build IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
 
   # Datascience image
