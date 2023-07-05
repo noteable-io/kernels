@@ -4,6 +4,7 @@
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
 ARG BASE_IMAGE
+# hadolint ignore=DL3006
 FROM ${BASE_IMAGE} as base
 
 ARG NBL_PYTHON_VERSION=3.9
@@ -27,7 +28,7 @@ COPY requirements.txt /tmp/noteable_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 
 # Smoke test to ensure packages were installed properly
-# hadolint ignore=SC1008
+# hadolint ignore=DL3059
 RUN python -c "import dx, noteable, psutil, sidecar_comms"
 
 COPY .pythonrc /home/noteable/.
