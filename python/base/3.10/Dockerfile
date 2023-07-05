@@ -25,6 +25,8 @@ RUN groupadd --gid 4004 noteable && \
   mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
+WORKDIR /tmp
+
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
@@ -43,7 +45,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY requirements.txt /tmp/base_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/base_requirements.txt
 
-COPY secrets_helper.py /tmp/secrets_helper.py
+COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
 ENV HOME="/home/noteable" \

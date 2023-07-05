@@ -1,5 +1,6 @@
 # syntax = docker/dockerfile:1.2.1
 ARG BASE_IMAGE
+# hadolint ignore=DL3006
 FROM ${BASE_IMAGE} as base
 
 ARG NBL_PYTHON_VERSION=3.10
@@ -40,16 +41,13 @@ RUN set -x && \
 ENV PATH="${CONDA_DIR}/bin:${PATH}"
 
 # Pin major.minor version of python
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \
   mamba clean --all -f -y
 
 WORKDIR /tmp
 
-# libpq-dev: requirement for psycopg2 postgres client binding for SQL magics.
-# default-libmysqlclient-dev build-essential: likewise for mysqlclient package.
-# (these RUN statement add-on lines must be kept in parallel between python3-generic and noteable-python
-#  on behalf of noteable-notebook-magics)
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
+RUN wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
   dpkg -i cuda-keyring_1.0-1_all.deb
 
 COPY Aptfile .
@@ -75,8 +73,7 @@ RUN pip install -I --no-cache-dir -r /tmp/requirements.txt
 # which requires that runtime / driver versions match for CUDA. The highest driver version supported by Amazon Linux
 # is 11.4, where as the lowest supported version in Ubuntu 22.04 is 11.7
 
-# Install tensorflow
-RUN python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.* && \
+RUN python3 -m pip install --no-cache-dir nvidia-cudnn-cu11==8.6.0.163 && \
   mkdir -p $CONDA_DIR/lib/nvvm/libdevice && \
   cp $CONDA_DIR/lib/libdevice.10.bc $CONDA_DIR/lib/nvvm/libdevice/
 

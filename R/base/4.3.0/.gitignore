@@ -3,4 +3,4 @@ apt-install
 Aptfile
 requirements.in
 run.sh
-secrets_helper.py
+secrets_helper.sh

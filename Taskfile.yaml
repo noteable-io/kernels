@@ -10,10 +10,10 @@ tasks:
     desc: Copy files from the root of the repository to the base build directories
     cmds:
       - cp apt-install {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/apt-install
-      - cp secrets_helper.py {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.py
+      - cp secrets_helper.sh {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.sh
     generates:
       - ./{{.LANGUAGE}}/base/{{.NBL_LANGUAGE_VERSION}}/apt-install
-      - ./{{.LANGUAGE}}/base/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.py
+      - ./{{.LANGUAGE}}/base/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.sh
 
   copy-language-files:
     desc: Copy files from the language-level directory to the build directories

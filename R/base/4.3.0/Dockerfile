@@ -47,7 +47,7 @@ SHELL ["micromamba", "run", "-n", "noteable-venv", "/bin/bash", "-c"]
 # --- CORE: KERNEL INSTALLATION ---
 RUN R -e "install.packages('IRkernel', repos='http://cran.us.r-project.org')"
 
-COPY secrets_helper.py /tmp/secrets_helper.py
+COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
 ENV HOME="/home/noteable" \

@@ -6,4 +6,4 @@ gpu.Aptfile
 initial-condarc
 requirements.in
 run.sh
-secrets_helper.py
+secrets_helper.sh

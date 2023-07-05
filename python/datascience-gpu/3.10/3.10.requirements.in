@@ -1,0 +1,2 @@
+-r requirements.in
+# any 3.10-specific requirements should be added below
