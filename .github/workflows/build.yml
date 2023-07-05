@@ -5,8 +5,6 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   superlint:
@@ -14,50 +12,31 @@ jobs:
     secrets: inherit
 
   build_images:
-    strategy:
-      matrix:
-        identifier:
-          - 'base'
-          - 'datascience'
-          - 'noteable'
-        version:
-          - 3.9
-          - 3.10
-          - 3.11
-        gpu_suffix:
-          - '-gpu'
-          - ''
-    name: python ${{ matrix.version }} - ${{ matrix.identifier }}-${{ matrix.gpu_suffix }}
-    uses: noteable-io/actions/.github/workflows/docker.yml@0.8.5
-    secrets: inherit
-    with:
-      context: ./python/${{ matrix.identifier }}${{ matrix.gpu_suffix }}
-      enable_comments: false
-      aws_account_id: ''
-      images: |
-        ghcr.io/noteable-io/kernel${{ matrix.gpu_suffix }}-python-${{ matrix.identifier }}-${{ matrix.version }}
-      build_args: |
-        NBL_PYTHON_VERSION=${{ matrix.version }}
-      tags: |
-        type=sha,format=long
-  
-  build_r_images:
-    strategy:
-      matrix:
-        identifier:
-          - base
-        version:
-          - 4.3
-    name: ${{ matrix.identifier }} / ${{ matrix.version }}
-    uses: noteable-io/actions/.github/workflows/docker.yml@0.8.5
-    secrets: inherit
-    with:
-      context: ./R
-      enable_comments: false
-      aws_account_id: ''
-      images: |
-        ghcr.io/noteable-io/kernel-r-${{ matrix.version }}
-      build_args: |
-        NBL_R_VERSION=${{ matrix.version }}
-      tags: |
-        type=sha,format=long
+    permissions:
+      id-token: write
+      packages: write
+    env:
+      TAG: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ github.token }}
+      - run: |
+          task python:base:copy_files NBL_PYTHON_VERSION=3.9
+          task python:base:copy_files NBL_PYTHON_VERSION=3.10
+          task python:base:copy_files NBL_PYTHON_VERSION=3.11
+          task python:noteable:copy_files NBL_PYTHON_VERSION=3.9
+          task python:noteable:copy_files NBL_PYTHON_VERSION=3.10
+          task python:noteable:copy_files NBL_PYTHON_VERSION=3.11
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/bake-action@v3
+        with:
+          push: true
+          targets: python

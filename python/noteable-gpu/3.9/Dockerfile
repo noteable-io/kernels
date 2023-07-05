@@ -1,11 +1,9 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.4
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via dx)
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
-ARG BASE_IMAGE
-# hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 ARG NBL_PYTHON_VERSION=3.9
 
