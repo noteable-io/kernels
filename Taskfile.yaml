@@ -3,7 +3,6 @@ version: 3
 includes:
   python: ./Taskfile.python.yaml
   r: ./Taskfile.R.yaml
-  test: ./Taskfile.test.yaml
 
 tasks:
   copy-root-files:
