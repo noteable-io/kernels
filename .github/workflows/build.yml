@@ -8,6 +8,7 @@ on:
 
 jobs:
   build_images:
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       packages: write
