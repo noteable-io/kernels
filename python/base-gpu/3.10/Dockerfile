@@ -83,22 +83,3 @@ ENV CUDNN_PATH=/opt/conda/lib/python3.9/site-packages/nvidia/cudnn
 # We move to separate lines to ensure CUDNN_PATH is available
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
   XLA_FLAGS="--xla_gpu_cuda_data_dir=$CONDA_DIR/lib/"
-
-USER noteable
-
-# Set standard working directory for noteable project
-WORKDIR /etc/noteable/project
-EXPOSE 50001-50005
-
-ENTRYPOINT ["/tini", "-g", "--"]
-CMD ["run.sh"]
-
-# Labels
-ARG NBL_ARG_REVISION="undefined"
-ARG NBL_ARG_PYTHON_VERSION="3.9.6"
-ARG NBL_ARG_BUILD_URL="undefined"
-ARG NBL_ARG_VERSION="undefined"
-LABEL org.opencontainers.image.revision="${NBL_ARG_REVISION}" \
-  org.opencontainers.image.title="noteable-python-gpu-${NBL_ARG_PYTHON_VERSION}" \
-  org.opencontainers.image.url="${NBL_ARG_BUILD_URL}" \
-  org.opencontainers.image.version="${NBL_ARG_VERSION}"
