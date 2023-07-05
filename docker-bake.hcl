@@ -20,7 +20,7 @@ group "python" {
   targets = [
     "python_noteable_3_9",
     "python_noteable_3_10",
-    "python_noteable_3_11",
+#    "python_noteable_3_11",
     "python_datascience_3_9",
     "python_datascience_3_10",
 #    "python_datascience_3_11",
