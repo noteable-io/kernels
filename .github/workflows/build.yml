@@ -21,12 +21,12 @@ jobs:
         with:
           repo-token: ${{ github.token }}
       - run: |
-          task python:base:copy_files NBL_PYTHON_VERSION=3.9
-          task python:base:copy_files NBL_PYTHON_VERSION=3.10
-          task python:base:copy_files NBL_PYTHON_VERSION=3.11
-          task python:noteable:copy_files NBL_PYTHON_VERSION=3.9
-          task python:noteable:copy_files NBL_PYTHON_VERSION=3.10
-          task python:noteable:copy_files NBL_PYTHON_VERSION=3.11
+          task python:base:copy-files NBL_PYTHON_VERSION=3.9
+          task python:base:copy-files NBL_PYTHON_VERSION=3.10
+          task python:base:copy-files NBL_PYTHON_VERSION=3.11
+          task python:noteable:copy-files NBL_PYTHON_VERSION=3.9
+          task python:noteable:copy-files NBL_PYTHON_VERSION=3.10
+          task python:noteable:copy-files NBL_PYTHON_VERSION=3.11
       - uses: docker/login-action@v2
         with:
           registry: ghcr.io
