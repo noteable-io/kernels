@@ -105,7 +105,7 @@ target "python_noteable_3_9" {
 target "python_noteable_3_10" {
   context = "python/noteable/3.10"
   contexts = {
-    base = "target:python_datacience_3_10"
+    base = "target:python_datascience_3_10"
   }
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.10-noteable:${TAG}"
