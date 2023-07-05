@@ -29,3 +29,10 @@ tasks:
     cmds:
       - task r:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       - task r:core:build IDENTIFIER=base NBL_R_VERSION={{.NBL_R_VERSION}}
+
+  noteable:build:
+    desc: Build the R 4.3.x image with data frame -> DEX support
+    cmds:
+      - cp R/noteable/.Rprofile R/noteable/{{.NBL_R_VERSION}}/.Rprofile
+      - cp R/noteable/requirements.R R/noteable/{{.NBL_R_VERSION}}/requirements.R
+      - task r:core:build IDENTIFIER=noteable NBL_R_VERSION={{.NBL_R_VERSION}} BASE_IMAGE=local/kernel-r-{{.NBL_R_VERSION}}-base:dev

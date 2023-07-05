@@ -1,0 +1,3 @@
+# Ignore files copied in here from Taskfile commands
+.Rprofile
+requirements.R
