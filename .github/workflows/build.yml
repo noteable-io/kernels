@@ -7,10 +7,6 @@ on:
   pull_request:
 
 jobs:
-  superlint:
-    uses: noteable-io/actions/.github/workflows/superlint.yml@0.8.5
-    secrets: inherit
-
   build_images:
     permissions:
       id-token: write
