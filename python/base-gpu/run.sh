@@ -22,6 +22,4 @@ echo "Starting Python kernel"
 # https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP
 export PYTHONSTARTUP=~/.pythonrc
 
-source /opt/conda/etc/profile.d/conda.sh
-conda activate noteable-venv
-exec python -m ipykernel_launcher -f ${connection_file} --debug
+mamba run exec python -m ipykernel_launcher --debug
