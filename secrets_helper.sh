@@ -8,13 +8,19 @@
 
 secrets_directory=${VAULT_SECRETS_PATH:-/vault/secrets}
 
+shopt -s nullglob
+
 if [ -d "$secrets_directory" ]; then
     for file in "$secrets_directory"/*.env; do
-        name=$(basename "$file" .env)
-        name=${name^^}  # Convert to uppercase
-        if ! declare -p "$name" > /dev/null 2>&1; then  # If variable is not set
-            content=$(cat "$file")
-            export "$name=$content"
+        if [ -f "$file" ]; then
+            name=$(basename "$file" .env)
+            name=${name^^}  # Convert to uppercase
+            if ! declare -p "$name" > /dev/null 2>&1; then  # If variable is not set
+                content=$(cat "$file")
+                export "$name=$content"
+            fi
         fi
     done
 fi
+
+shopt -u nullglob
