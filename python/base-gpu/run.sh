@@ -22,4 +22,4 @@ echo "Starting Python kernel"
 # https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP
 export PYTHONSTARTUP=~/.pythonrc
 
-mamba run exec python -m ipykernel_launcher --debug
+mamba run python -m ipykernel_launcher -f ${connection_file} --debug
