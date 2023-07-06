@@ -18,6 +18,7 @@ RUN apt-get update -y && \
     curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-archive-keyring.gpg && \
     echo "deb [arch=amd64,armhf,arm64 signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/debian/$(lsb_release -rs)/prod bullseye main" > /etc/apt/sources.list.d/mssql-release.list
 
+# hadolint ignore=DL3045
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 

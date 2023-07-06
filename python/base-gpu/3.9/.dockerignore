@@ -1,8 +1,0 @@
-# Mainly for removing any unnecessary files from the dev_packages subdirectory
-**/.benchmarks
-**/.github
-**/.pytest_cache
-**/.venv
-**/.vscode
-**/docs
-**/tests

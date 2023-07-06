@@ -4,6 +4,7 @@
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
 ARG BASE_IMAGE
+# hadolint ignore=DL3006
 FROM ${BASE_IMAGE} as base
 
 ARG NBL_PYTHON_VERSION=3.9
@@ -17,6 +18,7 @@ RUN apt-get update -y && \
     curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-archive-keyring.gpg && \
     echo "deb [arch=amd64,armhf,arm64 signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/debian/$(lsb_release -rs)/prod bullseye main" > /etc/apt/sources.list.d/mssql-release.list
 
+# hadolint ignore=DL3045
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
@@ -27,7 +29,7 @@ COPY requirements.txt /tmp/noteable_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 
 # Smoke test to ensure packages were installed properly
-# hadolint ignore=SC1008
+# hadolint ignore=DL3059
 RUN python -c "import dx, noteable, psutil, sidecar_comms"
 
 COPY .pythonrc /home/noteable/.
