@@ -3,6 +3,7 @@ apt-install
 Aptfile
 git_credential_helper.py
 git-wrapper.sh
+gpu.requirements.in
 ipython_config.py
 .pythonrc
 requirements.in

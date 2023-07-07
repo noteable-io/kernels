@@ -1,5 +1,0 @@
-tensorflow==2.12.*
-torch==2.*
-torchvision==0.15.*
-torchaudio==2.*
-fastai
