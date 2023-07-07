@@ -11,7 +11,7 @@ secrets_directory=${VAULT_SECRETS_PATH:-/vault/secrets}
 shopt -s nullglob
 
 if [ -d "$secrets_directory" ]; then
-    for file in "$secrets_directory"/*.env; do
+    for file in $secrets_directory/*.env; do
         if [ -f "$file" ]; then
             name=$(basename "$file" .env)
             name=${name^^}  # Convert to uppercase
