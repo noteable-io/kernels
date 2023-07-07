@@ -151,61 +151,61 @@ tasks:
   base:lock-all-dependencies:
     desc: Lock Python dependencies for all Python 3.x builds using pip-compile
     deps:
-      - task: python:base:lock-dependencies
+      - task: base:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:base:lock-dependencies
+      - task: base:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:base:lock-dependencies
+      - task: base:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
   base:build-all:
     desc: Build all Python base images
     deps:
-      - task: python:base:build
+      - task: base:build
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:base:build
+      - task: base:build
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:base:build
+      - task: base:build
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
   # datascience convenience functions
   datascience:lock-all-dependencies:
     desc: Lock Python dependencies for all Python 3.x builds using pip-compile
     deps:
-      - task: python:datascience:lock-dependencies
+      - task: datascience:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:datascience:lock-dependencies
+      - task: datascience:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:datascience:lock-dependencies
+      - task: datascience:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
   datascience:build-all:
     desc: Build all Python datascience images
     deps:
-      - task: python:datascience:build
+      - task: datascience:build
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:datascience:build
+      - task: datascience:build
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:datascience:build
+      - task: datascience:build
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
   # Noteable convenience functions
   noteable:lock-all-dependencies:
     desc: Lock Python dependencies for all Python 3.x builds using pip-compile
     deps:
-      - task: python:noteable:lock-dependencies
+      - task: noteable:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:noteable:lock-dependencies
+      - task: noteable:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:noteable:lock-dependencies
+      - task: noteable:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
   noteable:all:build:
     desc: Build all Python noteable images
     deps:
-      - task: python:noteable:build
+      - task: noteable:build
         vars: { NBL_PYTHON_VERSION: 3.9 }
-      - task: python:noteable:build
+      - task: noteable:build
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: python:noteable:build
+      - task: noteable:build
         vars: { NBL_PYTHON_VERSION: 3.11 }
