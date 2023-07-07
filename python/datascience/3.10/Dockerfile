@@ -4,8 +4,10 @@ ARG BASE_IMAGE
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE} as base
 
-ARG NBL_PYTHON_VERSION=3.10
-
 COPY requirements.txt /tmp/datascience_requirements.txt
-
 RUN pip install --no-cache-dir -r /tmp/datascience_requirements.txt
+
+FROM base as gpu
+
+COPY gpu.requirements.txt /tmp/datascience_gpu_requirements.txt
+RUN pip install --no-cache-dir -r /tmp/datascience_gpu_requirements.txt
