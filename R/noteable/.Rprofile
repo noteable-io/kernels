@@ -11,7 +11,14 @@ prepare_dex_content <- function(df) {
   # R data frames don't have this functionality, so we have to use reticulate 
   # to call into the python pandas library
   pandas <- import("pandas")
-  schema <- pandas$io$json$build_table_schema(df, index=FALSE)
+
+  if (is(df, "matrix")) {
+    # reticulate will try to convert this to a numpy.ndarray instead of a pandas dataframe, which
+    # will break the build_table_schema call, so we have to convert it to a data.frame first
+    df <- as.data.frame(df, stringsAsFactors = FALSE, row.names = FALSE)
+  }
+  df_py <- r_to_py(df)
+  schema <- pandas$io$json$build_table_schema(df_py, index=FALSE)
 
   # vectorized format (list of lists)
   #data = as.matrix.data.frame(t(df))
