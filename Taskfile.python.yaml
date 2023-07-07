@@ -99,6 +99,9 @@ tasks:
   datascience:build:
     desc: Build the Python 3.x image with datascience packages extending the base image of the same version
     cmds:
+      # ensure the base image is built first
+      - task python:base:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the datascience image
       - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
 
   # Datascience GPU image
@@ -110,6 +113,9 @@ tasks:
   datascience-gpu:build:
     desc: Build the Python 3.x image with datascience packages and GPU support
     cmds:
+      # ensure the base-gpu image is built first
+      - task python:base-gpu:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the datascience-gpu image
       - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev BUILD_TARGET=gpu
 
   # Noteable image
@@ -131,6 +137,9 @@ tasks:
   noteable:build:
     desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) extending the datascience image of the same version
     cmds:
+      # ensure the datascience image is built first
+      - task python:datascience:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the noteable image after copying over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
 
@@ -143,11 +152,13 @@ tasks:
   noteable-gpu:build:
     desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) and GPU support
     cmds:
+      # ensure the datascience-gpu image is built first
+      - task python:datascience-gpu:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the noteable-gpu image after copying over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - task python:core:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev BUILD_TARGET=gpu
 
-  # convenience functions
-  # TODO: clean all of this up
+  # convenience functions for building multiple images in parallel
   base:lock-all-dependencies:
     desc: Lock Python dependencies for all Python 3.x builds using pip-compile
     deps:
@@ -200,7 +211,7 @@ tasks:
       - task: noteable:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.11 }
 
-  noteable:all:build:
+  noteable:build-all:
     desc: Build all Python noteable images
     deps:
       - task: noteable:build
