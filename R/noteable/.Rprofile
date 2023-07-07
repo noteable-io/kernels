@@ -12,9 +12,18 @@ prepare_dex_content <- function(df) {
   # to call into the python pandas library
   pandas <- import("pandas")
 
-  if (is(df, "matrix")) {
-    # reticulate will try to convert this to a numpy.ndarray instead of a pandas dataframe, which
-    # will break the build_table_schema call, so we have to convert it to a data.frame first
+  # If df is a matrix, convert it to a data frame
+  if (is.matrix(df)) {
+    # In R, a matrix is a 2D vector, not a data frame. When reticulate converts an R matrix to Python,
+    # it becomes a numpy array, not a pandas DataFrame. The pandas function we're using requires a DataFrame,
+    # so we need to convert the matrix to a data frame first.
+    #
+    # We use stringsAsFactors = FALSE to prevent R from converting strings to factors. This is a feature of R
+    # that can be confusing for people used to Python, where there's no direct equivalent of factors.
+    #
+    # We use row.names = FALSE to prevent R from using the first column of the data as row names. This is
+    # because R matrices don't have row names in the same way that data frames do, and we want to keep the
+    # structure of the data consistent when we convert it to a DataFrame.
     df <- as.data.frame(df, stringsAsFactors = FALSE, row.names = FALSE)
   }
   df_py <- r_to_py(df)
