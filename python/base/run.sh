@@ -14,6 +14,7 @@ cp /etc/noteable/connections/connection_file.json ${connection_file}
 # set +x to avoid echoing the Secrets in plaintext to logs
 set +x
 echo "Injecting Secrets into environment, echoing is turned off"
+# hadolint ignore=SC1091
 source /tmp/secrets_helper.sh
 echo "Done injecting Secrets, turning echoing back on"
 set -x
