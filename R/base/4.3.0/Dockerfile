@@ -19,7 +19,8 @@ RUN groupadd --gid 4004 noteable && \
   --shell /bin/false \
   --create-home \
   --no-log-init \
-  --gid noteable noteable && \
+  --gid noteable noteable \
+  --home-dir /srv/noteable && \
   chown --recursive noteable:noteable /srv/noteable && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
