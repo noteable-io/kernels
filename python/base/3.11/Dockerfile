@@ -48,9 +48,9 @@ RUN pip install --no-cache-dir -r /tmp/base_requirements.txt
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/home/noteable" \
+ENV HOME="/srv/noteable" \
   PYTHONPATH="/home/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
-  XDG_CACHE_HOME="/home/noteable/.cache/" \
+  XDG_CACHE_HOME="/srv/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 WORKDIR /etc/noteable/project

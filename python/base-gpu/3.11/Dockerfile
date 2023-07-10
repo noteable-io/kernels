@@ -54,8 +54,8 @@ COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
 ENV PATH="/home/noteable/.local/bin:${PATH}" \
-  HOME="/home/noteable" \
-  XDG_CACHE_HOME="/home/noteable/.cache/" \
+  HOME="/srv/noteable" \
+  XDG_CACHE_HOME="/srv/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 RUN chown -R noteable:noteable "${CONDA_DIR}"
