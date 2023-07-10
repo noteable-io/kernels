@@ -1,6 +1,0 @@
-# Ignore files copied in here from Taskfile commands
-apt-install
-Aptfile
-gpu.requirements.in
-requirements.in
-run.sh

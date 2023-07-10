@@ -1,9 +1,0 @@
-# Ignore files copied in here from Taskfile commands
-apt-install
-Aptfile
-environment.txt
-gpu.Aptfile
-initial-condarc
-requirements.in
-run.sh
-secrets_helper.sh
