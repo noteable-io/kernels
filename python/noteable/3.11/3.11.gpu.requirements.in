@@ -1,2 +1,0 @@
--r gpu.requirements.in
-# any 3.11-specific requirements for the GPU build should be added below
