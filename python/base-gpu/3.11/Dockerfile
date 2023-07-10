@@ -53,7 +53,7 @@ RUN wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
-ENV PATH="/home/noteable/.local/bin:${PATH}" \
+ENV PATH="/srv/noteable/.local/bin:${PATH}" \
   HOME="/srv/noteable" \
   XDG_CACHE_HOME="/srv/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"

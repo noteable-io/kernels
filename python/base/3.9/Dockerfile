@@ -20,7 +20,7 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable && \
-  chown --recursive noteable:noteable /home/noteable && \
+  chown --recursive noteable:noteable /srv/noteable && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
   mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
@@ -49,7 +49,7 @@ COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
 ENV HOME="/srv/noteable" \
-  PYTHONPATH="/home/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
+  PYTHONPATH="/srv/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
   XDG_CACHE_HOME="/srv/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 

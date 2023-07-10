@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 # hadolint ignore=DL3059
 RUN python -c "import dx, noteable, psutil, sidecar_comms"
 
-COPY .pythonrc /home/noteable/.
+COPY .pythonrc /srv/noteable/.
 COPY ipython_config.py /etc/ipython
 COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git

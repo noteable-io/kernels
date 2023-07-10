@@ -20,7 +20,7 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable && \
-  chown --recursive noteable:noteable /home/noteable && \
+  chown --recursive noteable:noteable /srv/noteable && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
 # Install tini to manage passing signals to the child kernel process
