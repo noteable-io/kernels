@@ -1,5 +1,6 @@
 # ignore these everywhere
 .pythonrc
+.Rprofile
 apt-install
 Aptfile
 environment.txt
@@ -11,6 +12,7 @@ initial-condarc
 ipython_config.py
 secrets_helper.sh
 requirements.in
+requirements.R
 run.sh
 
 # ...except for these places where we care about changes happening
@@ -39,3 +41,6 @@ run.sh
 !python/noteable/ipython_config.py
 !python/noteable/git_credential_helper.py
 !python/noteable/git-wrapper.sh
+
+!r/noteable/.Rprofile
+!r/noteable/requirements.R

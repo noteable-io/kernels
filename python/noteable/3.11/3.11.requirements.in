@@ -1,3 +1,2 @@
 -r requirements.in
 # any 3.11-specific requirements should be added below
-flytekit==1.7.0
