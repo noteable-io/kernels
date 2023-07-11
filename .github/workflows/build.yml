@@ -113,7 +113,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - uses: docker/setup-buildx-action@v2
-      - name: Build python kernels
+      - name: Build kernels
         uses: docker/bake-action@v3
         with:
           push: false
