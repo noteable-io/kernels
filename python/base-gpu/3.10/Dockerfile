@@ -52,6 +52,8 @@ RUN wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/
 
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
+COPY gpu.Aptfile .
+RUN /usr/bin/apt-install gpu.Aptfile
 
 ENV PATH="/srv/noteable/.local/bin:${PATH}" \
   HOME="/srv/noteable" \
@@ -64,17 +66,11 @@ RUN chown -R noteable:noteable "${CONDA_DIR}"
 USER noteable
 
 COPY environment.txt /tmp/environment.txt
-RUN mamba install -y --file /tmp/environment.txt
-
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -I --no-cache-dir -r /tmp/requirements.txt
+RUN mamba env update -n base --file /tmp/environment.txt && \
+  pip install -I --no-cache-dir -r /tmp/requirements.txt
 
-# NOTE: At the moment, we're unable to use numba. Numba doesn't have support for forward compatibility,
-# which requires that runtime / driver versions match for CUDA. The highest driver version supported by Amazon Linux
-# is 11.4, where as the lowest supported version in Ubuntu 22.04 is 11.7
-
-RUN python3 -m pip install --no-cache-dir nvidia-cudnn-cu11==8.6.0.163 && \
-  mkdir -p $CONDA_DIR/lib/nvvm/libdevice && \
+RUN mkdir -p $CONDA_DIR/lib/nvvm/libdevice && \
   cp $CONDA_DIR/lib/libdevice.10.bc $CONDA_DIR/lib/nvvm/libdevice/
 
 # Set environment variables for Tensorflow / Cuda
@@ -83,3 +79,6 @@ ENV CUDNN_PATH=/opt/conda/lib/python3.9/site-packages/nvidia/cudnn
 # We move to separate lines to ensure CUDNN_PATH is available
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
   XLA_FLAGS="--xla_gpu_cuda_data_dir=$CONDA_DIR/lib/"
+
+# Overwrite the base run.sh to include `mamba` usage
+COPY run.sh /usr/local/bin
