@@ -11,7 +11,7 @@ secrets_directory=${VAULT_SECRETS_PATH:-/vault/secrets}
 shopt -s nullglob
 
 if [ -d "$secrets_directory" ]; then
-    # shellcheck ignore=SC2231
+    # shellcheck disable=SC2231
     for file in $secrets_directory/*.env; do
         if [ -f "$file" ]; then
             name=$(basename "$file" .env)

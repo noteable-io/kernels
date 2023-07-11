@@ -6,7 +6,7 @@ set -o pipefail
 APTFILE=${1}
 
 apt-get update -y
-# shellcheck ignore=SC2013,SC2086
+# shellcheck disable=SC2013,SC2086
 for package in $(cat ${APTFILE} | grep -v -s -e '^#' | grep -v -s -e "^:repo":); do
     # Accept End User License Agreement if needed
     # (needed for some packages like msodbcsql18)
