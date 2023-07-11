@@ -28,7 +28,7 @@ COPY requirements.txt /tmp/noteable_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 
 # Smoke test to ensure packages were installed properly
-# hadolint ignore=SC1008
+# hadolint ignore=SC1008,DL3059
 RUN python -c "import dx, noteable, psutil, sidecar_comms"
 
 COPY .pythonrc /srv/noteable/.
@@ -37,3 +37,8 @@ COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git
 
 USER noteable
+
+FROM base as gpu
+
+COPY gpu.requirements.txt /tmp/noteable_gpu_requirements.txt
+RUN pip install --no-cache-dir -r /tmp/noteable_gpu_requirements.txt
