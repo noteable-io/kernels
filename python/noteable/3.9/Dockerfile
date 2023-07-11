@@ -4,7 +4,7 @@
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
 # hadolint ignore=DL3006
-FROM base
+FROM base as main
 
 ARG NBL_PYTHON_VERSION=3.9
 
@@ -38,7 +38,7 @@ COPY git-wrapper.sh /usr/local/bin/git
 USER noteable
 
 # hadolint ignore=DL3006
-FROM base as gpu
+FROM main as gpu
 
 COPY gpu.requirements.txt /tmp/noteable_gpu_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_gpu_requirements.txt
