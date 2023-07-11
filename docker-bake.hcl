@@ -186,7 +186,7 @@ target "python_noteable_3_10" {
 }
 
 target "python_noteable_3_9_gpu" {
-  context = "python/noteable-gpu/3.9"
+  context = "python/noteable/3.9"
   contexts = {
     base = "target:python_datascience_3_9_gpu"
   }
@@ -197,7 +197,7 @@ target "python_noteable_3_9_gpu" {
 }
 
 target "python_noteable_3_10_gpu" {
-  context = "python/noteable-gpu/3.10"
+  context = "python/noteable/3.10"
   contexts = {
     base = "target:python_datascience_3_10_gpu"
   }
@@ -241,7 +241,7 @@ target "python_datascience_3_11" {
 }
 
 target "python_datascience_3_9_gpu" {
-  context = "python/datascience-gpu/3.9"
+  context = "python/datascience/3.9"
   contexts = {
     base = "target:python_base_3_9_gpu"
   }
@@ -252,7 +252,7 @@ target "python_datascience_3_9_gpu" {
 }
 
 target "python_datascience_3_10_gpu" {
-  context = "python/datascience-gpu/3.10"
+  context = "python/datascience/3.10"
   contexts = {
     base = "target:python_base_3_10_gpu"
   }
@@ -263,7 +263,7 @@ target "python_datascience_3_10_gpu" {
 }
 
 target "python_datascience_3_11_gpu" {
-  context = "python/datascience-gpu/3.11"
+  context = "python/datascience/3.11"
   contexts = {
     base = "target:python_base_3_11_gpu"
   }
