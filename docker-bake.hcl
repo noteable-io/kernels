@@ -9,7 +9,7 @@ group "default" {
 #    "python_gpu"
   ]
 }
-group "rlang" {
+group "rlang_4_3_0" {
   targets = [
     "rlang_base_4_3",
     "rlang_noteable_4_3"
