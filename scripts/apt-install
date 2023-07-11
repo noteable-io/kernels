@@ -9,7 +9,7 @@ apt-get update -y
 for package in $(cat ${APTFILE} | grep -v -s -e '^#' | grep -v -s -e "^:repo":); do
     # Accept End User License Agreement if needed
     # (needed for some packages like msodbcsql18)
-    ACCEPT_EULA=Y apt-get install -y ${package}
+    ACCEPT_EULA=Y apt-get install -y "${package}"
 done
 apt-get clean
 rm -rf /var/lib/apt/lists/*
