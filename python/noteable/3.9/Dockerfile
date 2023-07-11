@@ -3,9 +3,8 @@
 # - DEX support (via dx)
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
-ARG BASE_IMAGE
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 ARG NBL_PYTHON_VERSION=3.9
 
@@ -38,6 +37,7 @@ COPY git-wrapper.sh /usr/local/bin/git
 
 USER noteable
 
+# hadolint ignore=DL3006
 FROM base as gpu
 
 COPY gpu.requirements.txt /tmp/noteable_gpu_requirements.txt

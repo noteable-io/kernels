@@ -1,9 +1,8 @@
 # syntax = docker/dockerfile:1.4
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via .Rprofile)
-ARG BASE_IMAGE
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 USER noteable
 

@@ -1,12 +1,12 @@
 # syntax = docker/dockerfile:1.4
 # Datascience build: adds packages based on the NumFOCUS datascience stack
-ARG BASE_IMAGE
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 COPY requirements.txt /tmp/datascience_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/datascience_requirements.txt
 
+# hadolint ignore=DL3006
 FROM base as gpu
 
 COPY gpu.requirements.txt /tmp/datascience_gpu_requirements.txt
