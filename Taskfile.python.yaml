@@ -208,8 +208,6 @@ tasks:
         vars: { NBL_PYTHON_VERSION: 3.9 }
       - task: noteable:lock-dependencies
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: noteable:lock-dependencies
-        vars: { NBL_PYTHON_VERSION: 3.11 }
 
   noteable:build-all:
     desc: Build all Python noteable images
@@ -218,5 +216,3 @@ tasks:
         vars: { NBL_PYTHON_VERSION: 3.9 }
       - task: noteable:build
         vars: { NBL_PYTHON_VERSION: 3.10 }
-      - task: noteable:build
-        vars: { NBL_PYTHON_VERSION: 3.11 }
