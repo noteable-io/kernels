@@ -24,9 +24,6 @@ RUN apt-get update -y && \
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
-RUN touch /var/log/noteable_magics.log && \
-    chown noteable:noteable /var/log/noteable_magics.log
-
 COPY requirements.txt /tmp/noteable_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 
