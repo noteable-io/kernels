@@ -58,29 +58,43 @@ group "python_3_11" {
     "python_datascience_3_11",
   ]
 }
+
 group "python" {
   targets = [
-    "python_base_3_9",
-    "python_base_3_10",
-    "python_base_3_11",
-    "python_noteable_3_9",
-    "python_noteable_3_10",
-    "python_datascience_3_9",
-    "python_datascience_3_10",
-    "python_datascience_3_11",
+    "python_3_9",
+    "python_3_10",
+    "python_3_11",
+  ]
+}
+
+group "python_3_9_gpu" {
+  targets = [
+    "python_base_3_9_gpu",
+    "python_noteable_3_9_gpu",
+    "python_datascience_3_9_gpu",
+  ]
+}
+
+group "python_3_10_gpu" {
+  targets = [
+    "python_base_3_10_gpu",
+    "python_noteable_3_10_gpu",
+    "python_datascience_3_10_gpu",
+  ]
+}
+
+group "python_3_11_gpu" {
+  targets = [
+    "python_base_3_11_gpu",
+    "python_datascience_3_11_gpu",
   ]
 }
 
 group "python_gpu" {
   targets = [
-    "python_base_3_9_gpu",
-    "python_base_3_10_gpu",
-    "python_base_3_11_gpu",
-    "python_noteable_3_9_gpu",
-    "python_noteable_3_10_gpu",
-    "python_datascience_3_9_gpu",
-    "python_datascience_3_10_gpu",
-    "python_datascience_3_11_gpu",
+    "python_3_9_gpu",
+    "python_3_10_gpu",
+    "python_3_11_gpu",
   ]
 }
 
@@ -267,7 +281,7 @@ target "rlang_base_4_3_0" {
   ]
 }
 
-target "rlang_noteable_4_3" {
+target "rlang_noteable_4_3_0" {
   context = "R/noteable/4.3.0"
   contexts = {
     base = "target:rlang_base_4_3_0"
