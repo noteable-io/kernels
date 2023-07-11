@@ -62,8 +62,6 @@ jobs:
     env:
       # TODO: This should not be SHA, but branch / tag name
       TAG: ${{ github.sha }}
-      NBL_PYTHON_VERSION: ${{ matrix.version }}
-      IDENTIFIER: ${{ matrix.identifier }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -71,8 +69,8 @@ jobs:
         with:
           repo-token: ${{ github.token }}
       - run: |
-          task python:base:copy-files
-          task noteable:copy-files
+          task python:base:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
+          task noteable:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
 
       - uses: docker/login-action@v2
         with:
@@ -107,7 +105,7 @@ jobs:
         with:
           repo-token: ${{ github.token }}
       - run: |
-          task r:base:copy-files
+          task r:base:copy-files NBL_LANGUAGE_VERSION=${{ matrix.version }}
       - uses: docker/login-action@v2
         with:
           registry: ghcr.io
