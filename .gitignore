@@ -33,9 +33,9 @@ run.sh
 !python/datascience/requirements.in
 !python/noteable/requirements.in
 
-!python/base/run.sh
-!python/datascience/run.sh
-!python/noteable/run.sh
+!python/run.sh
+!python/base-gpu/run.sh
+!r/run.sh
 
 !python/noteable/.pythonrc
 !python/noteable/ipython_config.py
