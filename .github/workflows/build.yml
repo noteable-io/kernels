@@ -85,7 +85,7 @@ jobs:
           password: ${{ github.token }}
       - name: Set target
         id: target
-        run: echo |
+        run: |
           if [[ "${{ matrix.identifier }} == "base" ]];
             target="python_${VERSION//./_}"
           else
