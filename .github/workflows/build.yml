@@ -63,6 +63,7 @@ jobs:
     env:
       # TODO: This should not be SHA, but branch / tag name
       TAG: ${{ github.sha }}
+      VERSION: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -84,7 +85,7 @@ jobs:
         uses: docker/bake-action@v3
         with:
           push: false
-          targets: python
+          targets: python_${VERSION//./_}
 
   build_rlang_kernels:
     runs-on: ubuntu-latest
@@ -97,8 +98,7 @@ jobs:
     env:
       # TODO: This should not be SHA, but branch / tag name
       TAG: ${{ github.sha }}
-      NBL_LANGUAGE_VERSION: ${{ matrix.version }}
-      IDENTIFIER: base
+      VERSION: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -117,4 +117,4 @@ jobs:
         uses: docker/bake-action@v3
         with:
           push: false
-          targets: rlang
+          targets: rlang_${VERSION//./_}

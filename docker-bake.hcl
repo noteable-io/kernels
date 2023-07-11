@@ -24,6 +24,28 @@ group "python_base" {
   ]
 }
 
+group "python_3_9" {
+  targets = [
+    "python_base_3_9",
+    "python_noteable_3_9",
+    "python_datascience_3_9",
+  ]
+}
+
+group "python_3_10" {
+  targets = [
+    "python_base_3_10",
+    "python_noteable_3_10",
+    "python_datascience_3_10",
+  ]
+}
+
+group "python_3_11" {
+  targets = [
+    "python_base_3_11",
+    "python_datascience_3_11",
+  ]
+}
 group "python" {
   targets = [
     "python_base_3_9",
