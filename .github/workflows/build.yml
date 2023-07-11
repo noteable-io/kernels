@@ -75,7 +75,11 @@ jobs:
         with:
           repo-token: ${{ github.token }}
       - run: |
-          task python:base:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
+          task python:base:copy-files IDENTIFIER="base" NBL_PYTHON_VERSION=${{ matrix.version }}
+          if [[ "${{ matrix.identifier }}' == "base-gpu" ]];
+          then
+            task python:base:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
+          fi
           task python:noteable:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
 
       - uses: docker/login-action@v2
