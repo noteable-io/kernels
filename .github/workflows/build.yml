@@ -29,6 +29,27 @@ jobs:
           VALIDATE_DOCKERFILE_HADOLINT: true
           VALIDATE_YAML: true
 
+  run-hooks:
+    name: Run pre-commit hooks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install pre-commit
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade pre-commit
+
+      - name: Run pre-commit hooks ✅
+        run: pre-commit run --all-files --hook-stage manual
+
   build_images:
     runs-on: ubuntu-latest
     permissions:
