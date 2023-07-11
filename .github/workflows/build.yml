@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [3.9, 3.10] # TODO: Add 3.11
+        version: ["3.9", "3.10"] # TODO: Add 3.11
         identifier: [base, base-gpu]
     env:
       # TODO: This should not be SHA, but branch / tag name
