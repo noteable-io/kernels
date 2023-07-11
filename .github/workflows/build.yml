@@ -65,6 +65,9 @@ jobs:
       TAG: ${{ github.sha }}
       VERSION: ${{ matrix.version }}
       TARGET: python_${VERSION//./_}
+      BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      TIMESTAMP: $(date +%Y%m%d%H%M)
+      GITHUB_SHA: ${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -104,6 +107,9 @@ jobs:
       # TODO: This should not be SHA, but branch / tag name
       TAG: ${{ github.sha }}
       VERSION: ${{ matrix.version }}
+      BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      TIMESTAMP: $(date +%Y%m%d%H%M)
+      GITHUB_SHA: ${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task

@@ -62,15 +62,3 @@ EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["run.sh"]
-
-ARG NBL_ARG_BUILD_TIMESTAMP="undefined"
-ARG NBL_ARG_REVISION="undefined"
-ARG NBL_ARG_BUILD_URL="undefined"
-ARG NBL_ARG_VERSION="undefined"
-LABEL org.opencontainers.image.created="${NBL_ARG_BUILD_TIMESTAMP}" \
-  org.opencontainers.image.revision="${NBL_ARG_REVISION}" \
-  org.opencontainers.image.source="https://github.com/noteable-io/polymorph" \
-  org.opencontainers.image.title="noteable-R-${NBL_R_VERSION}" \
-  org.opencontainers.image.url="${NBL_ARG_BUILD_URL}" \
-  org.opencontainers.image.vendor="Noteable" \
-  org.opencontainers.image.version="${NBL_ARG_VERSION}"

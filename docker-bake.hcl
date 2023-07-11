@@ -2,6 +2,18 @@ variable "TAG" {
   default = "latest"
 }
 
+variable "GITHUB_SHA" {
+  default = ""
+}
+
+variable "BUILD_URL" {
+  default = ""
+}
+
+variable "TIMESTAMP" {
+  default = ""
+}
+
 group "default" {
   targets = [
     "rlang",
@@ -11,8 +23,8 @@ group "default" {
 }
 group "rlang_4_3_0" {
   targets = [
-    "rlang_base_4_3",
-    "rlang_noteable_4_3"
+    "rlang_base_4_3_0",
+    "rlang_noteable_4_3_0"
   ]
 }
 
@@ -72,7 +84,19 @@ group "python_gpu" {
   ]
 }
 
+target "base" {
+  labels = {
+    "org.opencontainers.image.created" = ""
+    "org.opencontainers.image.source" = "https://github.com/noteable-io/kernels"
+    "org.opencontainers.image.revision" = "${GITHUB_SHA}"
+    "org.opencontainers.image.vendor" = "Noteable"
+    "org.opencontainers.image.version" = "${TAG}"
+    "org.opencontainers.image.url" = ""
+  }
+}
+
 target "python_base_3_9" {
+  inherits = ["base"]
   context = "python/base/3.9"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.9-base:${TAG}"
@@ -80,6 +104,7 @@ target "python_base_3_9" {
 }
 
 target "python_base_3_10" {
+  inherits = ["base"]
   context = "python/base/3.10"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.10-base:${TAG}"
@@ -87,6 +112,7 @@ target "python_base_3_10" {
 }
 
 target "python_base_3_11" {
+  inherits = ["base"]
   context = "python/base/3.11"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.11-base:${TAG}"
@@ -233,14 +259,18 @@ target "python_datascience_3_11_gpu" {
   ]
 }
 
-target "rlang_base_4_3" {
+target "rlang_base_4_3_0" {
+  inherits = ["base"]
   context = "R/base/4.3.0"
+  tags = [
+    "ghcr.io/noteable-io/kernel-r-4.3.0:${TAG}"
+  ]
 }
 
 target "rlang_noteable_4_3" {
   context = "R/noteable/4.3.0"
   contexts = {
-    base = "target:rlang_base_4_3"
+    base = "target:rlang_base_4_3_0"
   }
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
