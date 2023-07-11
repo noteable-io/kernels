@@ -242,7 +242,6 @@ target "rlang_noteable_4_3" {
   contexts = {
     base = "target:rlang_base_4_3"
   }
-  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
   ]
