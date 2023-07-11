@@ -80,7 +80,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - uses: Set target
+      - name: Set target
         id: target
         run: echo "TARGET=${VERSION//./_}" >> "$GITHUB_OUTPUT
 
@@ -117,7 +117,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - uses: Set target
+      - name: Set target
         id: target
         run: echo "TARGET=${VERSION//./_}" >> "$GITHUB_OUTPUT
 
