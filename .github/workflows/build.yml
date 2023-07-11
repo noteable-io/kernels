@@ -59,7 +59,7 @@ jobs:
       fail-fast: false
       matrix:
         version: ["3.9", "3.10"] # TODO: Add 3.11
-        target: [base, gpu] # TODO: Add GPUs
+        identifier: [base, gpu] # TODO: Add GPUs
     env:
       # TODO: This should not be SHA, but branch / tag name
       TAG: ${{ github.sha }}
@@ -86,7 +86,7 @@ jobs:
       - name: Set target
         id: target
         run: echo |
-          if [[ "${{ matrix.target }} == "base" ]];
+          if [[ "${{ matrix.identifier }} == "base" ]];
             target="python_${VERSION//./_}"
           else
             target="python_${VERSION//./_}_gpu"
