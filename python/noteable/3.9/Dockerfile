@@ -13,6 +13,8 @@ USER root
 
 # Prerequisites to install msodbcsql18 driver for MS SQL Server connectivity.
 # From https://github.com/MicrosoftDocs/sql-docs/issues/8821#issuecomment-1569088666
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008,DL3009,DL3015
 RUN apt-get update -y && \
     apt-get install gnupg2 lsb-release -y  && \
     curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-archive-keyring.gpg && \
