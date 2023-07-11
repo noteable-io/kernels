@@ -52,7 +52,7 @@ jobs:
 
   build_python_kernels:
     runs-on:
-      group: ubuntu-22.04-8cpu
+      group: ubuntu-22.04-8cpu-public
     permissions:
       id-token: write
       packages: write
