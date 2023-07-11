@@ -100,12 +100,12 @@ group "python_gpu" {
 
 target "base" {
   labels = {
-    "org.opencontainers.image.created" = ""
+    "org.opencontainers.image.created" = "${TIMESTAMP}"
     "org.opencontainers.image.source" = "https://github.com/noteable-io/kernels"
     "org.opencontainers.image.revision" = "${GITHUB_SHA}"
     "org.opencontainers.image.vendor" = "Noteable"
     "org.opencontainers.image.version" = "${TAG}"
-    "org.opencontainers.image.url" = ""
+    "org.opencontainers.image.url" = "${BUILD_URL}"
   }
 }
 
