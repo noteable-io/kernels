@@ -1,0 +1,25 @@
+version: 3
+
+includes:
+  python: ./Taskfile.python.yaml
+  r: ./Taskfile.R.yaml
+
+tasks:
+  copy-root-files:
+    desc: Copy files from the root of the repository to the base build directories
+    cmds:
+      - cp ./scripts/apt-install {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/apt-install
+      - cp ./scripts/secrets_helper.sh {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.sh
+    generates:
+      - ./{{.LANGUAGE}}/base/{{.NBL_LANGUAGE_VERSION}}/apt-install
+      - ./{{.LANGUAGE}}/base/{{.NBL_LANGUAGE_VERSION}}/secrets_helper.sh
+
+  copy-language-files:
+    desc: Copy files from the language-level directory to the build directories
+    deps: [copy-root-files]
+    cmds:
+      - cp {{.LANGUAGE}}/Aptfile {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/Aptfile
+      - cp {{.LANGUAGE}}/run.sh {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/run.sh
+    generates:
+      - ./{{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/Aptfile
+      - ./{{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/run.sh

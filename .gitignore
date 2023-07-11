@@ -1,0 +1,46 @@
+# ignore these everywhere
+.pythonrc
+.Rprofile
+apt-install
+Aptfile
+environment.txt
+git_credential_helper.py
+git-wrapper.sh
+gpu.Aptfile
+gpu.requirements.in
+initial-condarc
+ipython_config.py
+secrets_helper.sh
+requirements.in
+requirements.R
+run.sh
+
+# ...except for these places where we care about changes happening
+# (NOTE: this is because the tasks should copy the files down into the build directories)
+!scripts/apt-install
+!scripts/secrets_helper.sh
+
+!python/base/Aptfile
+!python/datascience/Aptfile
+!python/noteable/Aptfile
+
+!python/base-gpu/gpu.Aptfile
+!python/base-gpu/environment.txt
+
+!python/base-gpu/initial-condarc
+
+!python/base/requirements.in
+!python/datascience/requirements.in
+!python/noteable/requirements.in
+
+!python/run.sh
+!python/base-gpu/run.sh
+!r/run.sh
+
+!python/noteable/.pythonrc
+!python/noteable/ipython_config.py
+!python/noteable/git_credential_helper.py
+!python/noteable/git-wrapper.sh
+
+!r/noteable/.Rprofile
+!r/noteable/requirements.R

@@ -1,0 +1,33 @@
+import dx
+import numpy as np
+import pandas as pd
+from matplotlib import font_manager, rcParams
+
+dx.set_display_mode("simple")
+dx.set_option("DISPLAY_MAX_ROWS", 50_000)
+dx.set_option("DISPLAY_MAX_COLUMNS", 100)
+dx.set_option("ENABLE_DATALINK", True)
+
+# Set up matplotlib to use the Noto Sans CJK fonts for
+# Chinese, Japanese, Korean character support
+font_manager.fontManager.addfont("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
+rcParams["font.family"] = "sans-serif"
+rcParams["font.sans-serif"] = [
+    "Noto Sans CJK HK",
+    "Noto Sans CJK JP",
+    "Noto Sans CJK KR",
+    "Noto Sans CJK SC",
+    "Noto Sans CJK TC",
+    # matplotlib defaults
+    "DejaVu Sans",
+    "Bitstream Vera Sans",
+    "Computer Modern Sans Serif",
+    "Lucida Grande",
+    "Verdana",
+    "Geneva",
+    "Lucid",
+    "Arial",
+    "Helvetica",
+    "Avant Garde",
+    "sans-serif",
+]

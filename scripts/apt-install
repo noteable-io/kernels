@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+APTFILE=${1}
+
+apt-get update -y
+# shellcheck disable=SC2013,SC2086
+for package in $(cat ${APTFILE} | grep -v -s -e '^#' | grep -v -s -e "^:repo":); do
+    # Accept End User License Agreement if needed
+    # (needed for some packages like msodbcsql18)
+    ACCEPT_EULA=Y apt-get install -y "${package}"
+done
+apt-get clean
+rm -rf /var/lib/apt/lists/*

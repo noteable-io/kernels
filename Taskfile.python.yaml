@@ -1,0 +1,296 @@
+version: 3
+
+# https://hub.docker.com/_/python/tags?page=1&name=slim-bullseye
+vars:
+  NBL_PYTHON_VERSION: 3.9
+  IDENTIFIER: base
+
+# NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
+# directly in `cmds: []`, the variables have to be passed in explicitly.
+
+tasks:
+  core:build:
+    desc: Build the Python 3.x image
+    cmds:
+      - >-
+        docker build python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}} \
+          --build-arg "NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}" \
+          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
+          --target "{{.BUILD_TARGET}}" \
+          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:dev"
+    requires:
+      vars: [IDENTIFIER, NBL_PYTHON_VERSION]
+    vars:
+      BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
+      TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
+
+  base:copy-files:
+    desc: Copy files from the Python directory to the build directories
+    cmds:
+      - task copy-root-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
+      - task copy-language-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
+
+  base:pyenv:install:
+    desc: Install the specified version of Python using pyenv
+    cmds:
+      - pyenv install -s {{.NBL_PYTHON_VERSION}}
+
+  base:pyenv:virtualenv:
+    desc: Create a new virtual environment using pyenv
+    deps: [base:pyenv:install]
+    cmds:
+      - pyenv virtualenv {{.NBL_PYTHON_VERSION}} py{{.NBL_PYTHON_VERSION}} || true
+
+  base:deps:install-pip-tools:
+    desc: Install Python dependencies
+    deps: [base:pyenv:virtualenv]
+    cmds:
+      - $(pyenv root)/versions/py{{.NBL_PYTHON_VERSION}}/bin/python -m pip install pip-tools==6.13.0
+
+  base:deps:copy-requirements:
+    desc: Copy identifier-level *requirements.in files to the version-level build directories
+    cmds:
+      - mkdir -p python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}
+      - cp python/{{.IDENTIFIER}}/{{.FILE_PREFIX}}requirements.in python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.in
+    generates:
+      - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.in
+
+  # Base image
+  base:lock-dependencies:
+    desc: Uses piptools compile to lock Python dependency versions for a specific build identifier, version, and file prefix (e.g. "gpu.")
+    deps: [base:deps:install-pip-tools]
+    cmds:
+      - task python:base:deps:copy-requirements FILE_PREFIX={{.FILE_PREFIX}} IDENTIFIER={{.IDENTIFIER}} NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # specifically looks at the python/<ident>/<version>/<version>.requirements.in file, not the generic requirements.in files
+      - $(pyenv root)/versions/py{{.NBL_PYTHON_VERSION}}/bin/python -m piptools compile --resolver=backtracking --output-file python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.txt python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.NBL_PYTHON_VERSION}}.{{.FILE_PREFIX}}requirements.in
+    generates:
+      - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.txt
+
+  base:build:
+    desc: Build the Python 3.x base image after copying required files
+    cmds:
+      - task python:base:copy-files IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - task python:core:build IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+
+  # Base GPU image
+  base-gpu:lock-dependencies:
+    desc: Lock Python dependencies for GPU builds using pip-compile
+    deps: [base:lock-dependencies]
+    cmds:
+      - task python:base:lock-dependencies IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+
+  base-gpu:build:
+    desc: Build the Python 3.x image with GPU support after copying required files
+    cmds:
+      - task python:base:copy-files IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # copy base-gpu specific files
+      - cp python/base-gpu/environment.txt python/base-gpu/{{.NBL_PYTHON_VERSION}}/environment.txt
+      - cp python/base-gpu/gpu.Aptfile python/base-gpu/{{.NBL_PYTHON_VERSION}}/gpu.Aptfile
+      - cp python/base-gpu/run.sh python/base-gpu/{{.NBL_PYTHON_VERSION}}/run.sh
+      - cp python/base-gpu/initial-condarc python/base-gpu/{{.NBL_PYTHON_VERSION}}/initial-condarc
+      # build off of the base image
+      - task python:core:build IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
+
+  # Datascience image
+  datascience:lock-dependencies:
+    desc: Lock Python dependencies for datascience builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+
+  datascience:build:
+    desc: Build the Python 3.x image with datascience packages extending the base image of the same version
+    cmds:
+      # ensure the base image is built first
+      - task python:base:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the datascience image
+      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
+
+  # Datascience GPU image
+  datascience-gpu:lock-dependencies:
+    desc: Lock Python dependencies for datascience builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
+
+  datascience-gpu:build:
+    desc: Build the Python 3.x image with datascience packages and GPU support
+    cmds:
+      # ensure the base-gpu image is built first
+      - task python:base-gpu:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the datascience-gpu image
+      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
+
+  # Noteable image
+  noteable:copy-files:
+    desc: Copy files from the `python/noteable` directory to the build directories
+    deps: [base:deps:copy-requirements]
+    cmds:
+      - cp python/noteable/Aptfile python/noteable/{{.NBL_PYTHON_VERSION}}/Aptfile
+      - cp python/noteable/git_credential_helper.py python/noteable/{{.NBL_PYTHON_VERSION}}/git_credential_helper.py
+      - cp python/noteable/git-wrapper.sh python/noteable/{{.NBL_PYTHON_VERSION}}/git-wrapper.sh
+      - cp python/noteable/ipython_config.py python/noteable/{{.NBL_PYTHON_VERSION}}/ipython_config.py
+      - cp python/noteable/.pythonrc python/noteable/{{.NBL_PYTHON_VERSION}}/.pythonrc
+
+  noteable:lock-dependencies:
+    desc: Lock Python dependencies for Noteable builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+
+  noteable:build:
+    desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) extending the datascience image of the same version
+    cmds:
+      # ensure the datascience image is built first
+      - task python:datascience:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the noteable image after copying over noteable-specific files
+      - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
+
+  # Noteable GPU image
+  noteable-gpu:lock-dependencies:
+    desc: Lock Python dependencies for Noteable builds using pip-compile
+    cmds:
+      - task python:base:lock-dependencies IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
+
+  noteable-gpu:build:
+    desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) and GPU support
+    cmds:
+      # ensure the datascience-gpu image is built first
+      - task python:datascience-gpu:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # build the noteable-gpu image after copying over noteable-specific files
+      - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
+      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
+
+  # convenience functions for building multiple images in parallel
+  base:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - task: base:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: base:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: base:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  base:build-all:
+    desc: Build all Python base images
+    deps:
+      - task: base:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: base:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: base:build
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  base-gpu:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x GPU builds using pip-compile
+    deps:
+      - task: base-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: base-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: base-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  base-gpu:build-all:
+    desc: Build all Python base-gpu images
+    deps:
+      - task: base-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: base-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: base-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  # datascience convenience functions
+  datascience:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - task: datascience:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: datascience:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: datascience:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  datascience:build-all:
+    desc: Build all Python datascience images
+    deps:
+      - task: datascience:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: datascience:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: datascience:build
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  datascience-gpu:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x GPU builds using pip-compile
+    deps:
+      - task: datascience-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: datascience-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: datascience-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  datascience-gpu:build-all:
+    desc: Build all Python datascience-gpu images
+    deps:
+      - task: datascience-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: datascience-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+      - task: datascience-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.11 }
+
+  # Noteable convenience functions
+  noteable:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - task: noteable:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: noteable:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+
+  noteable:build-all:
+    desc: Build all Python noteable images
+    deps:
+      - task: noteable:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: noteable:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+
+  noteable-gpu:lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x GPU builds using pip-compile
+    deps:
+      - task: noteable-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: noteable-gpu:lock-dependencies
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+
+  noteable-gpu:build-all:
+    desc: Build all Python noteable-gpu images
+    deps:
+      - task: noteable-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.9 }
+      - task: noteable-gpu:build
+        vars: { NBL_PYTHON_VERSION: 3.10 }
+
+  # convenience functions for building all images
+  lock-all-dependencies:
+    desc: Lock Python dependencies for all Python 3.x builds using pip-compile
+    deps:
+      - task: base:lock-all-dependencies
+      - task: base-gpu:lock-all-dependencies
+      - task: datascience:lock-all-dependencies
+      - task: datascience-gpu:lock-all-dependencies
+      - task: noteable:lock-all-dependencies
+      - task: noteable-gpu:lock-all-dependencies
+
+  build-all:
+    desc: Build all Python images
+    deps:
+      - task: base:build-all
+      - task: base-gpu:build-all
+      - task: datascience:build-all
+      - task: datascience-gpu:build-all
+      - task: noteable:build-all
+      - task: noteable-gpu:build-all
