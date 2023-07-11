@@ -128,6 +128,7 @@ target "python_noteable_3_9" {
   contexts = {
     base = "target:python_datascience_3_9"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.9-noteable:${TAG}"
   ]
@@ -138,6 +139,7 @@ target "python_noteable_3_10" {
   contexts = {
     base = "target:python_datascience_3_10"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.10-noteable:${TAG}"
   ]
@@ -148,6 +150,7 @@ target "python_noteable_3_9_gpu" {
   contexts = {
     base = "target:python_datascience_3_9_gpu"
   }
+  target = "gpu"
   tags = [
     "ghcr.io/noteable-io/kernel-gpu-python-3.9-noteable:${TAG}"
   ]
@@ -158,6 +161,7 @@ target "python_noteable_3_10_gpu" {
   contexts = {
     base = "target:python_datascience_3_10_gpu"
   }
+  target = "gpu"
   tags = [
     "ghcr.io/noteable-io/kernel-gpu-python-3.10-noteable:${TAG}"
   ]
@@ -168,6 +172,7 @@ target "python_datascience_3_9" {
   contexts = {
     base = "target:python_base_3_9"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.9-datascience:${TAG}"
   ]
@@ -178,6 +183,7 @@ target "python_datascience_3_10" {
   contexts = {
     base = "target:python_base_3_10"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.10-datascience:${TAG}"
   ]
@@ -188,6 +194,7 @@ target "python_datascience_3_11" {
   contexts = {
     base = "target:python_base_3_11"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-python-3.11-datascience:${TAG}"
   ]
@@ -198,6 +205,7 @@ target "python_datascience_3_9_gpu" {
   contexts = {
     base = "target:python_base_3_9_gpu"
   }
+  target = "gpu"
   tags = [
     "ghcr.io/noteable-io/kernel-gpu-python-3.9-datascience:${TAG}"
   ]
@@ -208,6 +216,7 @@ target "python_datascience_3_10_gpu" {
   contexts = {
     base = "target:python_base_3_10_gpu"
   }
+  target = "gpu"
   tags = [
     "ghcr.io/noteable-io/kernel-gpu-python-3.10-datascience:${TAG}"
   ]
@@ -218,6 +227,7 @@ target "python_datascience_3_11_gpu" {
   contexts = {
     base = "target:python_base_3_11_gpu"
   }
+  target = "gpu"
   tags = [
     "ghcr.io/noteable-io/kernel-gpu-python-3.11-datascience:${TAG}"
   ]
@@ -232,6 +242,7 @@ target "rlang_noteable_4_3" {
   contexts = {
     base = "target:rlang_base_4_3"
   }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
   ]
