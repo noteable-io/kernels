@@ -86,7 +86,8 @@ jobs:
       - name: Set target
         id: target
         run: |
-          if [[ "${{ matrix.identifier }}" == "base" ]];
+          if [[ "${{ matrix.identifier }}" == "base" ]]
+          then
             target="python_${VERSION//./_}"
           else
             target="python_${VERSION//./_}_gpu"
