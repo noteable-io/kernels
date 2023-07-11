@@ -76,7 +76,7 @@ jobs:
           repo-token: ${{ github.token }}
       - run: |
           task python:base:copy-files IDENTIFIER="base" NBL_PYTHON_VERSION=${{ matrix.version }}
-          if [[ "${{ matrix.identifier }}' == "base-gpu" ]];
+          if [[ "${{ matrix.identifier }}" == "base-gpu" ]];
           then
             task python:base:copy-files IDENTIFIER=${{ matrix.identifier }} NBL_PYTHON_VERSION=${{ matrix.version }}
           fi
