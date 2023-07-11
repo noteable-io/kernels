@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.4
 ARG BASE_IMAGE
 # hadolint ignore=DL3006
 FROM ${BASE_IMAGE} as base

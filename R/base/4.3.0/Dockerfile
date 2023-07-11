@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.4
 # ---
 # Bare minimum R 4.3.x image with IRkernel installed
 # - no R packages aside from builtins and IRkernel

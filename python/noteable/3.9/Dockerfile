@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.4
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via dx)
 # - git integration (via gitpython, nbdime)
