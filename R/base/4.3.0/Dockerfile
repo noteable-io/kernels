@@ -24,8 +24,6 @@ RUN groupadd --gid 4004 noteable && \
   chown --recursive noteable:noteable /srv/noteable && \
   mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
-WORKDIR /tmp
-
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
@@ -33,6 +31,7 @@ RUN chmod +x /tini
 
 # Use micromamba and set up a virtual environment so we can install packages without root
 COPY apt-install /usr/bin/
+# hadolint ignore=DL3045
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
