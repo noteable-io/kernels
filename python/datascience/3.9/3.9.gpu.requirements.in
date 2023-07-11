@@ -1,2 +1,2 @@
 -r gpu.requirements.in
-# any 3.9-specific requirements for the GPU build should be added below
+# any 3.9-specific requirements for the GPU build should be removed from the *requirements.in file referenced above, and instead added below
