@@ -17,11 +17,12 @@ tasks:
           --build-arg "NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}" \
           --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
           --target "{{.BUILD_TARGET}}" \
-          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}:dev"
+          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:dev"
     requires:
       vars: [IDENTIFIER, NBL_PYTHON_VERSION]
     vars:
       BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
+      TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
 
   base:copy-files:
     desc: Copy files from the Python directory to the build directories
@@ -116,7 +117,7 @@ tasks:
       # ensure the base-gpu image is built first
       - task python:base-gpu:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # build the datascience-gpu image
-      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev BUILD_TARGET=gpu
+      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
 
   # Noteable image
   noteable:copy-files:
@@ -156,7 +157,7 @@ tasks:
       - task python:datascience-gpu:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # build the noteable-gpu image after copying over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
-      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev BUILD_TARGET=gpu
+      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
 
   # convenience functions for building multiple images in parallel
   base:lock-all-dependencies:
