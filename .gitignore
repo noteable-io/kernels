@@ -1,3 +1,6 @@
+# Development files
+.idea
+
 # ignore these everywhere
 .pythonrc
 .Rprofile
