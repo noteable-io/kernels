@@ -35,14 +35,14 @@ We welcome many different types of contributions including:
 To begin contributing changes to notebook kernels, you'll need to setup your local environment
 
 ### Requirements
-- `python`: Version depending on which kernels being built 
-- `docker`: For building and testing images 
+- `python`: Version depending on which kernels being built
+- `docker`: For building and testing images
 
-### Setup 
-```shell 
+### Setup
+```shell
 git clone git@github.com:noteable-io/kernels
-cd kernels/$kernel/ 
-# Make proposed edits as needed 
+cd kernels/$kernel/
+# Make proposed edits as needed
 docker buildx bake <target>
 ```
 
