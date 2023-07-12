@@ -14,7 +14,7 @@ graphviz==0.20.1
 
 # https://github.com/noteable-io/ packages
 git+https://www.github.com/noteable-io/dx.git@a9a4310e51236833e818f3d81edc06a2c2fa3b0e
-git+https://www.github.com/noteable-io/noteable-notebook-magics.git@a9b922af6f0d96050e1a20f38b92c794ce5fc894
+git+https://www.github.com/noteable-io/noteable-notebook-magics.git@7860abb999de252ae2a7c97637a1153094dbc87f
 git+https://www.github.com/noteable-io/sidecar_comms.git@009210009af85640852398dd6965bb7c285e21e2
 git+https://www.github.com/noteable-io/ipykernel-logging.git@b5ae61c0c99ba8e1a6740fd24b123bc580efe53a
 
