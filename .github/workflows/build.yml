@@ -31,7 +31,7 @@ jobs:
 
   run-hooks:
     name: Run pre-commit hooks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Repo
@@ -108,7 +108,7 @@ jobs:
           targets: ${{ steps.target.outputs.TARGET }}
 
   build_rlang_kernels:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       packages: write
