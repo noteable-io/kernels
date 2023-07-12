@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["3.9", "3.10"] # TODO: Add 3.11
+        version: ["3.9", "3.10"] # TODO: Add 3.11 after fixing dependency conflicts
         identifier: [base, base-gpu]
     env:
       VERSION: ${{ matrix.version }}
