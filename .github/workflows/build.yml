@@ -62,7 +62,7 @@ jobs:
         version: ["3.9", "3.10", "3.11"] # TODO: Add 3.11
         identifier: [base, base-gpu]
     env:
-      TAG: ${{ github.ref_name == "main" && "latest" || github.ref_name }}
+      TAG: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
       VERSION: ${{ matrix.version }}
       TARGET: python_${VERSION//./_}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
