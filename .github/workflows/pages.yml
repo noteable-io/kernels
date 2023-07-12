@@ -13,7 +13,8 @@ jobs:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-22.04
     defaults:
-      working-directory: ./docs
+      run:
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
