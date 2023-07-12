@@ -62,8 +62,7 @@ jobs:
         version: ["3.9", "3.10", "3.11"] # TODO: Add 3.11
         identifier: [base, base-gpu]
     env:
-      TAG: |
-        ${{ github.ref_name == 'main' && 'latest' || 
+      TAG: ${{ github.ref_name == 'main' && 'latest' || 
           github.event_name == 'pull_request' && github.event.pull_request.number || 
           github.ref_name }}
       VERSION: ${{ matrix.version }}
@@ -118,8 +117,7 @@ jobs:
       matrix:
         version: [4.3.0]
     env:
-      TAG: |
-        ${{ github.ref_name == 'main' && 'latest' || 
+      TAG: ${{ github.ref_name == 'main' && 'latest' || 
           github.event_name == 'pull_request' && github.event.pull_request.number || 
           github.ref_name }}
       VERSION: ${{ matrix.version }}
