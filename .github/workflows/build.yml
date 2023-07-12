@@ -59,11 +59,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ["3.9", "3.10", "3.11"] # TODO: Add 3.11
+        version: ["3.9", "3.10"] # TODO: Add 3.11
         identifier: [base, base-gpu]
     env:
-      TAG: ${{ github.ref_name == 'main' && 'latest' || 
-          github.event_name == 'pull_request' && github.event.pull_request.number || 
+      TAG: ${{ github.ref_name == 'main' && 'latest' ||
+          github.event_name == 'pull_request' && github.event.pull_request.number ||
           github.ref_name }}
       VERSION: ${{ matrix.version }}
       TARGET: python_${VERSION//./_}
@@ -117,8 +117,8 @@ jobs:
       matrix:
         version: [4.3.0]
     env:
-      TAG: ${{ github.ref_name == 'main' && 'latest' || 
-          github.event_name == 'pull_request' && github.event.pull_request.number || 
+      TAG: ${{ github.ref_name == 'main' && 'latest' ||
+          github.event_name == 'pull_request' && github.event.pull_request.number ||
           github.ref_name }}
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
