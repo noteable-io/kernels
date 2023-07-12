@@ -8,7 +8,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-REF=${1:?'You must provider a ref name'}
+REF=${1:?'You must provide a ref name'}
 EVENT=${2:?'You must provide the github event'}
 PR_NUMBER=${3:-0}
 
