@@ -27,6 +27,7 @@ run.sh
 !python/base/Aptfile
 !python/datascience/Aptfile
 !python/noteable/Aptfile
+!r/Aptfile
 
 !python/base-gpu/gpu.Aptfile
 !python/base-gpu/environment.txt
