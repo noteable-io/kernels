@@ -27,7 +27,8 @@ variable "TIMESTAMP" {
 group "rlang_4_3_0" {
   targets = [
     "rlang_base_4_3_0",
-    "rlang_noteable_4_3_0"
+    "rlang_noteable_4_3_0",
+    "rlang_datascience_4_3_0",
   ]
 }
 
@@ -312,11 +313,22 @@ target "rlang_base_4_3_0" {
   ]
 }
 
+# R 4.3.0 Datascience variant
+target "rlang_datascience_4_3_0" {
+  context = "r/datascience/4.3.0"
+  contexts = {
+    base = "target:rlang_base_4_3_0"
+  }
+  tags = [
+    "ghcr.io/noteable-io/kernel-r-4.3.0-datascience:${TAG}"
+  ]
+}
+
 # R 4.3.0 Noteable variant
 target "rlang_noteable_4_3_0" {
   context = "r/noteable/4.3.0"
   contexts = {
-    base = "target:rlang_base_4_3_0"
+    base = "target:rlang_datascience_4_3_0"
   }
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
