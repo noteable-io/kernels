@@ -8,5 +8,5 @@ USER noteable
 
 # R package dependencies and py_install
 COPY requirements.R /tmp/requirements.R
-RUN R -e "source('/tmp/requirements.R')"
-
+COPY install_packages.R /tmp/install_packages.R
+RUN R -e "source('/tmp/install_packages.R')"

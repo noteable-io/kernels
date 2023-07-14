@@ -1,2 +1,2 @@
-packages <- readLines("requirements.R")
+packages <- readLines("/tmp/requirements.R")
 install.packages(packages, repos='http://cran.rstudio.com/')
