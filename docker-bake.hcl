@@ -308,7 +308,7 @@ target "rlang_base_4_3_0" {
   inherits = ["base"]
   context = "R/base/4.3.0"
   tags = [
-    "ghcr.io/noteable-io/kernel-r-4.3.0:${TAG}"
+    "ghcr.io/noteable-io/kernel-r-4.3.0-base:${TAG}"
   ]
 }
 
