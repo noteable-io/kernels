@@ -1,7 +1,6 @@
-# syntax = docker/dockerfile:1.2.1
-ARG BASE_IMAGE
+# syntax = docker/dockerfile:1.5
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 ARG NBL_PYTHON_VERSION=3.11
 

@@ -1,4 +1,7 @@
 #!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
 
 # This script helps inject Secrets into the Kernel environment.
 # The Vault Agent will volume mount files into the Kernel container

@@ -23,7 +23,8 @@ tasks:
     cmds:
       - task copy-root-files LANGUAGE=R IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       - task copy-language-files LANGUAGE=R IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
-
+      - cp R/noteable/.Rprofile R/noteable/{{.NBL_R_VERSION}}/.Rprofile
+      - cp R/noteable/requirements.R R/noteable/{{.NBL_R_VERSION}}/requirements.R
   base:build:
     desc: Build the R 4.x base image after copying required files
     cmds:

@@ -29,6 +29,10 @@ tasks:
     cmds:
       - task copy-root-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
       - task copy-language-files LANGUAGE=python IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}
+      - cp python/base-gpu/environment.txt python/base-gpu/{{.NBL_PYTHON_VERSION}}/environment.txt
+      - cp python/base-gpu/gpu.Aptfile python/base-gpu/{{.NBL_PYTHON_VERSION}}/gpu.Aptfile
+      - cp python/base-gpu/run.sh python/base-gpu/{{.NBL_PYTHON_VERSION}}/run.sh
+      - cp python/base-gpu/initial-condarc python/base-gpu/{{.NBL_PYTHON_VERSION}}/initial-condarc
 
   base:pyenv:install:
     desc: Install the specified version of Python using pyenv
