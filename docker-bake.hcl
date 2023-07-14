@@ -1,26 +1,29 @@
+# Builds for Noteable kernels are managed by https://docs.docker.com/engine/reference/commandline/buildx_bake/
+# For further reference for the configurations in this file
+# - https://docs.docker.com/build/bake/reference/
+
+# Environment variable for configuring
+# the ":$tag" for build Docker images
 variable "TAG" {
   default = "latest"
 }
 
+# Github SHA, which is used for the revision label
 variable "GITHUB_SHA" {
   default = ""
 }
 
+# URL for the github build that created the image
 variable "BUILD_URL" {
   default = ""
 }
 
+# When the image was created
 variable "TIMESTAMP" {
   default = ""
 }
 
-group "default" {
-  targets = [
-    "rlang",
-    "python",
-#    "python_gpu"
-  ]
-}
+# Group of R targets
 group "rlang_4_3_0" {
   targets = [
     "rlang_base_4_3_0",
@@ -28,6 +31,7 @@ group "rlang_4_3_0" {
   ]
 }
 
+# Grouping of all base python images
 group "python_base" {
   targets = [
     "python_base_3_9",
@@ -36,6 +40,7 @@ group "python_base" {
   ]
 }
 
+# Group of all Python 3.9 non-GPU images
 group "python_3_9" {
   targets = [
     "python_base_3_9",
@@ -44,6 +49,7 @@ group "python_3_9" {
   ]
 }
 
+# Group of all Python 3.10 non-GPU images
 group "python_3_10" {
   targets = [
     "python_base_3_10",
@@ -52,6 +58,7 @@ group "python_3_10" {
   ]
 }
 
+# Group of all Python 3.11 non-GPU images
 group "python_3_11" {
   targets = [
     "python_base_3_11",
@@ -59,6 +66,7 @@ group "python_3_11" {
   ]
 }
 
+# Gropu to build all non-GPU python images
 group "python" {
   targets = [
     "python_3_9",
@@ -67,6 +75,7 @@ group "python" {
   ]
 }
 
+# Group of all Python 3.9 GPU images
 group "python_3_9_gpu" {
   targets = [
     "python_base_3_9_gpu",
@@ -75,6 +84,7 @@ group "python_3_9_gpu" {
   ]
 }
 
+# Group of all Python 3.10 GPU images
 group "python_3_10_gpu" {
   targets = [
     "python_base_3_10_gpu",
@@ -83,6 +93,7 @@ group "python_3_10_gpu" {
   ]
 }
 
+# Group of all Python 3.11 GPU images
 group "python_3_11_gpu" {
   targets = [
     "python_base_3_11_gpu",
@@ -90,6 +101,7 @@ group "python_3_11_gpu" {
   ]
 }
 
+# Group of all Python GPU images
 group "python_gpu" {
   targets = [
     "python_3_9_gpu",
@@ -98,7 +110,9 @@ group "python_gpu" {
   ]
 }
 
+# Base bake template. All child kernels inherit from this.
 target "base" {
+  # Set standard Noteable labels, applied to all images
   labels = {
     "org.opencontainers.image.created" = "${TIMESTAMP}"
     "org.opencontainers.image.source" = "https://github.com/noteable-io/kernels"
@@ -109,6 +123,7 @@ target "base" {
   }
 }
 
+# Python 3.9 base image
 target "python_base_3_9" {
   inherits = ["base"]
   context = "python/base/3.9"
@@ -117,6 +132,7 @@ target "python_base_3_9" {
   ]
 }
 
+# Python 3.10 base image
 target "python_base_3_10" {
   inherits = ["base"]
   context = "python/base/3.10"
@@ -125,6 +141,7 @@ target "python_base_3_10" {
   ]
 }
 
+# Python 3.11 base image
 target "python_base_3_11" {
   inherits = ["base"]
   context = "python/base/3.11"
@@ -133,6 +150,7 @@ target "python_base_3_11" {
   ]
 }
 
+# Python 3.9 GPU image
 target "python_base_3_9_gpu" {
   context = "python/base-gpu/3.9"
   contexts = {
@@ -143,6 +161,7 @@ target "python_base_3_9_gpu" {
   ]
 }
 
+# Python 3.10 GPU image
 target "python_base_3_10_gpu" {
   context = "python/base-gpu/3.10"
   contexts = {
@@ -153,6 +172,7 @@ target "python_base_3_10_gpu" {
   ]
 }
 
+# Python 3.11 GPU image
 target "python_base_3_11_gpu" {
   context = "python/base-gpu/3.11"
   contexts = {
@@ -163,6 +183,7 @@ target "python_base_3_11_gpu" {
   ]
 }
 
+# Python 3.9 Noteable variant
 target "python_noteable_3_9" {
   context = "python/noteable/3.9"
   contexts = {
@@ -174,6 +195,7 @@ target "python_noteable_3_9" {
   ]
 }
 
+# Python 3.10 Noteable variant
 target "python_noteable_3_10" {
   context = "python/noteable/3.10"
   contexts = {
@@ -185,6 +207,7 @@ target "python_noteable_3_10" {
   ]
 }
 
+# Python 3.9 GPU Noteable variant
 target "python_noteable_3_9_gpu" {
   context = "python/noteable/3.9"
   contexts = {
@@ -196,6 +219,7 @@ target "python_noteable_3_9_gpu" {
   ]
 }
 
+# Python 3.10 GPU Noteable variant
 target "python_noteable_3_10_gpu" {
   context = "python/noteable/3.10"
   contexts = {
@@ -207,6 +231,7 @@ target "python_noteable_3_10_gpu" {
   ]
 }
 
+# Python 3.9 Datascience variant
 target "python_datascience_3_9" {
   context = "python/datascience/3.9"
   contexts = {
@@ -218,6 +243,7 @@ target "python_datascience_3_9" {
   ]
 }
 
+# Python 3.10 Datascience variant
 target "python_datascience_3_10" {
   context = "python/datascience/3.10"
   contexts = {
@@ -229,6 +255,7 @@ target "python_datascience_3_10" {
   ]
 }
 
+# Python 3.11 Datascience variant
 target "python_datascience_3_11" {
   context = "python/datascience/3.11"
   contexts = {
@@ -240,6 +267,7 @@ target "python_datascience_3_11" {
   ]
 }
 
+# Python 3.9 GPU Datascience variant
 target "python_datascience_3_9_gpu" {
   context = "python/datascience/3.9"
   contexts = {
@@ -251,6 +279,7 @@ target "python_datascience_3_9_gpu" {
   ]
 }
 
+# Python 3.10 GPU Datascience variant
 target "python_datascience_3_10_gpu" {
   context = "python/datascience/3.10"
   contexts = {
@@ -262,6 +291,7 @@ target "python_datascience_3_10_gpu" {
   ]
 }
 
+# Python 3.11 GPU Datascience variant
 target "python_datascience_3_11_gpu" {
   context = "python/datascience/3.11"
   contexts = {
@@ -273,6 +303,7 @@ target "python_datascience_3_11_gpu" {
   ]
 }
 
+# Base R 4.3.0 image
 target "rlang_base_4_3_0" {
   inherits = ["base"]
   context = "R/base/4.3.0"
@@ -281,6 +312,7 @@ target "rlang_base_4_3_0" {
   ]
 }
 
+# R 4.3.0 Noteable variant
 target "rlang_noteable_4_3_0" {
   context = "R/noteable/4.3.0"
   contexts = {
