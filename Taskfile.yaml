@@ -23,3 +23,18 @@ tasks:
     generates:
       - ./{{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/Aptfile
       - ./{{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}}/run.sh
+
+  build:
+    desc: Build the kernel image with docker buildx
+    cmds:
+      - >-
+        docker buildx build {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}} {{.CLI_ARGS}} \
+          --build-arg "NBL_LANGUAGE_VERSION={{.NBL_LANGUAGE_VERSION}}" \
+          --target "{{.BUILD_TARGET}}" \
+          --tag "local/kernel-{{.LANGUAGE}}-{{.NBL_LANGUAGE_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:{{.TAG}}"
+    requires:
+      vars: [LANGUAGE, IDENTIFIER, NBL_LANGUAGE_VERSION]
+    vars:
+      BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
+      TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
+      TAG: '{{default "dev" .TAG}}'
