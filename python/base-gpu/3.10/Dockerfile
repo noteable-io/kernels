@@ -1,7 +1,6 @@
-# syntax = docker/dockerfile:1.2.1
-ARG BASE_IMAGE
+# syntax = docker/dockerfile:1.5
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base
 
 ARG NBL_PYTHON_VERSION=3.10
 
@@ -45,8 +44,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \
   mamba clean --all -f -y
 
-WORKDIR /tmp
-
 RUN wget --progress=dot:giga https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb && \
   dpkg -i cuda-keyring_1.0-1_all.deb
 
@@ -82,3 +79,5 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
 
 # Overwrite the base run.sh to include `mamba` usage
 COPY run.sh /usr/local/bin
+
+WORKDIR /etc/noteable/project

@@ -1,13 +1,12 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.5
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via dx)
 # - git integration (via gitpython, nbdime)
 # - variable explorer, form cells (via sidecar_comms)
-ARG BASE_IMAGE
 # hadolint ignore=DL3006
-FROM ${BASE_IMAGE} as base
+FROM base as main
 
-ARG NBL_PYTHON_VERSION=3.9
+ARG NBL_PYTHON_VERSION=3.10
 
 USER root
 
@@ -38,7 +37,8 @@ COPY git-wrapper.sh /usr/local/bin/git
 
 USER noteable
 
-FROM base as gpu
+# hadolint ignore=DL3006
+FROM main as gpu
 
 COPY gpu.requirements.txt /tmp/noteable_gpu_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_gpu_requirements.txt
