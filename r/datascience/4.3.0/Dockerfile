@@ -1,5 +1,6 @@
-# syntax = docker/dockerfile:1.2.1
+# syntax = docker/dockerfile:1.5
 # Datascience build: adds packages based on the Jupyter r-notebook dependencies
+# (ref: https://github.com/jupyter/docker-stacks/blob/main/r-notebook/Dockerfile)
 # hadolint ignore=DL3006
 FROM base as main
 
