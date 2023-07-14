@@ -14,6 +14,8 @@ tasks:
     cmds:
       - task copy-root-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       - task copy-language-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
+      - cp r/datascience/install_packages.R r/datascience/{{.NBL_R_VERSION}}/install_packages.R
+      - cp r/datascience/requirements.R r/datascience/{{.NBL_R_VERSION}}/requirements.R
       - cp r/noteable/.Rprofile r/noteable/{{.NBL_R_VERSION}}/.Rprofile
       - cp r/noteable/requirements.R r/noteable/{{.NBL_R_VERSION}}/requirements.R
 
