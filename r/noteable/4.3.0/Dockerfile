@@ -2,7 +2,7 @@
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via .Rprofile)
 # hadolint ignore=DL3006
-FROM base
+FROM base as main
 
 USER noteable
 
