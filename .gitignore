@@ -48,7 +48,9 @@ run.sh
 !python/noteable/git-wrapper.sh
 
 !r/datascience/install_packages.R
-!r/datascience/.Rprofile
 
+!r/datascience/.Rprofile
 !r/noteable/.Rprofile
+
+!r/datascience/requirements.R
 !r/noteable/requirements.R
