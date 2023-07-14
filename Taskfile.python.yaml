@@ -9,21 +9,6 @@ vars:
 # directly in `cmds: []`, the variables have to be passed in explicitly.
 
 tasks:
-  core:build:
-    desc: Build the Python 3.x image
-    cmds:
-      - >-
-        docker build python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}} \
-          --build-arg "NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}" \
-          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
-          --target "{{.BUILD_TARGET}}" \
-          --tag "local/kernel-python-{{.NBL_PYTHON_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:dev"
-    requires:
-      vars: [IDENTIFIER, NBL_PYTHON_VERSION]
-    vars:
-      BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
-      TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
-
   base:copy-files:
     desc: Copy files from the Python directory to the build directories
     cmds:
@@ -74,7 +59,7 @@ tasks:
     desc: Build the Python 3.x base image after copying required files
     cmds:
       - task python:base:copy-files IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      - task python:core:build IDENTIFIER=base NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=base
 
   # Base GPU image
   base-gpu:lock-dependencies:
@@ -86,14 +71,16 @@ tasks:
   base-gpu:build:
     desc: Build the Python 3.x image with GPU support after copying required files
     cmds:
-      - task python:base:copy-files IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      # ensure the base image is built first
+      - task python:base:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy base-gpu specific files
+      - task python:base:copy-files IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       - cp python/base-gpu/environment.txt python/base-gpu/{{.NBL_PYTHON_VERSION}}/environment.txt
       - cp python/base-gpu/gpu.Aptfile python/base-gpu/{{.NBL_PYTHON_VERSION}}/gpu.Aptfile
       - cp python/base-gpu/run.sh python/base-gpu/{{.NBL_PYTHON_VERSION}}/run.sh
       - cp python/base-gpu/initial-condarc python/base-gpu/{{.NBL_PYTHON_VERSION}}/initial-condarc
-      # build off of the base image
-      - task python:core:build IDENTIFIER=base-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
+      # build the base-gpu image off of the base image
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=base-gpu BUILD_TARGET=main -- --build-context base=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
 
   # Datascience image
   datascience:lock-dependencies:
@@ -106,8 +93,8 @@ tasks:
     cmds:
       # ensure the base image is built first
       - task python:base:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      # build the datascience image
-      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
+      # build the datascience image off of the base image
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}  IDENTIFIER=datascience BUILD_TARGET=main -- --build-context base=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base:dev
 
   # Datascience GPU image
   datascience-gpu:lock-dependencies:
@@ -120,8 +107,8 @@ tasks:
     cmds:
       # ensure the base-gpu image is built first
       - task python:base-gpu:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      # build the datascience-gpu image
-      - task python:core:build IDENTIFIER=datascience NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
+      # build the datascience-gpu image off of the base-gpu image
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=datascience BUILD_TARGET=gpu TAG_SUFFIX=-gpu -- --build-context base=local/kernel-python-{{.NBL_PYTHON_VERSION}}-base-gpu:dev
 
   # Noteable image
   noteable:copy-files:
@@ -144,9 +131,10 @@ tasks:
     cmds:
       # ensure the datascience image is built first
       - task python:datascience:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      # build the noteable image after copying over noteable-specific files
+      # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
+      # build the noteable image off of the datascience image
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}}  IDENTIFIER=noteable BUILD_TARGET=main -- --build-context base=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
 
   # Noteable GPU image
   noteable-gpu:lock-dependencies:
@@ -159,9 +147,10 @@ tasks:
     cmds:
       # ensure the datascience-gpu image is built first
       - task python:datascience-gpu:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      # build the noteable-gpu image after copying over noteable-specific files
+      # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
-      - task python:core:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BASE_IMAGE=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev BUILD_TARGET=gpu TAG_SUFFIX=-gpu
+      # build the noteable-gpu image off of the datascience-gpu image
+      - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=noteable BUILD_TARGET=gpu TAG_SUFFIX=-gpu -- --build-context base=local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev
 
   # convenience functions for building multiple images in parallel
   base:lock-all-dependencies:
