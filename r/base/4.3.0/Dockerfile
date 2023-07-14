@@ -5,7 +5,7 @@
 # - no git, secrets, SQL, extensions, etc
 # ---
 ARG NBL_R_VERSION=4.3.0
-FROM r-base:${NBL_R_VERSION}
+FROM r-base:${NBL_R_VERSION} as base
 
 # User/group setup
 USER root
