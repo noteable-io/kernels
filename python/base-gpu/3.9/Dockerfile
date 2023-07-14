@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.5
 # hadolint ignore=DL3006
 FROM base
 

@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.5
 # Datascience build: adds packages based on the NumFOCUS datascience stack
 # hadolint ignore=DL3006
 FROM base as main

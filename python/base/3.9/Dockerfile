@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.5
 # ---
 # Bare minimum Python 3.x.x image with ipykernel installed
 # - no Python packages aside from builtins and ipykernel

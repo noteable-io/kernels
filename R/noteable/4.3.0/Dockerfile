@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.5
 # Noteable build: adds packages to enable Noteable-specific functionality:
 # - DEX support (via .Rprofile)
 # hadolint ignore=DL3006
