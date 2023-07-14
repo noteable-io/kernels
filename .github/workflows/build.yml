@@ -101,8 +101,7 @@ jobs:
       - name: Build python kernels
         uses: docker/bake-action@f32f8b8d70bc284af19f8148dd14ad1d2fbc6c28 # v3.1.0
         with:
-          #push: ${{ github.event_name != 'pull_request' }}
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           targets: ${{ steps.target.outputs.TARGET }}
 
   build_rlang_kernels:
@@ -140,6 +139,5 @@ jobs:
       - name: Build kernels
         uses: docker/bake-action@f32f8b8d70bc284af19f8148dd14ad1d2fbc6c28 # v3.1.0
         with:
-          #push: ${{ github.event_name != 'pull_request' }}
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           targets: ${{ steps.target.outputs.TARGET }}
