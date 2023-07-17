@@ -16,7 +16,9 @@ title: Project Structure
 For some of the existing kernels, this looks like
 ```
 - /
-  - /R/base/4.3.0
+  - /R
+    - /base
+      - /4.3.0
   - /python
     - /base
       - /3.9
