@@ -57,5 +57,5 @@ can be approved:
 - All images for a specific language must be built off of that language's base image
 - Base images must be able to start and run their entrypoint
 - The resulting image must run as the `noteable` user (or `4004:4004`)
-- The home directory for the user must be `/srv/noteable`
+- The home directory for the user must be `/home/noteable`
 - The entrypoint must be located at `/usr/local/bin/run.sh`
