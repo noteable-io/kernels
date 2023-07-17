@@ -3,6 +3,6 @@
   "position": 3,
   "link": {
     "type": "generated-index",
-    "description": "Maybe we help folks build their custom kernel images"
+    "description": "Tips for both building and using kernels, as well as configuring notebooks"
   }
 }

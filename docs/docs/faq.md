@@ -14,9 +14,9 @@ We welcome contributions to fix issues with existing kernels, as well as inserti
 Head over to the Contributor Guide, discuss your plan and implementation with maintainers, and once
 changes are accepted, those kernels are available for use shortly after
 
-### I need different version of an installed library?
+### I need a different version of an installed library?
 
-All the packages in these kernels is verified and tested by the team at Noteable. Updates to libraries,
+All the packages in these kernels are verified and tested by the team at Noteable. Updates to libraries,
 including security patches, are adopted once they're accepted as valid.
 
 If you have a dependency conflict with a package you're installing, you can open an issue
