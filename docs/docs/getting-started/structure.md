@@ -26,7 +26,9 @@ For some of the existing kernels, this looks like
 If we were to add a new language, such as Rust @ `1.70.0`:
 ```
 - /
-  - rust/base/1.70.0 # Add a new rust/base directory, then seed the initial version
+  - /rust
+    - /base
+      - /1.70.0 # Add a new rust/base directory, then seed the initial version
 ```
 
 To add an additional Python version, such as `3.11`:
