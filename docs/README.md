@@ -2,11 +2,4 @@
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-### Quick Start
-
-```
-npm install
-npm run start
-```
-
-**Note:** You must be in the `/docs` directory, not the root of the project
+For configuration, development guides, and other information, please refer to https://docusaurus.io/docs/installation#running-the-development-server
