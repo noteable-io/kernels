@@ -44,7 +44,7 @@ To add an additional Python version, such as `3.11`:
 ```
 
 Note, that when adding kernel directories, `/docker-bake.hcl` will also need to be
-configured to build the new targets
+configured to build the new targets. For information on `docker buildx bake`, please refer to https://docs.docker.com/build/bake/reference/
 
 ### GPU Variants
 

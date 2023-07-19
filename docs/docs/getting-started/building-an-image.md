@@ -22,11 +22,18 @@ or if needed, any of the configured groups of images can be built together
 
 ## Building a Kernel
 
-TODO: Cleanup around Task copying of files where needed
-
 Once necessary files have been copied, `bake` can be executed. This will build
 the requested target, and any required parent images
+
+#### Python
 ```
-task prep:${target}
+task python:base:copy-files NBL_PYTHON_VERSION=<python_version> IDENTIFIER=base # or base-gpu for GPU images
+task python:noteable:copy-files NBL_PYTHON_VERSION=<python_version> IDENTIFIER=base
+docker buildx bake ${target}
+```
+
+#### R
+```
+task r:base:copy-files NBL_LANGUAGE_VERSION=<R version>
 docker buildx bake ${target}
 ```
