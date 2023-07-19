@@ -15,8 +15,10 @@ cd kernels
 
 In order to build the various kernels provided at Noteable, you'll need a few system tools.
 
-- [Docker](https://docs.docker.com/engine/install/)
-- [Taskfile](https://taskfile.dev/installation/)
+| | Version |
+|---|---|
+| [Docker](https://docs.docker.com/engine/install/) | `>= 19.03` |
+| [Taskfile](https://taskfile.dev/installation/)  | `> 3.0.0`
 
 Ensure the following commands return successfully before continuing
 
