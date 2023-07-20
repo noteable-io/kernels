@@ -299,7 +299,7 @@ ipykernel==6.23.1
     #   nbclassic
     #   notebook
     #   sidecar-comms
-ipykernel-logging @ git+https://www.github.com/noteable-io/ipykernel-logging.git@b5ae61c0c99ba8e1a6740fd24b123bc580efe53a
+ipykernel-logging @ git+https://www.github.com/noteable-io/ipykernel-logging.git@dc169edb8d7c262a001b795373b479df561bfe73
     # via -r python/noteable/3.10/requirements.in
 ipython[kernel]==8.13.2
     # via
