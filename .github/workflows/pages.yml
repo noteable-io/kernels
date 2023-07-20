@@ -41,8 +41,9 @@ jobs:
           done
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
-        path:
-          - ./docs
+        with:
+          path:
+            - ./docs
 
   deploy:
     # Add a dependency to the build job
