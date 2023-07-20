@@ -35,14 +35,11 @@ jobs:
       - name: Build website
         run: npm run build
       - name: Fix permissions
-        run: |
-          chmod -v -R +rX "./" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
+        run: chmod -v -R +rX "./"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./docs
+          path: ./docs/build
 
   deploy:
     # Add a dependency to the build job
