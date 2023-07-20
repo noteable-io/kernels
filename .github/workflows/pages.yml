@@ -13,11 +13,13 @@ on:
       - 'docs/**'
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
-    name: Deploy to GitHub Pages
+  build:
+    name: Build the docusaurus site
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -32,25 +34,34 @@ jobs:
         run: npm install --frozen-lockfile
       - name: Build website
         run: npm run build
+      - name: Fix permissions
+        run: |
+          chmod -v -R +rX "./" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+        path:
+          - ./docs
 
-      # Generate a token to publish to gh-pages
-      - name: Generate pages token
-#        if: ${{ github.ref == 'refs/heads/main' }}
-        id: generate_pages_token
-        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
-        with:
-          app_id: ${{ secrets.PUBLISHER_APP_ID }}
-          installation_id: ${{ secrets.PUBLISHER_APP_INSTALLATION_ID }}
-          private_key: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+#    if: ${{ github.ref == '/refs/heads/main' }}
 
-      # Popular action to deploy to GitHub Pages:
-      # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-22.04
+    steps:
       - name: Deploy to GitHub Pages
-#        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3.9.3
-        with:
-          github_token: ${{ steps.generate_pages_token.outputs.token }}
-          # Build output to publish to the `gh-pages` branch:
-          publish_dir: ./docs/build
-          user_name: noteable-pages-publisher[bot]
-          user_email: 140083265+noteable-pages-publisher[bot]@users.noreply.github.com
+        id: deployment
+        uses: actions/deploy-pages@v2
