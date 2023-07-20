@@ -35,6 +35,7 @@ jobs:
 
       # Generate a token to publish to gh-pages
       - name: Generate pages token
+#        if: ${{ github.ref == 'refs/heads/main' }}
         id: generate_pages_token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
         with:
@@ -45,6 +46,7 @@ jobs:
       # Popular action to deploy to GitHub Pages:
       # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
       - name: Deploy to GitHub Pages
+#        if: ${{ github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3.9.3
         with:
           github_token: ${{ steps.generate_pages_token.outputs.token }}
