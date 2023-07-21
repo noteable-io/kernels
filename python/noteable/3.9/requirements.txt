@@ -495,7 +495,7 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   nbclassic
     #   notebook
-noteable @ git+https://www.github.com/noteable-io/noteable-notebook-magics.git@80400d864bdc3b73ce3c4e3580b1df8d01c4c860
+noteable @ git+https://www.github.com/noteable-io/noteable-notebook-magics.git@b7ea1e809bfc78be7bec58602504596dde6a089a
     # via -r python/noteable/3.9/requirements.in
 noteable-origami==0.0.11
     # via papermill-origami
