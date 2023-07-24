@@ -1,3 +1,4 @@
-* @noteable-io/back-end
-
+* @noteable-io/back-end @noteable-io/devops
 .github/ @noteable-io/devops
+python/** @noteable-io/back-end
+R/** @noteable-io/back-end
