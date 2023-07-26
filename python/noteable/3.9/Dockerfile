@@ -23,6 +23,8 @@ RUN apt-get update -y && \
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
+USER noteable
+
 COPY requirements.txt /tmp/noteable_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 
@@ -34,8 +36,6 @@ COPY .pythonrc /srv/noteable/.
 COPY ipython_config.py /etc/ipython
 COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git
-
-USER noteable
 
 # hadolint ignore=DL3006
 FROM main as gpu
