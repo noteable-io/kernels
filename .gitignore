@@ -33,6 +33,7 @@ dev_packages
 !r/Aptfile
 !r/datascience/Aptfile
 !r/noteable/Aptfile
+!rust/base/Aptfile
 
 !python/base-gpu/gpu.Aptfile
 !python/base-gpu/environment.txt
