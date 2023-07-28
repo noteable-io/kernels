@@ -1,3 +1,4 @@
+arrow
 caret
 crayon
 devtools
@@ -5,6 +6,7 @@ dplyr
 e1071
 forecast
 ggplot2
+ggpubr
 hexbin
 htmltools
 htmlwidgets
