@@ -17,6 +17,7 @@ tasks:
       - cp r/datascience/Aptfile r/datascience/{{.NBL_LANGUAGE_VERSION}}/Aptfile
       - cp r/datascience/install_packages.R r/datascience/{{.NBL_LANGUAGE_VERSION}}/install_packages.R
       - cp r/datascience/requirements.R r/datascience/{{.NBL_LANGUAGE_VERSION}}/requirements.R
+      - cp r/noteable/Aptfile r/noteable/{{.NBL_LANGUAGE_VERSION}}/Aptfile
       - cp r/noteable/.Rprofile r/noteable/{{.NBL_LANGUAGE_VERSION}}/.Rprofile
       - cp r/noteable/requirements.R r/noteable/{{.NBL_LANGUAGE_VERSION}}/requirements.R
 
@@ -45,6 +46,7 @@ tasks:
       # ensure the datascience image is built first
       - task r:datascience:build IDENTIFIER=noteable NBL_R_VERSION={{.NBL_R_VERSION}}
       # copy noteable-specific files to the build directories
+      - cp r/noteable/Aptfile r/noteable/{{.NBL_R_VERSION}}/Aptfile
       - cp r/noteable/.Rprofile r/noteable/{{.NBL_R_VERSION}}/.Rprofile
       - cp r/noteable/requirements.R r/noteable/{{.NBL_R_VERSION}}/requirements.R
       # build the noteable image off of the datascience image
