@@ -4,10 +4,14 @@
 # hadolint ignore=DL3006
 FROM base as main
 
-USER noteable
+USER root
 
-# Install python to use with Reticulate
-RUN micromamba install python=3.9 -y -c conda-forge
+# install python for reticulate support
+# hadolint ignore=DL3045
+COPY Aptfile .
+RUN /usr/bin/apt-install Aptfile
+
+USER noteable
 
 # R package dependencies and py_install
 COPY requirements.R /tmp/requirements.R
