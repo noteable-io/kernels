@@ -4,9 +4,16 @@
 # hadolint ignore=DL3006
 FROM base as main
 
+USER root
+
+# R package dependencies
+# hadolint ignore=DL3045
+COPY Aptfile .
+RUN /usr/bin/apt-install Aptfile
+
 USER noteable
 
-# R package dependencies and py_install
+# install R packages
 COPY requirements.R /tmp/requirements.R
 COPY install_packages.R /tmp/install_packages.R
 RUN R -e "source('/tmp/install_packages.R')"
