@@ -22,7 +22,6 @@ RUN groupadd --gid 4004 noteable && \
     --gid noteable noteable \
     --home-dir /srv/noteable && \
     chown --recursive noteable:noteable /srv/noteable && \
-    mkdir /opt/venv && chown noteable:noteable /opt/venv && \
     mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
 
 WORKDIR /tmp
@@ -33,7 +32,7 @@ RUN /usr/bin/apt-install Aptfile
 
 USER noteable
 
-ENV PATH="/home/noteable/.cargo/bin:${PATH}"
+ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 
 RUN cargo install evcxr_jupyter && \
     evcxr_jupyter --install
@@ -48,9 +47,5 @@ EXPOSE 50001-50005
 
 RUN cargo init
 
-# Use tini to manage passing signals to the child kernel process
-# -g will ensure signals are passed to the entire child process *group*, 
-# not just the immediate child process (bash)
-# https://github.com/krallin/tini#process-group-killing
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["run.sh"]
