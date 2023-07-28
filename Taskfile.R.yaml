@@ -12,19 +12,20 @@ tasks:
   base:copy-files:
     desc: Copy files from the R directory to the build directories
     cmds:
-      - task copy-root-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
-      - task copy-language-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
-      - cp r/datascience/install_packages.R r/datascience/{{.NBL_R_VERSION}}/install_packages.R
-      - cp r/datascience/requirements.R r/datascience/{{.NBL_R_VERSION}}/requirements.R
-      - cp r/noteable/.Rprofile r/noteable/{{.NBL_R_VERSION}}/.Rprofile
-      - cp r/noteable/requirements.R r/noteable/{{.NBL_R_VERSION}}/requirements.R
+      - task copy-root-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_LANGUAGE_VERSION}}
+      - task copy-language-files LANGUAGE=r IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_LANGUAGE_VERSION}}
+      - cp r/datascience/Aptfile r/datascience/{{.NBL_LANGUAGE_VERSION}}/Aptfile
+      - cp r/datascience/install_packages.R r/datascience/{{.NBL_LANGUAGE_VERSION}}/install_packages.R
+      - cp r/datascience/requirements.R r/datascience/{{.NBL_LANGUAGE_VERSION}}/requirements.R
+      - cp r/noteable/.Rprofile r/noteable/{{.NBL_LANGUAGE_VERSION}}/.Rprofile
+      - cp r/noteable/requirements.R r/noteable/{{.NBL_LANGUAGE_VERSION}}/requirements.R
 
   base:build:
     desc: Build the R 4.x base image after copying required files
     cmds:
       - task r:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       # build the base image
-      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=base
+      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=base -- --build-arg NBL_R_VERSION={{.NBL_R_VERSION}}
 
   datascience:build:
     desc: Build the R 4.3.x image with commonly-installed packages
@@ -32,6 +33,7 @@ tasks:
       # ensure the base image is built first
       - task r:base:build IDENTIFIER=datascience NBL_R_VERSION={{.NBL_R_VERSION}}
       # copy datascience-specific files to the build directories
+      - cp r/datascience/Aptfile r/datascience/{{.NBL_R_VERSION}}/Aptfile
       - cp r/datascience/install_packages.R r/datascience/{{.NBL_R_VERSION}}/install_packages.R
       - cp r/datascience/requirements.R r/datascience/{{.NBL_R_VERSION}}/requirements.R
       # build the datascience image off of the base image
