@@ -3,9 +3,8 @@ set -o pipefail
 set -o nounset
 set -o errexit
 
-echo "Local time: $(date)"
-
 set -x
+echo "Local time: $(date)"
 
 connection_file=/tmp/connection_file.json
 cp /etc/noteable/connections/connection_file.json ${connection_file}
@@ -20,4 +19,4 @@ echo "Done injecting Secrets, turning echoing back on"
 set -x
 
 echo "Starting R kernel"
-micromamba run -n noteable-venv R --slave -e "IRkernel::main()" --args  ${connection_file}
+exec R --slave -e "IRkernel::main()" --args  ${connection_file}
