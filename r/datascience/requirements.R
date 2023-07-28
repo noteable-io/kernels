@@ -1,8 +1,10 @@
 caret
 crayon
 devtools
+dplyr
 e1071
 forecast
+ggplot2
 hexbin
 htmltools
 htmlwidgets
@@ -10,6 +12,7 @@ irkernel
 nycflights13
 randomforest
 rcurl
+rgdal
 rmarkdown
 rodbc
 rsqlite
