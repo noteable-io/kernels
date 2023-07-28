@@ -8,7 +8,6 @@ ggplot2
 hexbin
 htmltools
 htmlwidgets
-irkernel
 nycflights13
 randomforest
 rcurl
