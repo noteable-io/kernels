@@ -12,6 +12,7 @@ git-wrapper.sh
 gpu.Aptfile
 gpu.requirements.in
 initial-condarc
+install_packages.R
 ipython_config.py
 secrets_helper.sh
 requirements.in
@@ -26,6 +27,9 @@ run.sh
 !python/base/Aptfile
 !python/datascience/Aptfile
 !python/noteable/Aptfile
+!r/Aptfile
+!r/datascience/Aptfile
+!r/noteable/Aptfile
 
 !python/base-gpu/gpu.Aptfile
 !python/base-gpu/environment.txt
@@ -45,5 +49,10 @@ run.sh
 !python/noteable/git_credential_helper.py
 !python/noteable/git-wrapper.sh
 
+!r/datascience/install_packages.R
+
+!r/datascience/.Rprofile
 !r/noteable/.Rprofile
+
+!r/datascience/requirements.R
 !r/noteable/requirements.R

@@ -27,7 +27,8 @@ variable "TIMESTAMP" {
 group "rlang_4_3_0" {
   targets = [
     "rlang_base_4_3_0",
-    "rlang_noteable_4_3_0"
+    "rlang_noteable_4_3_0",
+    "rlang_datascience_4_3_0",
   ]
 }
 
@@ -306,18 +307,31 @@ target "python_datascience_3_11_gpu" {
 # Base R 4.3.0 image
 target "rlang_base_4_3_0" {
   inherits = ["base"]
-  context = "R/base/4.3.0"
+  context = "r/base/4.3.0"
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-base:${TAG}"
   ]
 }
 
-# R 4.3.0 Noteable variant
-target "rlang_noteable_4_3_0" {
-  context = "R/noteable/4.3.0"
+# R 4.3.0 Datascience variant
+target "rlang_datascience_4_3_0" {
+  context = "r/datascience/4.3.0"
   contexts = {
     base = "target:rlang_base_4_3_0"
   }
+  target = "main"
+  tags = [
+    "ghcr.io/noteable-io/kernel-r-4.3.0-datascience:${TAG}"
+  ]
+}
+
+# R 4.3.0 Noteable variant
+target "rlang_noteable_4_3_0" {
+  context = "r/noteable/4.3.0"
+  contexts = {
+    base = "target:rlang_datascience_4_3_0"
+  }
+  target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
   ]
