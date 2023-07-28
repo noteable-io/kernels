@@ -22,7 +22,8 @@ RUN groupadd --gid 4004 noteable && \
   --gid noteable noteable \
   --home-dir /srv/noteable && \
   chown --recursive noteable:noteable /srv/noteable && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
+  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable && \
+  chown --recursive noteable:noteable /usr/local/lib/R/site-library
 
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
@@ -35,17 +36,7 @@ COPY apt-install /usr/bin/
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
-  ./bin/micromamba shell init -s bash -p ~/micromamba
-
 USER noteable
-RUN micromamba create --name noteable-venv \
-  -c conda-forge \
-  -y \
-  r="${NBL_R_VERSION}"
-# make subsequent RUN commands use the virtualenv:
-SHELL ["micromamba", "run", "-n", "noteable-venv", "/bin/bash", "-c"]
 
 # hadolint ignore=SC2239
 RUN R -e "install.packages('IRkernel', repos='http://cran.us.r-project.org')"
