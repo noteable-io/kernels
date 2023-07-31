@@ -135,7 +135,7 @@ tasks:
       # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy dev_packages for local builds, even if we aren't using the dev stage
-      - cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
+      - sudo cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
       # build the noteable image off of the datascience image
       - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=noteable BUILD_TARGET={{.BUILD_TARGET}} -- --build-context base=docker-image://local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
 
