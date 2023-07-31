@@ -135,7 +135,7 @@ tasks:
       # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy dev_packages for local builds, even if we aren't using the dev stage
-      - sudo cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
+      - cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
       # build the noteable image off of the datascience image
       - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=noteable BUILD_TARGET={{.BUILD_TARGET}} -- --build-context base=docker-image://local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
 
@@ -257,7 +257,7 @@ tasks:
         vars: { NBL_PYTHON_VERSION: 3.10 }
 
   noteable:build-all-with-dev-packages:
-    desc: LOCAL DEV - Build all Python images with `dev_packages` included
+    desc: LOCAL DEV - Build all `noteable` images with `dev_packages` included
     deps:
       - task: noteable:build
         vars:
@@ -285,7 +285,7 @@ tasks:
         vars: { NBL_PYTHON_VERSION: 3.10 }
 
   noteable-gpu:build-all-with-dev-packages:
-    desc: LOCAL DEV - Build all Python images with `dev_packages` included
+    desc: LOCAL DEV - Build all `noteable` images with `gpu_dev_packages` included
     deps:
       - task: noteable-gpu:build
         vars:
