@@ -47,6 +47,7 @@ dev_packages
 !python/run.sh
 !python/base-gpu/run.sh
 !r/run.sh
+!rust/run.sh
 
 !python/noteable/.pythonrc
 !python/noteable/ipython_config.py
