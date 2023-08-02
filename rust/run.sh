@@ -9,6 +9,7 @@ echo "Local time: $(date)"
 
 set +x
 echo "Injecting Secrets into environment, echoing is turned off"
+# shellcheck disable=SC1091
 source /tmp/secrets_helper.sh
 echo "Done injecting Secrets, turning echoing back on"
 set -x
