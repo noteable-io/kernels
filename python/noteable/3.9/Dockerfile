@@ -37,8 +37,32 @@ COPY ipython_config.py /etc/ipython
 COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git
 
+# hadolint ignore=DL3007
+FROM main AS dev
+
+# Copy any local packages into the image for development/testing
+COPY ./dev_packages /dev_packages
+RUN if [ "$(ls /dev_packages)" ]; then \
+    pip install --no-cache-dir /dev_packages/* && \
+    python -c "import dx, noteable, psutil, sidecar_comms"; \
+    else \
+    echo "No dev_packages to install"; \
+    fi
+
 # hadolint ignore=DL3006
 FROM main as gpu
 
 COPY gpu.requirements.txt /tmp/noteable_gpu_requirements.txt
 RUN pip install --no-cache-dir -r /tmp/noteable_gpu_requirements.txt
+
+# hadolint ignore=DL3007
+FROM gpu AS gpu-dev
+
+# Copy any local packages into the image for development/testing
+COPY ./gpu_dev_packages /gpu_dev_packages
+RUN if [ "$(ls /gpu_dev_packages)" ]; then \
+    pip install --no-cache-dir /gpu_dev_packages/* && \
+    python -c "import dx, noteable, psutil, sidecar_comms"; \
+    else \
+    echo "No gpu_dev_packages to install"; \
+    fi
