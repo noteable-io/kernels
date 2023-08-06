@@ -7,9 +7,11 @@
 absl-py==1.4.0
     # via
     #   tensorboard
-    #   tensorflow
+    #   tensorflow-macos
+accelerate==0.21.0
+    # via -r python/datascience/3.9/gpu.requirements.in
 astunparse==1.6.3
-    # via tensorflow
+    # via tensorflow-macos
 blis==0.7.9
     # via thinc
 cachetools==5.3.1
@@ -25,8 +27,6 @@ charset-normalizer==3.1.0
     # via requests
 click==8.1.3
     # via typer
-cmake==3.26.4
-    # via triton
 confection==0.1.0
     # via thinc
 contourpy==1.1.0
@@ -38,6 +38,8 @@ cymem==2.0.7
     #   preshed
     #   spacy
     #   thinc
+diffusers==0.19.3
+    # via -r python/datascience/3.9/gpu.requirements.in
 fastai==2.7.12
     # via -r python/datascience/3.9/gpu.requirements.in
 fastcore==1.5.29
@@ -52,14 +54,18 @@ fastprogress==1.0.3
     #   fastdownload
 filelock==3.12.2
     # via
+    #   diffusers
+    #   huggingface-hub
     #   torch
-    #   triton
+    #   transformers
 flatbuffers==23.5.26
-    # via tensorflow
+    # via tensorflow-macos
 fonttools==4.40.0
     # via matplotlib
+fsspec==2023.6.0
+    # via huggingface-hub
 gast==0.4.0
-    # via tensorflow
+    # via tensorflow-macos
 google-auth==2.21.0
     # via
     #   google-auth-oauthlib
@@ -67,39 +73,41 @@ google-auth==2.21.0
 google-auth-oauthlib==1.0.0
     # via tensorboard
 google-pasta==0.2.0
-    # via tensorflow
+    # via tensorflow-macos
 grpcio==1.56.0
     # via
     #   tensorboard
-    #   tensorflow
+    #   tensorflow-macos
 h5py==3.9.0
-    # via tensorflow
+    # via tensorflow-macos
+huggingface-hub==0.16.4
+    # via
+    #   diffusers
+    #   transformers
 idna==3.4
     # via requests
 importlib-metadata==6.7.0
     # via
-    #   jax
+    #   diffusers
     #   markdown
 importlib-resources==5.12.0
     # via matplotlib
-jax==0.4.13
-    # via tensorflow
+invisible-watermark==0.2.0
+    # via -r python/datascience/3.9/gpu.requirements.in
 jinja2==3.1.2
     # via
     #   spacy
     #   torch
 joblib==1.3.1
     # via scikit-learn
-keras==2.12.0
-    # via tensorflow
+keras==2.13.1
+    # via tensorflow-macos
 kiwisolver==1.4.4
     # via matplotlib
 langcodes==3.3.0
     # via spacy
 libclang==16.0.0
-    # via tensorflow
-lit==16.0.6
-    # via triton
+    # via tensorflow-macos
 markdown==3.4.3
     # via tensorboard
 markupsafe==2.1.3
@@ -108,8 +116,6 @@ markupsafe==2.1.3
     #   werkzeug
 matplotlib==3.7.2
     # via fastai
-ml-dtypes==0.2.0
-    # via jax
 mpmath==1.3.0
     # via sympy
 murmurhash==1.0.9
@@ -121,67 +127,51 @@ networkx==3.1
     # via torch
 numpy==1.24.3
     # via
+    #   accelerate
     #   blis
     #   contourpy
+    #   diffusers
     #   h5py
-    #   jax
+    #   invisible-watermark
     #   matplotlib
-    #   ml-dtypes
+    #   opencv-python
     #   opt-einsum
     #   pandas
+    #   pywavelets
     #   scikit-learn
     #   scipy
     #   spacy
     #   tensorboard
-    #   tensorflow
+    #   tensorflow-macos
     #   thinc
     #   torchvision
-nvidia-cublas-cu11==11.10.3.66
-    # via
-    #   nvidia-cudnn-cu11
-    #   nvidia-cusolver-cu11
-    #   torch
-nvidia-cuda-cupti-cu11==11.7.101
-    # via torch
-nvidia-cuda-nvrtc-cu11==11.7.99
-    # via torch
-nvidia-cuda-runtime-cu11==11.7.99
-    # via torch
-nvidia-cudnn-cu11==8.5.0.96
-    # via torch
-nvidia-cufft-cu11==10.9.0.58
-    # via torch
-nvidia-curand-cu11==10.2.10.91
-    # via torch
-nvidia-cusolver-cu11==11.4.0.1
-    # via torch
-nvidia-cusparse-cu11==11.7.4.91
-    # via torch
-nvidia-nccl-cu11==2.14.3
-    # via torch
-nvidia-nvtx-cu11==11.7.91
-    # via torch
+    #   transformers
 oauthlib==3.2.2
     # via requests-oauthlib
+opencv-python==4.8.0.74
+    # via invisible-watermark
 opt-einsum==3.3.0
-    # via
-    #   jax
-    #   tensorflow
+    # via tensorflow-macos
 packaging==23.1
     # via
+    #   accelerate
     #   fastai
     #   fastcore
+    #   huggingface-hub
     #   matplotlib
     #   spacy
-    #   tensorflow
+    #   tensorflow-macos
     #   thinc
+    #   transformers
 pandas==2.0.3
     # via fastai
 pathy==0.10.2
     # via spacy
 pillow==10.0.0
     # via
+    #   diffusers
     #   fastai
+    #   invisible-watermark
     #   matplotlib
     #   torchvision
 preshed==3.0.8
@@ -191,7 +181,9 @@ preshed==3.0.8
 protobuf==4.23.3
     # via
     #   tensorboard
-    #   tensorflow
+    #   tensorflow-macos
+psutil==5.9.5
+    # via accelerate
 pyasn1==0.5.0
     # via
     #   pyasn1-modules
@@ -211,25 +203,42 @@ python-dateutil==2.8.2
     #   pandas
 pytz==2023.3
     # via pandas
+pywavelets==1.4.1
+    # via invisible-watermark
 pyyaml==6.0
-    # via fastai
+    # via
+    #   accelerate
+    #   fastai
+    #   huggingface-hub
+    #   transformers
+regex==2023.6.3
+    # via
+    #   diffusers
+    #   transformers
 requests==2.31.0
     # via
+    #   diffusers
     #   fastai
+    #   huggingface-hub
     #   requests-oauthlib
     #   spacy
     #   tensorboard
     #   torchvision
+    #   transformers
 requests-oauthlib==1.3.1
     # via google-auth-oauthlib
 rsa==4.9
     # via google-auth
+safetensors==0.3.2
+    # via
+    #   -r python/datascience/3.9/gpu.requirements.in
+    #   diffusers
+    #   transformers
 scikit-learn==1.3.0
     # via fastai
 scipy==1.11.1
     # via
     #   fastai
-    #   jax
     #   scikit-learn
 six==1.16.0
     # via
@@ -237,7 +246,7 @@ six==1.16.0
     #   google-auth
     #   google-pasta
     #   python-dateutil
-    #   tensorflow
+    #   tensorflow-macos
 smart-open==6.3.0
     # via
     #   pathy
@@ -255,29 +264,32 @@ srsly==2.4.6
     #   thinc
 sympy==1.12
     # via torch
-tensorboard==2.12.3
-    # via tensorflow
+tensorboard==2.13.0
+    # via tensorflow-macos
 tensorboard-data-server==0.7.1
     # via tensorboard
-tensorflow==2.12.1
+tensorflow==2.13.0
     # via -r python/datascience/3.9/gpu.requirements.in
-tensorflow-estimator==2.12.0
-    # via tensorflow
-tensorflow-io-gcs-filesystem==0.32.0
+tensorflow-estimator==2.13.0
+    # via tensorflow-macos
+tensorflow-macos==2.13.0
     # via tensorflow
 termcolor==2.3.0
-    # via tensorflow
+    # via tensorflow-macos
 thinc==8.1.10
     # via spacy
 threadpoolctl==3.1.0
     # via scikit-learn
+tokenizers==0.13.3
+    # via transformers
 torch==2.0.1
     # via
     #   -r python/datascience/3.9/gpu.requirements.in
+    #   accelerate
     #   fastai
+    #   invisible-watermark
     #   torchaudio
     #   torchvision
-    #   triton
 torchaudio==2.0.2
     # via -r python/datascience/3.9/gpu.requirements.in
 torchvision==0.15.2
@@ -285,17 +297,21 @@ torchvision==0.15.2
     #   -r python/datascience/3.9/gpu.requirements.in
     #   fastai
 tqdm==4.65.0
-    # via spacy
-triton==2.0.0
-    # via torch
+    # via
+    #   huggingface-hub
+    #   spacy
+    #   transformers
+transformers==4.31.0
+    # via -r python/datascience/3.9/gpu.requirements.in
 typer==0.9.0
     # via
     #   pathy
     #   spacy
 typing-extensions==4.5.0
     # via
+    #   huggingface-hub
     #   pydantic
-    #   tensorflow
+    #   tensorflow-macos
     #   torch
     #   typer
 tzdata==2023.3
@@ -313,15 +329,9 @@ werkzeug==2.3.6
 wheel==0.40.0
     # via
     #   astunparse
-    #   nvidia-cublas-cu11
-    #   nvidia-cuda-cupti-cu11
-    #   nvidia-cuda-runtime-cu11
-    #   nvidia-curand-cu11
-    #   nvidia-cusparse-cu11
-    #   nvidia-nvtx-cu11
     #   tensorboard
 wrapt==1.14.1
-    # via tensorflow
+    # via tensorflow-macos
 zipp==3.15.0
     # via
     #   importlib-metadata
