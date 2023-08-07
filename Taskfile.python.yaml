@@ -52,7 +52,7 @@ tasks:
     cmds:
       - task python:base:deps:copy-requirements FILE_PREFIX={{.FILE_PREFIX}} IDENTIFIER={{.IDENTIFIER}} NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # specifically looks at the python/<ident>/<version>/<version>.requirements.in file, not the generic requirements.in files
-      - $(pyenv root)/versions/py{{.NBL_PYTHON_VERSION}}/bin/python -m piptools compile --resolver=backtracking --output-file python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.txt python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.NBL_PYTHON_VERSION}}.{{.FILE_PREFIX}}requirements.in
+      - $(pyenv root)/versions/py{{.NBL_PYTHON_VERSION}}/bin/python -m piptools compile --output-file python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.txt python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.NBL_PYTHON_VERSION}}.{{.FILE_PREFIX}}requirements.in
     generates:
       - python/{{.IDENTIFIER}}/{{.NBL_PYTHON_VERSION}}/{{.FILE_PREFIX}}requirements.txt
 
