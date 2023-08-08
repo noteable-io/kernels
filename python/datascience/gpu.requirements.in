@@ -1,5 +1,10 @@
-tensorflow==2.12.*
+tensorflow==2.13.*
 torch==2.*
 torchvision==0.15.*
 torchaudio==2.*
 fastai
+transformers
+diffusers
+accelerate
+safetensors
+invisible-watermark
