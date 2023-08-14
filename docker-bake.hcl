@@ -23,6 +23,13 @@ variable "TIMESTAMP" {
   default = ""
 }
 
+# Group of Rust targets
+group "rust" {
+  targets = [
+    "rust_base_1_70",
+  ]
+}
+
 # Group of R targets
 group "rlang_4_3_0" {
   targets = [
@@ -334,5 +341,14 @@ target "rlang_noteable_4_3_0" {
   target = "main"
   tags = [
     "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
+  ]
+}
+
+# Base Rust 1.70 image
+target "rust_base_1_70" {
+  inherits = ["base"]
+  context = "rust/base/1.70"
+  tags = [
+    "ghcr.io/noteable-io/kernel-rust-1.70-base:${TAG}"
   ]
 }
