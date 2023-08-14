@@ -345,7 +345,7 @@ target "rlang_noteable_4_3_0" {
 }
 
 # Base Rust 1.70 image
-target "rust_base_1_70" {
+target "rust_base_1_70_0" {
   inherits = ["base"]
   context = "rust/base/1.70"
   tags = [
