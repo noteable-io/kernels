@@ -30,6 +30,13 @@ group "rust" {
   ]
 }
 
+# Group of Rust 1.70 targets
+group "rust_1_70_0" {
+  targets = [
+    "rust_base_1_70_0",
+  ]
+}
+
 # Group of R targets
 group "rlang_4_3_0" {
   targets = [
