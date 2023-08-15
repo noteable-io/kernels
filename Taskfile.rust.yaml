@@ -1,0 +1,30 @@
+version: 3
+
+# https://hub.docker.com/_/rust/tags
+vars:
+  NBL_RUST_VERSION: 1.70
+  IDENTIFIER: base
+
+# NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
+# directly in `cmds: []`, the variables have to be passed in explicitly.
+tasks:
+  core:build:
+    desc: Build the Rust 1.x image
+    cmds:
+      - >-
+        docker build rust/{{.IDENTIFIER}}/{{.NBL_RUST_VERSION}} \
+          --build-arg "NBL_RUST_VERSION={{.NBL_RUST_VERSION}}" \
+          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
+          --tag "local/kernel-rust-{{.NBL_RUST_VERSION}}-{{.IDENTIFIER}}:dev"
+
+  base:copy-files:
+    desc: Copy files from the Rust directory to the build directories
+    cmds:
+      - task copy-root-files LANGUAGE=rust IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_RUST_VERSION}}
+      - task copy-language-files LANGUAGE=rust IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_RUST_VERSION}}
+
+  base:build:
+    desc: Build the Rust 1.x base image after copying required files
+    cmds:
+      - task rust:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_RUST_VERSION}}
+      - task rust:core:build IDENTIFIER=base NBL_RUST_VERSION={{.NBL_RUST_VERSION}}

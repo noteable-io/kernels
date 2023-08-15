@@ -33,6 +33,7 @@ dev_packages
 !r/Aptfile
 !r/datascience/Aptfile
 !r/noteable/Aptfile
+!rust/Aptfile
 
 !python/base-gpu/gpu.Aptfile
 !python/base-gpu/environment.txt
@@ -46,6 +47,7 @@ dev_packages
 !python/run.sh
 !python/base-gpu/run.sh
 !r/run.sh
+!rust/run.sh
 
 !python/noteable/.pythonrc
 !python/noteable/ipython_config.py
