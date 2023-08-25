@@ -163,11 +163,11 @@ docstring-parser==0.15
     #   flytekit
 duckdb==0.8.0
     # via duckdb-engine
-duckdb-engine==0.6.9
+duckdb-engine==0.9.2
     # via
     #   dx
     #   noteable
-dx @ git+https://www.github.com/noteable-io/dx.git@0fe5ea9e50de6582b6674b41fa34b7a942aee4f6
+dx @ git+https://www.github.com/noteable-io/dx.git@1f1fe3b06e5031d9e2fbbbcdbc7e2c3c97617acf
     # via -r python/noteable/3.9/requirements.in
 entrypoints==0.4
     # via papermill
@@ -498,7 +498,7 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   nbclassic
     #   notebook
-noteable @ git+https://www.github.com/noteable-io/noteable-notebook-magics.git@4399550a7ba7407a0fc829271d315e79552abb46
+noteable @ git+https://www.github.com/noteable-io/noteable-notebook-magics.git@2ba317e54a4e0d30558d800f8fc64374086ae95f
     # via -r python/noteable/3.9/requirements.in
 noteable-origami==0.0.11
     # via papermill-origami
@@ -511,7 +511,6 @@ notebook-shim==0.2.3
 numpy==1.23.5
     # via
     #   databricks-sql-connector
-    #   duckdb-engine
     #   flytekit
     #   pandas
     #   pyarrow
@@ -787,7 +786,7 @@ send2trash==1.8.2
     #   jupyter-server
     #   nbclassic
     #   notebook
-sidecar-comms @ git+https://www.github.com/noteable-io/sidecar_comms.git@009210009af85640852398dd6965bb7c285e21e2
+sidecar_comms @ git+https://www.github.com/noteable-io/sidecar_comms.git@009210009af85640852398dd6965bb7c285e21e2
     # via -r python/noteable/3.9/requirements.in
 singlestoredb[sqlalchemy]==0.8.1
     # via

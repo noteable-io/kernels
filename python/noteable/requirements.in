@@ -13,8 +13,8 @@ nbdime==3.1.1
 graphviz==0.20.1
 
 # https://github.com/noteable-io/ packages
-git+https://www.github.com/noteable-io/dx.git@0fe5ea9e50de6582b6674b41fa34b7a942aee4f6
-git+https://www.github.com/noteable-io/noteable-notebook-magics.git@4399550a7ba7407a0fc829271d315e79552abb46
+git+https://www.github.com/noteable-io/dx.git@1f1fe3b06e5031d9e2fbbbcdbc7e2c3c97617acf
+git+https://www.github.com/noteable-io/noteable-notebook-magics.git@2ba317e54a4e0d30558d800f8fc64374086ae95f
 git+https://www.github.com/noteable-io/sidecar_comms.git@009210009af85640852398dd6965bb7c285e21e2
 git+https://www.github.com/noteable-io/ipykernel-logging.git@dc169edb8d7c262a001b795373b479df561bfe73
 
