@@ -650,7 +650,7 @@ pygments==2.15.1
     #   rich
 pyhive==0.6.5
     # via sqlalchemy-databricks
-pyiceberg==0.3.0
+pyiceberg==0.4.0
     # via -r python/noteable/3.9/requirements.in
 pyjwt==2.7.0
     # via
@@ -683,6 +683,7 @@ python-dateutil==2.8.2
     #   pandas
     #   pendulum
     #   pyhive
+    #   strictyaml
 python-json-logger==2.0.7
     # via
     #   flytekit
@@ -711,7 +712,6 @@ pyyaml==6.0
     #   kubernetes
     #   libcst
     #   papermill
-    #   pyiceberg
     #   responses
 pyzmq==25.0.2
     # via
@@ -816,7 +816,9 @@ snowflake-connector-python==3.0.3
 snowflake-sqlalchemy==1.4.7
     # via noteable
 sortedcontainers==2.4.0
-    # via flytekit
+    # via
+    #   flytekit
+    #   pyiceberg
 soupsieve==2.4.1
     # via beautifulsoup4
 sqlalchemy==1.4.48
@@ -855,6 +857,8 @@ stack-data==0.6.2
     # via ipython
 statsd==3.3.0
     # via flytekit
+strictyaml==1.7.3
+    # via pyiceberg
 structlog==22.3.0
     # via
     #   dx
@@ -997,8 +1001,6 @@ ypy-websocket==0.8.2
     # via jupyter-server-ydoc
 zipp==3.15.0
     # via importlib-metadata
-zstandard==0.19.0
-    # via pyiceberg
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
