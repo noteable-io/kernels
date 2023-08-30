@@ -4,7 +4,7 @@ papermill-origami==0.0.9
 cloudpickle==2.2.0
 flytekitplugins-papermill==1.2.4
 # Added for ease of use with integration partners
-pyiceberg==0.3.0
+pyiceberg==0.4.0
 fugue==0.8.3
 fugue-jupyter==0.2.3
 # Diffing for notebooks
