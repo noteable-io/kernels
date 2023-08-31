@@ -118,7 +118,7 @@ jobs:
     env:
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      GITHUB_SHA: ${{ github.ref }}
+      GITHUB_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -156,7 +156,7 @@ jobs:
     env:
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      GITHUB_SHA: ${{ github.ref }}
+      GITHUB_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
