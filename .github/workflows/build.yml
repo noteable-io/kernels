@@ -68,7 +68,7 @@ jobs:
       VERSION: ${{ matrix.version }}
       TARGET: python_${VERSION//./_}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      GITHUB_SHA: ${{ github.sha }}
+      GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -118,7 +118,7 @@ jobs:
     env:
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      GITHUB_SHA: ${{ github.sha }}
+      GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
@@ -156,7 +156,7 @@ jobs:
     env:
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      GITHUB_SHA: ${{ github.sha }}
+      GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Task
