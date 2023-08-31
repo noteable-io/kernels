@@ -4,8 +4,12 @@
 
 # Environment variable for configuring
 # the ":$tag" for build Docker images
+variable "HANDLE" {
+  default = ""
+}
+
 variable "TAG" {
-  default = "latest"
+  default = ""
 }
 
 # Github SHA, which is used for the revision label
@@ -143,7 +147,8 @@ target "python_base_3_9" {
   inherits = ["base"]
   context = "python/base/3.9"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.9-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.9-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.9-base:${HANDLE}" : ""
   ]
 }
 
@@ -152,7 +157,8 @@ target "python_base_3_10" {
   inherits = ["base"]
   context = "python/base/3.10"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.10-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.10-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.10-base:${HANDLE}" : ""
   ]
 }
 
@@ -161,7 +167,8 @@ target "python_base_3_11" {
   inherits = ["base"]
   context = "python/base/3.11"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.11-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.11-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.11-base:${HANDLE}" : ""
   ]
 }
 
@@ -172,7 +179,8 @@ target "python_base_3_9_gpu" {
     base = "target:python_base_3_9"
   }
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.9-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.9-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.9-base:${HANDLE}" : ""
   ]
 }
 
@@ -183,7 +191,8 @@ target "python_base_3_10_gpu" {
     base = "target:python_base_3_10"
   }
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.10-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.10-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.10-base:${HANDLE}" : ""
   ]
 }
 
@@ -194,7 +203,8 @@ target "python_base_3_11_gpu" {
     base = "target:python_base_3_11"
   }
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.11-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.11-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.11-base:${HANDLE}" : ""
   ]
 }
 
@@ -206,7 +216,8 @@ target "python_noteable_3_9" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.9-noteable:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.9-noteable:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.9-noteable:${HANDLE}" : ""
   ]
 }
 
@@ -218,7 +229,8 @@ target "python_noteable_3_10" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.10-noteable:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.10-noteable:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.10-noteable:${HANDLE}" : ""
   ]
 }
 
@@ -230,7 +242,8 @@ target "python_noteable_3_9_gpu" {
   }
   target = "gpu"
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.9-noteable:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.9-noteable:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.9-noteable:${HANDLE}" : ""
   ]
 }
 
@@ -242,7 +255,8 @@ target "python_noteable_3_10_gpu" {
   }
   target = "gpu"
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.10-noteable:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.10-noteable:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.10-noteable:${HANDLE}" : ""
   ]
 }
 
@@ -254,7 +268,8 @@ target "python_datascience_3_9" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.9-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.9-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.9-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -266,7 +281,8 @@ target "python_datascience_3_10" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.10-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.10-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.10-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -278,7 +294,8 @@ target "python_datascience_3_11" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-python-3.11-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-python-3.11-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-python-3.11-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -290,7 +307,8 @@ target "python_datascience_3_9_gpu" {
   }
   target = "gpu"
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.9-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.9-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.9-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -302,7 +320,8 @@ target "python_datascience_3_10_gpu" {
   }
   target = "gpu"
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.10-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.10-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.10-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -314,7 +333,8 @@ target "python_datascience_3_11_gpu" {
   }
   target = "gpu"
   tags = [
-    "ghcr.io/noteable-io/kernel-gpu-python-3.11-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-gpu-python-3.11-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-gpu-python-3.11-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -323,7 +343,8 @@ target "rlang_base_4_3_0" {
   inherits = ["base"]
   context = "r/base/4.3.0"
   tags = [
-    "ghcr.io/noteable-io/kernel-r-4.3.0-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-r-4.3.0-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-r-4.3.0-base:${HANDLE}" : ""
   ]
 }
 
@@ -335,7 +356,8 @@ target "rlang_datascience_4_3_0" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-r-4.3.0-datascience:${TAG}"
+    "ghcr.io/noteable-io/kernel-r-4.3.0-datascience:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-r-4.3.0-datascience:${HANDLE}" : ""
   ]
 }
 
@@ -347,7 +369,8 @@ target "rlang_noteable_4_3_0" {
   }
   target = "main"
   tags = [
-    "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}"
+    "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-r-4.3.0-noteable:${HANDLE}" : ""
   ]
 }
 
@@ -356,6 +379,7 @@ target "rust_base_1_70_0" {
   inherits = ["base"]
   context = "rust/base/1.70"
   tags = [
-    "ghcr.io/noteable-io/kernel-rust-1.70-base:${TAG}"
+    "ghcr.io/noteable-io/kernel-rust-1.70-base:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-rust-1.70-base:${HANDLE}" : ""
   ]
 }

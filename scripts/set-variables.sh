@@ -15,12 +15,9 @@ PR_NUMBER=${3:-0}
 TIMESTAMP=$(date)
 
 if [[ "${REF}" == "main" ]]; then
-  tag="latest"
+  echo "HANDLE=latest" >> "${GITHUB_ENV}"
 elif [[ "${EVENT}" == "pull_request" ]]; then
-  tag="pr-${PR_NUMBER}"
-else
-  tag="${REF}"
+  echo "HANDLE=pr=${PR_NUMBER}" >> "${GITHUB_ENV}"
 fi
-
-echo "TAG=${tag}" >> "${GITHUB_ENV}"
+echo "TAG=${GITHUB_SHA}" >> "${GITHUB_ENV}"
 echo "TIMESTAMP=${TIMESTAMP}" >> "${GITHUB_ENV}"
