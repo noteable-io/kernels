@@ -20,7 +20,7 @@ requirements.R
 run.sh
 
 # Ignore these even at the parent-level directories; only to be used as placeholders for local development
-dev_packages
+**/*dev_packages
 
 # ...except for these places where we care about changes happening
 # (NOTE: this is because the tasks should copy the files down into the build directories)
