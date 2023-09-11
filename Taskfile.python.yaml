@@ -131,7 +131,7 @@ tasks:
     desc: Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) extending the datascience image of the same version
     cmds:
       # ensure the datascience image is built first
-      - task python:datascience:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
+      - task python:datascience:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # build the noteable image off of the datascience image
