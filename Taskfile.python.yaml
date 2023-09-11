@@ -134,10 +134,15 @@ tasks:
       - task python:datascience:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
-      # copy dev_packages for local builds, even if we aren't using the dev stage
-      - sudo cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
       # build the noteable image off of the datascience image
       - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=noteable BUILD_TARGET={{.BUILD_TARGET}} -- --build-context base=docker-image://local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience:dev
+
+  noteable:build-with-dev-packages:
+    desc: LOCAL DEV - Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc) and dev_packages extending the datascience image of the same version
+    cmds:
+      # copy dev_packages in and then build with BUILD_TARGET specified
+      - sudo cp -R python/noteable/dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
+      - task python:noteable:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BUILD_TARGET=dev
 
   # Noteable GPU image
   noteable-gpu:lock-dependencies:
@@ -152,10 +157,15 @@ tasks:
       - task python:datascience-gpu:build IDENTIFIER=noteable-gpu NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}}
       # copy over noteable-specific files
       - task python:noteable:copy-files IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} FILE_PREFIX="gpu."
-      # copy dev_packages for local builds, even if we aren't using the dev stage
-      - sudo cp -R python/noteable/gpu_dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
       # build the noteable-gpu image off of the datascience-gpu image
       - task build LANGUAGE=python NBL_LANGUAGE_VERSION={{.NBL_PYTHON_VERSION}} IDENTIFIER=noteable BUILD_TARGET={{.BUILD_TARGET}} TAG_SUFFIX=-gpu -- --build-context base=docker-image://local/kernel-python-{{.NBL_PYTHON_VERSION}}-datascience-gpu:dev
+
+  noteable-gpu:build-with-dev-packages:
+    desc: LOCAL DEV - Build the Python 3.x image with "Noteable feature"-related packages (SQL, git integration, DEX, etc), GPU support, and dev_packages
+    cmds:
+      # copy dev_packages in and then build with BUILD_TARGET specified
+      - sudo cp -R python/noteable/gpu_dev_packages python/noteable/{{.NBL_PYTHON_VERSION}}/
+      - task python:noteable-gpu:build IDENTIFIER=noteable NBL_PYTHON_VERSION={{.NBL_PYTHON_VERSION}} BUILD_TARGET=gpu-dev
 
   # convenience functions for building multiple images in parallel
   base:lock-all-dependencies:
@@ -259,14 +269,12 @@ tasks:
   noteable:build-all-with-dev-packages:
     desc: LOCAL DEV - Build all `noteable` images with `dev_packages` included
     deps:
-      - task: noteable:build
+      - task: noteable:build-with-dev-packages
         vars:
           NBL_PYTHON_VERSION: 3.9
-          BUILD_TARGET: dev
-      - task: noteable:build
+      - task: noteable:build-with-dev-packages
         vars:
           NBL_PYTHON_VERSION: 3.10
-          BUILD_TARGET: dev
 
   noteable-gpu:lock-all-dependencies:
     desc: Lock Python dependencies for all Python 3.x GPU builds using pip-compile
@@ -280,21 +288,21 @@ tasks:
     desc: Build all Python noteable-gpu images
     deps:
       - task: noteable-gpu:build
-        vars: { NBL_PYTHON_VERSION: 3.9 }
+        vars:
+          NBL_PYTHON_VERSION: 3.9
       - task: noteable-gpu:build
-        vars: { NBL_PYTHON_VERSION: 3.10 }
+        vars:
+          NBL_PYTHON_VERSION: 3.10
 
   noteable-gpu:build-all-with-dev-packages:
     desc: LOCAL DEV - Build all `noteable` images with `gpu_dev_packages` included
     deps:
-      - task: noteable-gpu:build
+      - task: noteable-gpu:build-with-dev-packages
         vars:
           NBL_PYTHON_VERSION: 3.9
-          BUILD_TARGET: gpu-dev
-      - task: noteable-gpu:build
+      - task: noteable-gpu:build-with-dev-packages
         vars:
           NBL_PYTHON_VERSION: 3.10
-          BUILD_TARGET: gpu-dev
 
   # convenience functions for building all images
   lock-all-dependencies:
