@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.5
 # hadolint ignore=DL3006
-FROM base
+FROM base AS main
 
 ARG NBL_PYTHON_VERSION=3.9
 
