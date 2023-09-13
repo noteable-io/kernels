@@ -1,0 +1,29 @@
+version: 3
+
+vars:
+  NBL_DENO_VERSION: 1.37-dev
+  IDENTIFIER: base
+
+# NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
+# directly in `cmds: []`, the variables have to be passed in explicitly.
+tasks:
+  core:build:
+    desc: Build the Deno image
+    cmds:
+      - >-
+        docker build deno/{{.IDENTIFIER}}/{{.NBL_DENO_VERSION}} \
+          --build-arg "NBL_DENO_VERSION={{.NBL_DENO_VERSION}}" \
+          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
+          --tag "local/kernel-deno-{{.NBL_DENO_VERSION}}-{{.IDENTIFIER}}:dev"
+
+  base:copy-files:
+    desc: Copy files from the Deno directory to the build directories
+    cmds:
+      - task copy-root-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
+      - task copy-language-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
+
+  base:build:
+    desc: Build the Deno base image after copying required files
+    cmds:
+      - task deno:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
+      - task deno:core:build IDENTIFIER=base NBL_DENO_VERSION={{.NBL_DENO_VERSION}}

@@ -4,6 +4,7 @@ includes:
   python: ./Taskfile.python.yaml
   r: ./Taskfile.R.yaml
   rust: ./Taskfile.rust.yaml
+  deno: ./Taskfile.deno.yaml
 
 tasks:
   copy-root-files:
