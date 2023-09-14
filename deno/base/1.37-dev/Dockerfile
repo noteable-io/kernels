@@ -36,7 +36,12 @@ USER noteable
 
 ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 
-RUN cargo install --git https://github.com/bartlomieju/deno --branch jupyter2 deno
+# install deno from latest commit in `jupyter2` branch
+# TODO: update this once merged to main branch and use package install instead
+RUN cargo install \
+    --git https://github.com/bartlomieju/deno \
+    --rev 01ac23d431eed61308c27edad30d44040ae142cb \
+    deno
 
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
