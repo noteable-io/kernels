@@ -44,6 +44,10 @@ RUN cargo install \
     --features __runtime_js_sources \
     deno
 
+# the kernel needs the deno kernelspec discoverable locally before it can start
+# hadolint ignore=DL3059
+RUN deno --unstable jupyter --install
+
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
