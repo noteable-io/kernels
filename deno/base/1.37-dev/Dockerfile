@@ -41,6 +41,7 @@ ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 RUN cargo install \
     --git https://github.com/bartlomieju/deno \
     --rev 01ac23d431eed61308c27edad30d44040ae142cb \
+    --features __runtime_js_sources \
     deno
 
 COPY secrets_helper.sh /tmp/secrets_helper.sh
@@ -50,8 +51,6 @@ ENV HOME="/srv/noteable"
 
 WORKDIR /etc/noteable/project
 EXPOSE 50001-50005
-
-RUN cargo init
 
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["run.sh"]
