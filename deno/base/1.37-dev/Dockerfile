@@ -36,7 +36,7 @@ USER noteable
 
 ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 
-# install deno from latest commit in `jupyter2` branch
+# install deno from latest commit when jupyter2 branch was merged
 # TODO: update this once merged to main branch and use package install instead
 RUN cargo install \
     --git https://github.com/denoland/deno \
