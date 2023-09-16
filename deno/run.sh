@@ -14,7 +14,8 @@ source /tmp/secrets_helper.sh
 echo "Done injecting Secrets, turning echoing back on"
 set -x
 
-
 echo "Starting Deno kernel"
-
-exec deno --unstable jupyter --conn /etc/noteable/connections/connection_file.json
+exec deno --unstable \
+    jupyter \
+    --conn /etc/noteable/connections/connection_file.json \
+    --kernel

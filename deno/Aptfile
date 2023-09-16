@@ -2,3 +2,4 @@ tini
 curl
 cmake
 protobuf-compiler
+jupyter

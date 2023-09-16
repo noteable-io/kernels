@@ -36,13 +36,17 @@ USER noteable
 
 ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 
-# install deno from latest commit in `jupyter2` branch
+# install deno from latest commit when jupyter2 branch was merged
 # TODO: update this once merged to main branch and use package install instead
 RUN cargo install \
-    --git https://github.com/bartlomieju/deno \
-    --rev 01ac23d431eed61308c27edad30d44040ae142cb \
+    --git https://github.com/denoland/deno \
+    --rev bf0760411336ce5ebb1c103f766c8154af478414 \
     --features __runtime_js_sources \
     deno
+
+# the kernel needs the deno kernelspec discoverable locally before it can start
+# hadolint ignore=DL3059
+RUN deno --unstable jupyter --install
 
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
