@@ -39,7 +39,7 @@ ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 # install deno from latest commit in `jupyter2` branch
 # TODO: update this once merged to main branch and use package install instead
 RUN cargo install \
-    --git https://github.com/bartlomieju/deno \
+    --git https://github.com/denoland/deno \
     --rev bf0760411336ce5ebb1c103f766c8154af478414 \
     --features __runtime_js_sources \
     deno
