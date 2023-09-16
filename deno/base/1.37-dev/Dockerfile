@@ -34,15 +34,14 @@ RUN /usr/bin/apt-install Aptfile
 
 USER noteable
 
-ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
-
-# install deno from latest commit when jupyter2 branch was merged
-# TODO: update this once merged to main branch and use package install instead
-RUN cargo install \
-    --git https://github.com/denoland/deno \
-    --rev bf0760411336ce5ebb1c103f766c8154af478414 \
-    --features __runtime_js_sources \
-    deno
+# use the deno installer and upgrade to the latest (canary) build
+# https://docs.deno.com/runtime/manual/references/contributing/release_schedule
+ENV DENO_INSTALL=/srv/noteable
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -fsSL https://deno.land/x/install/install.sh | sh
+# deno installs to `DENO_INSTALL/bin`, so we'll add to PATH for follow-on deno commands
+ENV PATH="${DENO_INSTALL}/bin/:${PATH}"
+RUN deno upgrade --canary
 
 # the kernel needs the deno kernelspec discoverable locally before it can start
 # hadolint ignore=DL3059
