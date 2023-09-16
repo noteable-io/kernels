@@ -40,7 +40,7 @@ ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 # TODO: update this once merged to main branch and use package install instead
 RUN cargo install \
     --git https://github.com/bartlomieju/deno \
-    --rev 525719ed462c20f58841ba217fb48b4ea9fe0b0f \
+    --rev bf0760411336ce5ebb1c103f766c8154af478414 \
     --features __runtime_js_sources \
     deno
 
