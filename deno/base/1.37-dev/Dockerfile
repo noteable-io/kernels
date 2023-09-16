@@ -1,13 +1,10 @@
 # syntax = docker/dockerfile:1.5
 # ---
-# Bare minimum Rust 1.72.x image with deno installed
-# - no Rust crates/packages aside from builtins and deno
+# Bare minimum Deno 1.36 image with a canary upgrade to 1.37-dev
 # - no git, secrets, SQL, extensions, etc
 # ---
-# Deno is installed from a PR that adds Jupyter support
-# Rust 1.72 is required
 ARG NBL_DENO_VERSION="1.37-dev"
-FROM rust:1.72 as base
+FROM denoland/deno:1.36.4 as base
 
 # User/group setup
 USER root
@@ -32,17 +29,9 @@ COPY apt-install /usr/bin/
 COPY Aptfile .
 RUN /usr/bin/apt-install Aptfile
 
+RUN deno upgrade --canary --version=430b63c2c4d6567a77e77980058ef13b45a9f30e
+
 USER noteable
-
-ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
-
-# install deno from latest commit in `jupyter2` branch
-# TODO: update this once merged to main branch and use package install instead
-RUN cargo install \
-    --git https://github.com/bartlomieju/deno \
-    --rev 01ac23d431eed61308c27edad30d44040ae142cb \
-    --features __runtime_js_sources \
-    deno
 
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
