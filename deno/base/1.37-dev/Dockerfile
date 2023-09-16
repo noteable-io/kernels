@@ -43,7 +43,6 @@ RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 ENV PATH="${DENO_INSTALL}/bin/:${PATH}"
 RUN deno upgrade --canary
 
-
 # the kernel needs the deno kernelspec discoverable locally before it can start
 # hadolint ignore=DL3059
 RUN deno --unstable jupyter --install
