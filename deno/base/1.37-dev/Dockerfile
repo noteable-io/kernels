@@ -34,14 +34,16 @@ RUN /usr/bin/apt-install Aptfile
 
 USER noteable
 
-# use the deno installer and upgrade to the latest (canary) build
+# use the deno installer and upgrade to the specified (canary) build
 # https://docs.deno.com/runtime/manual/references/contributing/release_schedule
 ENV DENO_INSTALL=/srv/noteable
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 # deno installs to `DENO_INSTALL/bin`, so we'll add to PATH for follow-on deno commands
 ENV PATH="${DENO_INSTALL}/bin/:${PATH}"
-RUN deno upgrade --canary
+RUN deno upgrade \
+    --canary \
+    --version=87ddd1f04d2b71aadb3a8a5fb3e4ac15988947c1
 
 # the kernel needs the deno kernelspec discoverable locally before it can start
 # hadolint ignore=DL3059
