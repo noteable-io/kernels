@@ -1,7 +1,7 @@
 version: 3
 
 vars:
-  NBL_DENO_VERSION: 1.37-dev
+  NBL_DENO_VERSION: 1.37
   IDENTIFIER: base
 
 # NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
@@ -27,3 +27,13 @@ tasks:
     cmds:
       - task deno:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
       - task deno:core:build IDENTIFIER=base NBL_DENO_VERSION={{.NBL_DENO_VERSION}}
+
+  packages:build:
+    desc: Build the Deno 1.3x image with commonly-installed packages
+    cmds:
+      # ensure the base image is built first
+      - task deno:base:build IDENTIFIER=base NBL_DENO_VERSION={{.NBL_DENO_VERSION}}
+      # copy packages-specific files to the build directories
+      - cp deno/packages/imports.ts deno/packages/{{.NBL_DENO_VERSION}}/imports.ts
+      # build the packages image off of the base image
+      - task build LANGUAGE=deno NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}} IDENTIFIER=packages BUILD_TARGET=main -- --build-context base=docker-image://local/kernel-deno-{{.NBL_DENO_VERSION}}-base:dev
