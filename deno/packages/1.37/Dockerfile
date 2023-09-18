@@ -5,6 +5,7 @@ FROM base as main
 
 USER noteable
 
-# run script that caches packages ahead of time
-COPY imports.ts /tmp/imports.ts
-RUN deno cache /tmp/imports.ts
+COPY deno.lock /srv/noteable/deno.lock
+
+# use an altered run.sh to use the deno.lock file
+COPY run.sh /usr/local/bin

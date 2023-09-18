@@ -47,6 +47,7 @@ run.sh
 !python/datascience/requirements.in
 !python/noteable/requirements.in
 
+!deno/packages/run.sh
 !python/run.sh
 !python/base-gpu/run.sh
 !r/run.sh
