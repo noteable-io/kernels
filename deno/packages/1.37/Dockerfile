@@ -5,7 +5,6 @@ FROM base as main
 
 USER noteable
 
-COPY deno.lock /srv/noteable/deno.lock
-
-# use an altered run.sh to use the deno.lock file
-COPY run.sh /usr/local/bin
+# Copy and cache our desired imports
+COPY ./deps.ts /tmp/deps.ts
+RUN deno cache /tmp/deps.ts

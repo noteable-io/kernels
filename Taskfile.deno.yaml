@@ -21,7 +21,7 @@ tasks:
     cmds:
       - task copy-root-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
       - task copy-language-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
-      - cp deno/packages/run.sh deno/packages/{{.NBL_DENO_VERSION}}/run.sh
+      - cp deno/packages/deps.ts deno/packages/{{.NBL_DENO_VERSION}}/deps.ts
 
   base:build:
     desc: Build the Deno base image after copying required files
@@ -29,18 +29,12 @@ tasks:
       - task deno:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
       - task deno:core:build IDENTIFIER=base NBL_DENO_VERSION={{.NBL_DENO_VERSION}}
 
-  packages:lock-dependencies:
-    desc: Generate a deno.lock file from the deps.ts file
-    cmds:
-      - cp deno/packages/deps.ts deno/packages/{{.NBL_DENO_VERSION}}/deps.ts
-      - deno cache --lock=deno/packages/{{.NBL_DENO_VERSION}}/deno.lock --lock-write deno/packages/{{.NBL_DENO_VERSION}}/deps.ts
-
   packages:build:
     desc: Build the Deno 1.3x image with commonly-installed packages
     cmds:
       # ensure the base image is built first
       - task deno:base:build IDENTIFIER=packages NBL_DENO_VERSION={{.NBL_DENO_VERSION}}
       # copy adjusted lockfile
-      - cp deno/packages/run.sh deno/packages/{{.NBL_DENO_VERSION}}/run.sh
+      - cp deno/packages/deps.ts deno/packages/{{.NBL_DENO_VERSION}}/deps.ts
       # build the packages image off of the base image
       - task build LANGUAGE=deno NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}} IDENTIFIER=packages BUILD_TARGET=main -- --build-context base=docker-image://local/kernel-deno-{{.NBL_DENO_VERSION}}-base:dev
