@@ -21,6 +21,7 @@ tasks:
     cmds:
       - task copy-root-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
       - task copy-language-files LANGUAGE=deno IDENTIFIER={{.IDENTIFIER}} NBL_LANGUAGE_VERSION={{.NBL_DENO_VERSION}}
+      - cp deno/packages/run.sh deno/packages/{{.NBL_DENO_VERSION}}/run.sh
 
   base:build:
     desc: Build the Deno base image after copying required files
