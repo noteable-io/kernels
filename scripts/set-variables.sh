@@ -8,7 +8,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-REF=${1:?'You must provide a ref'}
+REF=${1:?'You must provide a ref name'}
 EVENT=${2:?'You must provide the github event'}
 PR_NUMBER=${3:-0}
 
@@ -16,7 +16,7 @@ TIMESTAMP=$(date)
 
 # If 'main' or 'PR', we add a handle ('latest', 'pr-XXX') to the image
 # We don't provide a handle for releases
-if [[ "${REF}" == "refs/heads/main" ]]; then
+if [[ "${REF}" == "main" ]]; then
   echo "HANDLE=latest" >> "${GITHUB_ENV}"
 elif [[ "${EVENT}" == "pull_request" ]]; then
   echo "HANDLE=pr-${PR_NUMBER}" >> "${GITHUB_ENV}"
