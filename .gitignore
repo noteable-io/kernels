@@ -6,6 +6,7 @@
 .Rprofile
 apt-install
 Aptfile
+deps.ts
 environment.txt
 git_credential_helper.py
 git-wrapper.sh
@@ -40,10 +41,13 @@ run.sh
 
 !python/base-gpu/initial-condarc
 
+!deno/packages/deps.ts
+
 !python/base/requirements.in
 !python/datascience/requirements.in
 !python/noteable/requirements.in
 
+!deno/packages/run.sh
 !python/run.sh
 !python/base-gpu/run.sh
 !r/run.sh

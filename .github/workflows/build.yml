@@ -190,7 +190,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        version: ["1.37-dev"]
+        version: ["1.37"]
     env:
       VERSION: ${{ matrix.version }}
       BUILD_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

@@ -30,14 +30,15 @@ variable "TIMESTAMP" {
 # Group of Deno targets
 group "deno" {
   targets = [
-    "deno_1_37-dev",
+    "deno_1_37",
   ]
 }
 
 # Group of Deno 1.37 targets
-group "deno_1_37-dev" {
+group "deno_1_37" {
   targets = [
-    "deno_base_1_37-dev",
+    "deno_base_1_37",
+    "deno_packages_1_37",
   ]
 }
 
@@ -399,12 +400,25 @@ target "rust_base_1_70_0" {
   ]
 }
 
-# Base Deno 1.37-dev image
-target "deno_base_1_37-dev" {
+# Base Deno 1.37 image
+target "deno_base_1_37" {
   inherits = ["base"]
-  context = "deno/base/1.37-dev"
+  context = "deno/base/1.37"
   tags = [
     "ghcr.io/noteable-io/kernel-deno-1.37-base:${TAG}",
     notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-deno-1.37-base:${HANDLE}" : ""
+  ]
+}
+
+# Deno 1.37 packages variant
+target "deno_packages_1_37" {
+  context = "deno/packages/1.37"
+  contexts = {
+    base = "target:deno_base_1_37"
+  }
+  target = "main"
+  tags = [
+    "ghcr.io/noteable-io/kernel-deno-1.37-packages:${TAG}",
+    notequal("", HANDLE) ? "ghcr.io/noteable-io/kernel-deno-1.37-packages:${HANDLE}" : ""
   ]
 }
