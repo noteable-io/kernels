@@ -220,3 +220,33 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           targets: ${{ steps.target.outputs.TARGET }}
+
+  create_release:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+        with:
+          # We need to pull tags as well, so that we can
+          # grab the latest releases for changelog actions
+          fetch-depth: 0
+
+        # Get information from the CHANGELOG. By default,
+        # this action grabs the latest version
+      - name: Get latest CHANGELOG version
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@b97ce03a10d9bdbb07beb491c76a5a01d78cd3ef
+        with:
+          path: ./CHANGELOG.md
+
+      - name: Create/update release
+        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5
+        with:
+          # This pulls from the "Get Changelog Entry" step above, referencing it's ID to get its outputs object.
+          # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          tag: ${{ steps.changelog_reader.outputs.version }}
+          name: Release ${{ steps.changelog_reader.outputs.version }}
+          body: ${{ steps.changelog_reader.outputs.changes }}
+          allowUpdates: false
+          token: ${{ secrets.NBL_GITHUB_PACKAGES_TOKEN }}
