@@ -24,7 +24,7 @@ fi
 
 # If a release, we use the tag, otherwise we use the commit SHA
 if [[ "${EVENT}" == "release" ]]; then
-  echo "TAG=${GITHUB_REF}" >> "${GITHUB_ENV}"
+  echo "TAG=${REF}" >> "${GITHUB_ENV}"
 else
   echo "TAG=${GITHUB_SHA}" >> "${GITHUB_ENV}"
 fi
