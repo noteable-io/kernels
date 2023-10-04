@@ -43,7 +43,7 @@ RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 ENV PATH="${DENO_INSTALL}/bin/:${PATH}"
 RUN deno upgrade \
     --canary \
-    --version=7bcf1211a1494c188c9de83670d328c0492de98a
+    --version=cbddf5756e07fbbe10bd35d23bb9e9c0c685442a
 
 # the kernel needs the deno kernelspec discoverable locally before it can start
 # hadolint ignore=DL3059
