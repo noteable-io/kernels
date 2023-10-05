@@ -1,0 +1,8 @@
+jupyter_client=7.3.*
+ipython
+vdom=0.6
+papermill=2.2.*
+ipywidgets=7.6.*
+geopandas
+pyspark==3.2.1
+openjdk==8.0.332

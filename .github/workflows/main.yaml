@@ -1,0 +1,114 @@
+name: Build kernel images
+
+on: 
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build-python-images:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # version: ["3.8.8", "3.9.13", "3.10.5"] 3.10.5 fails with dependency conflicts
+        # We may need to have separate requirements.txt for each version, or replace
+        # dependencies on the fly
+        version: ["3.7.12", "3.8.13", "3.9.13", "3.10.9"]
+        directory: ["datascience-notebook"]
+        # The datascience-notebook base image does not support ARM
+        # We would need to build and maintain our own base image
+        # architecture: ["arm", "amd"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # TODO: Log into DockerHub to prevent rate limiting
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      
+      - name: Create context
+        run: |
+          docker context create github-action
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          endpoint: github-action
+          version: v0.10.4
+        env:
+          DOCKER_CONTEXT: github-action
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        id: docker-cache
+        with:
+          path: "/tmp/buildx-cache"
+          key: "${{ runner.os }}-buildx-${{ matrix.directory }}-${{ matrix.version }}"
+          restore-keys: "${{ runner.os }}-buildx-"
+      
+      - name: Build arguments
+        id: build-args
+        run: |
+          # Image Name
+          container_registry=ghcr.io/${{ github.repository_owner }}
+          image_name=kernel-${{ matrix.directory }}
+          full_image_name="${container_registry}/${image_name}"
+
+          # Image Tags
+          image_sha_tag="${GITHUB_SHA:0:12}" # first 12 numbers of the SHA
+          image_version_tag="python-$(version=${{ matrix.version }} && echo ${version%.*} )" # removes patch version
+          
+          full_image_name_tagged=''
+
+          if [ "${GITHUB_EVENT_NAME}" = 'push' ]; then
+            full_image_name_tagged="${full_image_name}:${image_version_tag}"
+          elif [ "${GITHUB_EVENT_NAME}" = 'pull_request' ]; then
+            full_image_name_tagged="${full_image_name}:${image_version_tag}-${image_sha_tag}"
+          fi
+
+          echo "::set-output name=FULL_IMAGE_NAME::${full_image_name}"
+          echo "::set-output name=FULL_IMAGE_NAME_TAGGED::${full_image_name_tagged}"
+
+          echo "::set-output name=BUILD_URL::https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "::set-output name=BUILD_TIMESTAMP::$(date --utc --iso-8601=seconds)"
+
+          echo "full_image_name: $full_image_name"
+          echo "image_version_tag: $image_version_tag"
+          echo "image_sha_tag: $image_sha_tag"
+          echo "full_image_name_tagged: $full_image_name_tagged"
+
+      - name: Build image
+        env:
+          DOCKER_CONTEXT: github-action
+        run: |
+          (
+            cd ${GITHUB_WORKSPACE}/kernels/${{ matrix.directory }}
+            
+            docker buildx build \
+              --pull \
+              --push \
+              --platform=linux/amd64 \
+              --progress plain \
+              --cache-from 'type=local,src=/tmp/buildx-cache' \
+              --cache-to 'type=local,dest=/tmp/buildx-cache' \
+              --tag '${{ steps.build-args.outputs.FULL_IMAGE_NAME_TAGGED }}' \
+              --build-arg PYTHON_VERSION=${{ matrix.version }} \
+              --build-arg 'NBL_ARG_BUILD_TIMESTAMP=${{ steps.build-args.outputs.BUILD_TIMESTAMP }}' \
+              --build-arg 'NBL_ARG_BUILD_URL=${{ steps.build-args.outputs.BUILD_URL }}' \
+              --build-arg 'NBL_ARG_REVISION=${{ github.sha }}' \
+              --build-arg 'NBL_ARG_VERSION=${{ github.ref }}' \
+              .
+          )
