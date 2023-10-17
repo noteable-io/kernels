@@ -13,18 +13,21 @@ FROM rust:1.72 as base
 USER root
 
 ENV NB_USER="noteable" \
-    NB_UID=4004 \
-    NB_GID=4004
+  NB_UID=4004 \
+  NB_GID=4004
 
 RUN groupadd --gid 4004 noteable && \
-    useradd --uid 4004 \
-    --shell /bin/false \
-    --create-home \
-    --no-log-init \
-    --gid noteable noteable \
-    --home-dir /srv/noteable && \
-    chown --recursive noteable:noteable /srv/noteable && \
-    mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
+  useradd --uid 4004 \
+  --shell /bin/false \
+  --create-home \
+  --no-log-init \
+  --gid noteable noteable \
+  --home-dir /var/run/noteable && \
+  chown --recursive noteable:noteable
+
+# TEMPORARY: symlink to the previous /etc/noteable until all other services are migrated and
+# the old /etc/noteable can be removed
+RUN ln -s /etc/noteable /var/run/noteable
 
 WORKDIR /tmp
 
@@ -42,8 +45,8 @@ RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 # deno installs to `DENO_INSTALL/bin`, so we'll add to PATH for follow-on deno commands
 ENV PATH="${DENO_INSTALL}/bin/:${PATH}"
 RUN deno upgrade \
-    --canary \
-    --version=48e695a2c89edad6e4880e7decfdb36d524f8279
+  --canary \
+  --version=48e695a2c89edad6e4880e7decfdb36d524f8279
 
 # the kernel needs the deno kernelspec discoverable locally before it can start
 # hadolint ignore=DL3059
@@ -54,7 +57,7 @@ COPY run.sh /usr/local/bin
 
 ENV HOME="/srv/noteable"
 
-WORKDIR /etc/noteable/project
+WORKDIR /var/run/noteable/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["tini", "-g", "--"]

@@ -8,7 +8,7 @@ echo "Local time: $(date)"
 set -x
 
 connection_file=/tmp/connection_file.json
-cp /etc/noteable/connections/connection_file.json ${connection_file}
+cp /var/run/noteable/connections/connection_file.json ${connection_file}
 
 # Inject Secrets into environment (see script docstring for more info)
 # set +x to avoid echoing the Secrets in plaintext to logs

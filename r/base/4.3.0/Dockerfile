@@ -20,10 +20,12 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable \
-  --home-dir /srv/noteable && \
-  chown --recursive noteable:noteable /srv/noteable && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable && \
-  chown --recursive noteable:noteable /usr/local/lib/R/site-library
+  --home-dir /var/run/noteable && \
+  chown --recursive noteable:noteable
+
+# TEMPORARY: symlink to the previous /etc/noteable until all other services are migrated and
+# the old /etc/noteable can be removed
+RUN ln -s /etc/noteable /var/run/noteable
 
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
@@ -48,7 +50,7 @@ ENV HOME="/srv/noteable" \
   XDG_CACHE_HOME="/srv/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
-WORKDIR /etc/noteable/project
+WORKDIR /var/run/noteable/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]

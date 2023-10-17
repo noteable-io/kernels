@@ -6,7 +6,7 @@ c.InteractiveShellApp.extensions = [
 
 c.SqlMagic.feedback = False
 c.SqlMagic.autopandas = True
-c.NTBLMagic.project_dir = "/etc/noteable/project"
+c.NTBLMagic.project_dir = "/var/run/noteable/project"
 c.NoteableDataLoaderMagic.return_head = False
 c.IPythonKernel._execute_sleep = 0.15
 # 10 minutes to support large files

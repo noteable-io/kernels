@@ -80,4 +80,4 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
 # Overwrite the base run.sh to include `mamba` usage
 COPY run.sh /usr/local/bin
 
-WORKDIR /etc/noteable/project
+WORKDIR /var/run/noteable/project

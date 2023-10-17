@@ -17,4 +17,4 @@ set -x
 
 echo "Starting Rust kernel"
 
-exec evcxr_jupyter --control_file /etc/noteable/connections/connection_file.json
+exec evcxr_jupyter --control_file /var/run/noteable/connections/connection_file.json

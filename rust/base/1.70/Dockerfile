@@ -11,18 +11,21 @@ FROM rust:${NBL_RUST_VERSION}-slim-bullseye as base
 USER root
 
 ENV NB_USER="noteable" \
-    NB_UID=4004 \
-    NB_GID=4004
+  NB_UID=4004 \
+  NB_GID=4004
 
 RUN groupadd --gid 4004 noteable && \
-    useradd --uid 4004 \
-    --shell /bin/false \
-    --create-home \
-    --no-log-init \
-    --gid noteable noteable \
-    --home-dir /srv/noteable && \
-    chown --recursive noteable:noteable /srv/noteable && \
-    mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
+  useradd --uid 4004 \
+  --shell /bin/false \
+  --create-home \
+  --no-log-init \
+  --gid noteable noteable \
+  --home-dir /var/run/noteable && \
+  chown --recursive noteable:noteable
+
+# TEMPORARY: symlink to the previous /etc/noteable until all other services are migrated and
+# the old /etc/noteable can be removed
+RUN ln -s /etc/noteable /var/run/noteable
 
 WORKDIR /tmp
 
@@ -35,14 +38,14 @@ USER noteable
 ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
 
 RUN cargo install evcxr_jupyter && \
-    evcxr_jupyter --install
+  evcxr_jupyter --install
 
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
 ENV HOME="/srv/noteable"
 
-WORKDIR /etc/noteable/project
+WORKDIR /var/run/noteable/project
 EXPOSE 50001-50005
 
 RUN cargo init
