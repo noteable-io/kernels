@@ -18,4 +18,4 @@ COPY requirements.R /tmp/requirements.R
 RUN R -e "source('/tmp/requirements.R')"
 
 # similarly, copy any R commands that need to run on startup
-COPY .Rprofile /srv/noteable/.Rprofile
+COPY .Rprofile /var/run/noteable/.Rprofile

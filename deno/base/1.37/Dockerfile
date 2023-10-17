@@ -39,7 +39,7 @@ USER noteable
 
 # use the deno installer and upgrade to the specified (canary) build
 # https://docs.deno.com/runtime/manual/references/contributing/release_schedule
-ENV DENO_INSTALL=/srv/noteable
+ENV DENO_INSTALL=/var/run/noteable
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 # deno installs to `DENO_INSTALL/bin`, so we'll add to PATH for follow-on deno commands
@@ -55,7 +55,7 @@ RUN deno --unstable jupyter --install
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/srv/noteable"
+ENV HOME="/var/run/noteable"
 
 WORKDIR /var/run/noteable/project
 EXPOSE 50001-50005

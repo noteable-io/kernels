@@ -35,7 +35,7 @@ RUN /usr/bin/apt-install Aptfile
 
 USER noteable
 
-ENV PATH="/srv/noteable/.cargo/bin:${PATH}"
+ENV PATH="/var/run/noteable/.cargo/bin:${PATH}"
 
 RUN cargo install evcxr_jupyter && \
   evcxr_jupyter --install
@@ -43,7 +43,7 @@ RUN cargo install evcxr_jupyter && \
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/srv/noteable"
+ENV HOME="/var/run/noteable"
 
 WORKDIR /var/run/noteable/project
 EXPOSE 50001-50005

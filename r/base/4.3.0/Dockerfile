@@ -47,8 +47,8 @@ RUN R -e "install.packages('IRkernel', repos='http://cran.us.r-project.org')"
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/srv/noteable" \
-  XDG_CACHE_HOME="/srv/noteable/.cache/" \
+ENV HOME="/var/run/noteable" \
+  XDG_CACHE_HOME="/var/run/noteable/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 WORKDIR /var/run/noteable/project
