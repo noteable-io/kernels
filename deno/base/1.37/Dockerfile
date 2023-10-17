@@ -23,7 +23,7 @@ RUN groupadd --gid 4004 noteable && \
   --no-log-init \
   --gid noteable noteable \
   --home-dir /var/run/noteable && \
-  chown --recursive noteable:noteable
+  chown --recursive noteable:noteable /var/run/noteable
 
 # TEMPORARY: symlink to the previous /etc/noteable until all other services are migrated and
 # the old /etc/noteable can be removed
