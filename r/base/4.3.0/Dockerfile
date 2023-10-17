@@ -23,9 +23,9 @@ RUN groupadd --gid 4004 noteable && \
   --home-dir /var/run/noteable && \
   chown --recursive noteable:noteable /var/run/noteable
 
-# TEMPORARY: symlink to the previous /etc/noteable until all other services are migrated and
-# the old /etc/noteable can be removed
-RUN ln -s /etc/noteable /var/run/noteable
+# TEMPORARY: symlink the previous /etc/noteable to the new /var/run/noteable dir
+# until all other services are migrated and the old /etc/noteable can be removed
+RUN ln -s /var/run/noteable /etc/noteable
 
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
