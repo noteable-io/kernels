@@ -38,5 +38,6 @@ tasks:
       vars: [LANGUAGE, IDENTIFIER, NBL_LANGUAGE_VERSION]
     vars:
       BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
+      NBL_HOME_DIR: '{{default "/var/run/noteable" .NBL_HOME_DIR}}'
       TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
       TAG: '{{default "dev" .TAG}}'

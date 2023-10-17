@@ -7,6 +7,7 @@
 # Deno is installed from a PR that adds Jupyter support
 # Rust 1.72 is required
 ARG NBL_DENO_VERSION="1.37-dev"
+ARG NBL_HOME_DIR="/var/run/noteable"
 FROM rust:1.72 as base
 
 # User/group setup
@@ -22,12 +23,12 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable \
-  --home-dir /var/run/noteable && \
-  chown --recursive noteable:noteable /var/run/noteable
+  --home-dir "${NBL_HOME_DIR}" && \
+  chown --recursive noteable:noteable "${NBL_HOME_DIR}"
 
-# TEMPORARY: symlink the previous /etc/noteable to the new /var/run/noteable dir
+# TEMPORARY: symlink the previous /etc/noteable to the new NBL_HOME_DIR (/var/run/noteable) dir
 # until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s /var/run/noteable /etc/noteable
+RUN ln -s "${NBL_HOME_DIR}" /etc/noteable
 
 WORKDIR /tmp
 
@@ -39,7 +40,7 @@ USER noteable
 
 # use the deno installer and upgrade to the specified (canary) build
 # https://docs.deno.com/runtime/manual/references/contributing/release_schedule
-ENV DENO_INSTALL=/var/run/noteable
+ENV DENO_INSTALL=${NBL_HOME_DIR}
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 # deno installs to `DENO_INSTALL/bin`, so we'll add to PATH for follow-on deno commands
@@ -55,9 +56,9 @@ RUN deno --unstable jupyter --install
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/var/run/noteable"
+ENV HOME="${NBL_HOME_DIR}"
 
-WORKDIR /var/run/noteable/project
+WORKDIR ${NBL_HOME_DIR}/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["tini", "-g", "--"]

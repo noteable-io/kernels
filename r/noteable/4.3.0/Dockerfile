@@ -4,6 +4,8 @@
 # hadolint ignore=DL3006
 FROM base as main
 
+ARG NBL_HOME_DIR=/var/run/noteable
+
 USER root
 
 # install python for reticulate support
@@ -18,4 +20,4 @@ COPY requirements.R /tmp/requirements.R
 RUN R -e "source('/tmp/requirements.R')"
 
 # similarly, copy any R commands that need to run on startup
-COPY .Rprofile /var/run/noteable/.Rprofile
+COPY .Rprofile ${NBL_HOME_DIR}/.Rprofile

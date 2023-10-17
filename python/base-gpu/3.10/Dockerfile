@@ -3,6 +3,7 @@
 FROM base AS main
 
 ARG NBL_PYTHON_VERSION=3.10
+ARG NBL_HOME_DIR=/var/run/noteable
 
 USER root
 
@@ -52,9 +53,9 @@ RUN /usr/bin/apt-install Aptfile
 COPY gpu.Aptfile .
 RUN /usr/bin/apt-install gpu.Aptfile
 
-ENV PATH="/var/run/noteable/.local/bin:${PATH}" \
-  HOME="/var/run/noteable" \
-  XDG_CACHE_HOME="/var/run/noteable/.cache/" \
+ENV PATH="${NBL_HOME_DIR}/.local/bin:${PATH}" \
+  HOME="${NBL_HOME_DIR}" \
+  XDG_CACHE_HOME="${NBL_HOME_DIR}/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 RUN chown -R noteable:noteable "${CONDA_DIR}"
@@ -80,4 +81,4 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
 # Overwrite the base run.sh to include `mamba` usage
 COPY run.sh /usr/local/bin
 
-WORKDIR /var/run/noteable/project
+WORKDIR ${NBL_HOME_DIR}/project
