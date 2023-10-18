@@ -5,8 +5,9 @@
 # - no git, secrets, SQL, extensions, etc
 # ---
 ARG NBL_R_VERSION=4.3.0
-ARG NBL_HOME_DIR=/var/run/noteable
 FROM r-base:${NBL_R_VERSION} as base
+
+ARG NBL_HOME_DIR=/var/run/noteable
 
 # User/group setup
 USER root

@@ -5,8 +5,9 @@
 # - no git, secrets, SQL, extensions, etc
 # ---
 ARG NBL_RUST_VERSION="1.70"
-ARG NBL_HOME_DIR=/var/run/noteable
 FROM rust:${NBL_RUST_VERSION}-slim-bullseye as base
+
+ARG NBL_HOME_DIR=/var/run/noteable
 
 # User/group setup
 USER root

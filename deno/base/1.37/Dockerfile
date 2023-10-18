@@ -6,9 +6,9 @@
 # ---
 # Deno is installed from a PR that adds Jupyter support
 # Rust 1.72 is required
-ARG NBL_DENO_VERSION="1.37-dev"
-ARG NBL_HOME_DIR="/var/run/noteable"
 FROM rust:1.72 as base
+
+ARG NBL_HOME_DIR=/var/run/noteable
 
 # User/group setup
 USER root

@@ -2,8 +2,8 @@
 # hadolint ignore=DL3006
 FROM base AS main
 
-ARG NBL_PYTHON_VERSION=3.11
 ARG NBL_HOME_DIR=/var/run/noteable
+ARG NBL_PYTHON_VERSION=3.11
 
 USER root
 
