@@ -26,7 +26,13 @@ tasks:
     cmds:
       - task r:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       # build the base image
-      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=base -- --build-arg NBL_R_VERSION={{.NBL_R_VERSION}}
+      - >-
+        task build \
+          LANGUAGE=r \
+          NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} \
+          IDENTIFIER=base \
+          -- \
+          --build-arg NBL_R_VERSION={{.NBL_R_VERSION}}
 
   datascience:build:
     desc: Build the R 4.3.x image with commonly-installed packages
@@ -38,7 +44,14 @@ tasks:
       - cp r/datascience/install_packages.R r/datascience/{{.NBL_R_VERSION}}/install_packages.R
       - cp r/datascience/requirements.R r/datascience/{{.NBL_R_VERSION}}/requirements.R
       # build the datascience image off of the base image
-      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=datascience BUILD_TARGET=main -- --build-context base=docker-image://local/kernel-r-{{.NBL_R_VERSION}}-base:dev
+      - >-
+        task build \
+          LANGUAGE=r \
+          NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} \
+          IDENTIFIER=datascience \
+          BUILD_TARGET=main \
+          -- \
+          --build-context base=docker-image://local/kernel-r-{{.NBL_R_VERSION}}-base:dev
 
   noteable:build:
     desc: Build the R 4.3.x image with data frame -> DEX support
@@ -50,4 +63,11 @@ tasks:
       - cp r/noteable/.Rprofile r/noteable/{{.NBL_R_VERSION}}/.Rprofile
       - cp r/noteable/requirements.R r/noteable/{{.NBL_R_VERSION}}/requirements.R
       # build the noteable image off of the datascience image
-      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=noteable BUILD_TARGET=main -- --build-context base=docker-image://local/kernel-r-{{.NBL_R_VERSION}}-datascience:dev
+      - >-
+        task build \
+          LANGUAGE=r \
+          NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} \
+          IDENTIFIER=noteable \
+          BUILD_TARGET=main \
+          -- \
+          --build-context base=docker-image://local/kernel-r-{{.NBL_R_VERSION}}-datascience:dev

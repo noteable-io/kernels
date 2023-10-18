@@ -8,15 +8,6 @@ vars:
 # NOTE: When using `deps: []`, variables are inherited from the current task, but when calling them
 # directly in `cmds: []`, the variables have to be passed in explicitly.
 tasks:
-  core:build:
-    desc: Build the Rust 1.x image
-    cmds:
-      - >-
-        docker build rust/{{.IDENTIFIER}}/{{.NBL_RUST_VERSION}} \
-          --build-arg "NBL_RUST_VERSION={{.NBL_RUST_VERSION}}" \
-          --build-arg "BASE_IMAGE={{.BASE_IMAGE}}" \
-          --tag "local/kernel-rust-{{.NBL_RUST_VERSION}}-{{.IDENTIFIER}}:dev"
-
   base:copy-files:
     desc: Copy files from the Rust directory to the build directories
     cmds:
@@ -27,4 +18,10 @@ tasks:
     desc: Build the Rust 1.x base image after copying required files
     cmds:
       - task rust:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_RUST_VERSION}}
-      - task rust:core:build IDENTIFIER=base NBL_RUST_VERSION={{.NBL_RUST_VERSION}}
+      - >-
+        task build \
+          LANGUAGE=rust \
+          NBL_LANGUAGE_VERSION={{.NBL_RUST_VERSION}} \
+          IDENTIFIER=base \
+          -- \
+          --build-arg NBL_RUST_VERSION={{.NBL_RUST_VERSION}}
