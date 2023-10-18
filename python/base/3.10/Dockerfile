@@ -7,9 +7,10 @@
 ARG NBL_PYTHON_VERSION=3.10
 FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
 
-# User/group setup
 ARG NBL_HOME_DIR=/var/run/noteable
+ARG NBL_PYTHON_VERSION
 
+# User/group setup
 USER root
 
 ENV NB_USER="noteable" \
