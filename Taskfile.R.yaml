@@ -26,7 +26,7 @@ tasks:
     cmds:
       - task r:base:copy-files IDENTIFIER=base NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}}
       # build the base image
-      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=base -- --build-arg NBL_R_VERSION={{.NBL_R_VERSION}}
+      - task build LANGUAGE=r NBL_LANGUAGE_VERSION={{.NBL_R_VERSION}} IDENTIFIER=base BUILD_TARGET=base -- --build-arg NBL_R_VERSION={{.NBL_R_VERSION}}
 
   datascience:build:
     desc: Build the R 4.3.x image with commonly-installed packages
