@@ -6,6 +6,7 @@
 # hadolint ignore=DL3006
 FROM base as main
 
+ARG NBL_HOME_DIR=/srv/noteable
 ARG NBL_PYTHON_VERSION=3.10
 
 USER root
@@ -32,7 +33,7 @@ RUN pip install --no-cache-dir -r /tmp/noteable_requirements.txt
 # hadolint ignore=SC1008,DL3059
 RUN python -c "import dx, noteable, psutil, sidecar_comms"
 
-COPY .pythonrc /var/run/noteable/.
+COPY .pythonrc "${NBL_HOME_DIR}/."
 COPY ipython_config.py /etc/ipython
 COPY git_credential_helper.py /git_credential_helper.py
 COPY git-wrapper.sh /usr/local/bin/git
