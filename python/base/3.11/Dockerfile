@@ -27,7 +27,7 @@ RUN groupadd --gid 4004 noteable && \
   --gid noteable noteable \
   --home-dir "${NBL_HOME_DIR}" && \
   chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
-  mkdir -p "${NBL_WORK_DIR}" && chown noteable:noteable "${NBL_WORK_DIR}" && \
+  mkdir -p "${NBL_WORK_DIR}" && chown --recursive noteable:noteable "${NBL_WORK_DIR}" && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
   mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 
