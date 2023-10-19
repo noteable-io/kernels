@@ -37,6 +37,7 @@ tasks:
         docker buildx build {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}} {{.CLI_ARGS}} \
           --build-arg "NBL_LANGUAGE_VERSION={{.NBL_LANGUAGE_VERSION}}" \
           --build-arg "NBL_HOME_DIR={{.NBL_HOME_DIR}}" \
+          --build-arg "NBL_WORK_DIR={{.NBL_WORK_DIR}}" \
           --target "{{.BUILD_TARGET}}" \
           --tag "local/kernel-{{.LANGUAGE}}-{{.NBL_LANGUAGE_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:{{.TAG}}"
     requires:
