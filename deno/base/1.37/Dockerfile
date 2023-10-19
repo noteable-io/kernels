@@ -8,7 +8,9 @@
 # Rust 1.72 is required
 FROM rust:1.72 as base
 
-ARG NBL_HOME_DIR=/var/run/noteable
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
 
 # User/group setup
 USER root
@@ -24,11 +26,12 @@ RUN groupadd --gid 4004 noteable && \
   --no-log-init \
   --gid noteable noteable \
   --home-dir "${NBL_HOME_DIR}" && \
-  chown --recursive noteable:noteable "${NBL_HOME_DIR}"
+  chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
+  mkdir -p "${NBL_WORK_DIR}" && chown noteable:noteable "${NBL_WORK_DIR}"
 
-# TEMPORARY: symlink the previous /etc/noteable to the new NBL_HOME_DIR (/var/run/noteable) dir
+# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
 # until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s "${NBL_HOME_DIR}" /etc/noteable
+RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
 
 WORKDIR /tmp
 
@@ -58,7 +61,7 @@ COPY run.sh /usr/local/bin
 
 ENV HOME="${NBL_HOME_DIR}"
 
-WORKDIR ${NBL_HOME_DIR}/project
+WORKDIR ${NBL_WORK_DIR}/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["tini", "-g", "--"]

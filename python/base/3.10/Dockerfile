@@ -7,7 +7,9 @@
 ARG NBL_PYTHON_VERSION=3.10
 FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
 
-ARG NBL_HOME_DIR=/var/run/noteable
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
 ARG NBL_PYTHON_VERSION
 
 # User/group setup
@@ -25,12 +27,13 @@ RUN groupadd --gid 4004 noteable && \
   --gid noteable noteable \
   --home-dir "${NBL_HOME_DIR}" && \
   chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
+  mkdir -p "${NBL_WORK_DIR}" && chown noteable:noteable "${NBL_WORK_DIR}" && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
   mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 
 # TEMPORARY: symlink the previous /etc/noteable to the new NBL_HOME_DIR (/var/run/noteable) dir
 # until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s "${NBL_HOME_DIR}" /etc/noteable
+RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
 
 WORKDIR /tmp
 
@@ -60,7 +63,7 @@ ENV HOME="${NBL_HOME_DIR}" \
   XDG_CACHE_HOME="${NBL_HOME_DIR}/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
-WORKDIR ${NBL_HOME_DIR}/project
+WORKDIR ${NBL_WORK_DIR}/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]

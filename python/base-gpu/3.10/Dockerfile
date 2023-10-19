@@ -2,7 +2,9 @@
 # hadolint ignore=DL3006
 FROM base AS main
 
-ARG NBL_HOME_DIR=/var/run/noteable
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
 ARG NBL_PYTHON_VERSION=3.10
 
 USER root
@@ -81,4 +83,4 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
 # Overwrite the base run.sh to include `mamba` usage
 COPY run.sh /usr/local/bin
 
-WORKDIR ${NBL_HOME_DIR}/project
+WORKDIR ${NBL_WORK_DIR}/project
