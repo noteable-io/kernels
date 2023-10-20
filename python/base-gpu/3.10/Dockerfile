@@ -2,6 +2,9 @@
 # hadolint ignore=DL3006
 FROM base AS main
 
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
 ARG NBL_PYTHON_VERSION=3.10
 
 USER root
@@ -52,9 +55,9 @@ RUN /usr/bin/apt-install Aptfile
 COPY gpu.Aptfile .
 RUN /usr/bin/apt-install gpu.Aptfile
 
-ENV PATH="/srv/noteable/.local/bin:${PATH}" \
-  HOME="/srv/noteable" \
-  XDG_CACHE_HOME="/srv/noteable/.cache/" \
+ENV PATH="${NBL_HOME_DIR}/.local/bin:${PATH}" \
+  HOME="${NBL_HOME_DIR}" \
+  XDG_CACHE_HOME="${NBL_HOME_DIR}/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
 RUN chown -R noteable:noteable "${CONDA_DIR}"
@@ -80,4 +83,4 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_DIR/lib/:$CUDNN_PATH/lib \
 # Overwrite the base run.sh to include `mamba` usage
 COPY run.sh /usr/local/bin
 
-WORKDIR /etc/noteable/project
+WORKDIR ${NBL_WORK_DIR}/project

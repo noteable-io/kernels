@@ -6,6 +6,10 @@ includes:
   rust: ./Taskfile.rust.yaml
   deno: ./Taskfile.deno.yaml
 
+vars:
+  NBL_HOME_DIR: /srv/noteable
+  NBL_WORK_DIR: /var/run/noteable
+
 tasks:
   copy-root-files:
     desc: Copy files from the root of the repository to the base build directories
@@ -32,11 +36,15 @@ tasks:
       - >-
         docker buildx build {{.LANGUAGE}}/{{.IDENTIFIER}}/{{.NBL_LANGUAGE_VERSION}} {{.CLI_ARGS}} \
           --build-arg "NBL_LANGUAGE_VERSION={{.NBL_LANGUAGE_VERSION}}" \
+          --build-arg "NBL_HOME_DIR={{.NBL_HOME_DIR}}" \
+          --build-arg "NBL_WORK_DIR={{.NBL_WORK_DIR}}" \
           --target "{{.BUILD_TARGET}}" \
           --tag "local/kernel-{{.LANGUAGE}}-{{.NBL_LANGUAGE_VERSION}}-{{.IDENTIFIER}}{{.TAG_SUFFIX}}:{{.TAG}}"
     requires:
       vars: [LANGUAGE, IDENTIFIER, NBL_LANGUAGE_VERSION]
     vars:
       BUILD_TARGET: '{{default "base" .BUILD_TARGET}}'
+      NBL_HOME_DIR: '{{default "/srv/noteable" .NBL_HOME_DIR}}'
+      NBL_WORK_DIR: '{{default "/var/run/noteable" .NBL_WORK_DIR}}'
       TAG_SUFFIX: '{{default "" .TAG_SUFFIX}}'
       TAG: '{{default "dev" .TAG}}'

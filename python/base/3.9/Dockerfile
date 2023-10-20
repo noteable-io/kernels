@@ -7,6 +7,11 @@
 ARG NBL_PYTHON_VERSION=3.9
 FROM python:${NBL_PYTHON_VERSION}-slim-bullseye as base
 
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
+ARG NBL_PYTHON_VERSION
+
 # User/group setup
 USER root
 
@@ -20,11 +25,15 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable \
-  --home-dir /srv/noteable && \
-  chown --recursive noteable:noteable /srv/noteable && \
+  --home-dir "${NBL_HOME_DIR}" && \
+  chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
+  mkdir -p "${NBL_WORK_DIR}" && chown --recursive noteable:noteable "${NBL_WORK_DIR}" && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
-  mkdir /etc/ipython && chown noteable:noteable /etc/ipython && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable
+  mkdir /etc/ipython && chown noteable:noteable /etc/ipython
+
+# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
+# until all other services are migrated and the old /etc/noteable can be removed
+RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
 
 WORKDIR /tmp
 
@@ -49,12 +58,12 @@ RUN pip install --no-cache-dir -r /tmp/base_requirements.txt
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/srv/noteable" \
-  PYTHONPATH="/srv/noteable/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
-  XDG_CACHE_HOME="/srv/noteable/.cache/" \
+ENV HOME="${NBL_HOME_DIR}" \
+  PYTHONPATH="${NBL_HOME_DIR}/.local/lib/python${NBL_PYTHON_VERSION}/site-packages:${PYTHONPATH}" \
+  XDG_CACHE_HOME="${NBL_HOME_DIR}/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
-WORKDIR /etc/noteable/project
+WORKDIR ${NBL_WORK_DIR}/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]

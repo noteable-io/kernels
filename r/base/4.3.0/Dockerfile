@@ -7,6 +7,10 @@
 ARG NBL_R_VERSION=4.3.0
 FROM r-base:${NBL_R_VERSION} as base
 
+# Application code lives in NBL_HOME_DIR, project data lives in NBL_WORK_DIR
+ARG NBL_HOME_DIR=/srv/noteable
+ARG NBL_WORK_DIR=/var/run/noteable
+
 # User/group setup
 USER root
 
@@ -20,10 +24,14 @@ RUN groupadd --gid 4004 noteable && \
   --create-home \
   --no-log-init \
   --gid noteable noteable \
-  --home-dir /srv/noteable && \
-  chown --recursive noteable:noteable /srv/noteable && \
-  mkdir -p /etc/noteable && chown noteable:noteable /etc/noteable && \
+  --home-dir "${NBL_HOME_DIR}" && \
+  chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
+  mkdir -p "${NBL_WORK_DIR}" && chown --recursive noteable:noteable "${NBL_WORK_DIR}" && \
   chown --recursive noteable:noteable /usr/local/lib/R/site-library
+
+# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
+# until all other services are migrated and the old /etc/noteable can be removed
+RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
 
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
@@ -44,11 +52,11 @@ RUN R -e "install.packages('IRkernel', repos='http://cran.us.r-project.org')"
 COPY secrets_helper.sh /tmp/secrets_helper.sh
 COPY run.sh /usr/local/bin
 
-ENV HOME="/srv/noteable" \
-  XDG_CACHE_HOME="/srv/noteable/.cache/" \
+ENV HOME="${NBL_HOME_DIR}" \
+  XDG_CACHE_HOME="${NBL_HOME_DIR}/.cache/" \
   GOOGLE_APPLICATION_CREDENTIALS="/vault/secrets/gcp-credentials"
 
-WORKDIR /etc/noteable/project
+WORKDIR ${NBL_WORK_DIR}/project
 EXPOSE 50001-50005
 
 ENTRYPOINT ["/tini", "-g", "--"]
