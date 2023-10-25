@@ -32,7 +32,7 @@ prepare_dex_content <- function(df) {
   # vectorized format (list of lists)
   #data = as.matrix.data.frame(t(df))
   # pandas df.to_dict("records") format
-  data = as.data.frame.list(df)
+  data = as.data.frame.list(df, check.names=FALSE)
 
   list(
     schema = schema,
