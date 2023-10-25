@@ -31,7 +31,10 @@ prepare_dex_content <- function(df) {
 
   # vectorized format (list of lists)
   #data = as.matrix.data.frame(t(df))
+
   # pandas df.to_dict("records") format
+  # NOTE: if we don't pass check.names=FALSE, columns with spaces will show periods instead, which will
+  # break the connection between the fields defined in `schema` and the keys in `data`
   data = as.data.frame.list(df, check.names=FALSE)
 
   list(
