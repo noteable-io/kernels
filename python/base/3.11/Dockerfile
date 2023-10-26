@@ -31,10 +31,6 @@ RUN groupadd --gid 4004 noteable && \
   mkdir /opt/venv && chown noteable:noteable /opt/venv && \
   mkdir /etc/ipython && chown noteable:noteable /etc/ipython
 
-# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
-# until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
-
 WORKDIR /tmp
 
 # Install tini to manage passing signals to the child kernel process

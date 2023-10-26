@@ -29,10 +29,6 @@ RUN groupadd --gid 4004 noteable && \
   chown --recursive noteable:noteable "${NBL_HOME_DIR}" && \
   mkdir -p "${NBL_WORK_DIR}" && chown --recursive noteable:noteable "${NBL_WORK_DIR}"
 
-# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
-# until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
-
 WORKDIR /tmp
 
 COPY apt-install /usr/bin/
