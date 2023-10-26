@@ -29,10 +29,6 @@ RUN groupadd --gid 4004 noteable && \
   mkdir -p "${NBL_WORK_DIR}" && chown --recursive noteable:noteable "${NBL_WORK_DIR}" && \
   chown --recursive noteable:noteable /usr/local/lib/R/site-library
 
-# TEMPORARY: symlink the previous /etc/noteable to the new NBL_WORK_DIR (/var/run/noteable) dir
-# until all other services are migrated and the old /etc/noteable can be removed
-RUN ln -s "${NBL_WORK_DIR}" /etc/noteable
-
 # Install tini to manage passing signals to the child kernel process
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
