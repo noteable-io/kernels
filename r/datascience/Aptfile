@@ -2,4 +2,4 @@ libcurl4-openssl-dev
 libfontconfig1-dev
 libgdal-dev
 libssl-dev
-libxml-2.0
+libxml2-dev
