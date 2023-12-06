@@ -1,5 +1,9 @@
 libcurl4-openssl-dev
 libfontconfig1-dev
+libfribidi-dev
 libgdal-dev
+libharfbuzz-dev 
 libssl-dev
 libxml2-dev
+unixodbc
+unixodbc-dev

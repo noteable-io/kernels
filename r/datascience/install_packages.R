@@ -7,6 +7,10 @@ is_package_installed <- function(package) {
 
 # Install packages with error handling
 for (pkg in packages) {
+  # Skip if the package has a `#` in front
+  if (substr(pkg, 1, 1) == "#") {
+    next
+  }
   tryCatch({
       # Attempt to install the package
       install.packages(pkg, repos='http://cran.us.r-project.org')
