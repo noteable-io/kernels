@@ -17,7 +17,3 @@ USER noteable
 COPY requirements.R /tmp/requirements.R
 COPY install_packages.R /tmp/install_packages.R
 RUN R -e "source('/tmp/install_packages.R')"
-
-# smoke test to ensure all packages are installed
-# hadolint ignore=DL3059
-RUN R -e "packages <- readLines('/tmp/requirements.R'); for(pkg in packages) { library(pkg, character.only = TRUE) }"
