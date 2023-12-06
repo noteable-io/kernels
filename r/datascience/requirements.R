@@ -6,6 +6,7 @@ caret
 crayon
 # ragg/pkgdown are required for devtools but not installed automatically
 ragg
+remotes
 pkgdown
 devtools
 dplyr
@@ -20,7 +21,7 @@ nycflights13
 odbc
 randomForest
 RCurl
-rgdal
+# rgdal (removed Oct 2023: https://cran.r-project.org/web/packages/rgdal/index.html)
 rmarkdown
 RODBC
 RSQLite
