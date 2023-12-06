@@ -1,6 +1,8 @@
 arrow
 caret
 crayon
+ragg
+pkgdown
 devtools
 dplyr
 e1071
