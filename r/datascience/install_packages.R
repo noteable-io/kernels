@@ -14,7 +14,7 @@ for (pkg in packages) {
   tryCatch({
       # Attempt to install the package
       install.packages(pkg, repos='http://cran.us.r-project.org')
-      
+
       # Check if installation was successful, otherwise raise error
       if (!is_package_installed(pkg)) {
         stop(paste("⛔ Installation of package", pkg, "failed."))
