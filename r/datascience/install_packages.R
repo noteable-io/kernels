@@ -21,7 +21,7 @@ for (pkg in packages) {
       } else {
         message(paste("✅ Package", pkg, "installed successfully."))
       }
-    }, 
+    },
     error = function(e) {
       # Handle errors: print error message
       stop(paste("🔥 Error installing package", pkg, ":", e$message))
